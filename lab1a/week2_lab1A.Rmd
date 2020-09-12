@@ -150,17 +150,129 @@ cdata
 # mtcars
 ```
 
+
+**1. How are missing values recorded, and why might they occur?**
+
+The missing numeric values in the data set are denoted by ‘-9’. This might occur when police can not determine specific details about the fatality, such as the age of the killed person or the speed limit at the crash site. Text entries may contain ‘Unknown’ if police could not determine those details of the crash.
+
+**2. How many fatalities occurred since 1989? How many fatal crashes have there been since 1989?**
+
+When importing the data, note that we have specified the missing value identifier as na = "-9" and asked the read_csv() function to inspect more of the data than the default in order to guess the column types. We also cleaned the column names using the clean_names() function from the janitor package.
+
 ```{r}
-slice(mtcars,1)
-mtcars[which.max(mtcars$qsec),]
+bitre_link = "https://data.gov.au/data/dataset/5b530fb8-526e-4fbf-b0f6-aa24e84e4277/resource/fd646fdc-7788-4bea-a736-e4aeb0dd09a8/download/ardd_fatalities.csv"
+fdata = readr::read_csv(bitre_link, na = "-9", guess_max = 1e+06)
+fdata = janitor::clean_names(fdata)
+# glimpse(fdata) 
+##Get me a subset of year
+b_df = subset(cdata,year==2020)
+## Find the most common hour for fatalities in 2020
+sort(table(b_df$hour),decreasing=TRUE)[1:4]
+
+sort(table(b_df$month),decreasing=TRUE)
+
+```
+Each entry in this data set is a unique fatality, so we can count the number of fatalities by counting the number of rows: 51543. There may be more than one fatality per crash, so to identify the number of fatal crashes, we need to reduce the data frame removing individual specific data and then applying the distinct() function to keep only distinct rows:
+
+```{r}
+cdata = fdata %>% select(-road_user, -gender, -age, -age_group) %>% 
+    distinct()
+nrow(cdata)
+cdata %>% select(crash_id) %>% n_distinct()
 ```
 
-1. How are missing values recorded, and why might they occur?
-2.How many fatalities occurred since 1989? How many fatal crashes have there been since 1989?
-3. What is the most common hour of the day for a fatal crash?
-4. What is the most common day of the week for a fatal crash?
-5. What is the most common month for a fatal crash?
-6. Are fatal crashes uniformly distributed across the months of the year? Filter the data down to one year (e.g. 2019) to do this test. You should write out a full hypothesis test and make an appropriate conclusion.
+This is almost the same as checking to see how many distinct crash_id entries there are in the data set. There is one inconsistency where we have two rows in the crash data for the same crash ID:
+```{r}
+cdata %>% group_by(crash_id) %>% filter(n() > 1)
+```
+
+
+In this crash one fatality had a speed_limit of 100 while the other had a speed_limit of 60. This could be an error, or perhaps they were traveling on opposite sides of the road and the crash occurred near a change in the speed limit. Let’s just keep one of them by slicing the data:
+
+```{r}
+cdata = cdata %>% group_by(crash_id) %>% slice(1) %>% ungroup()
+nrow(cdata)
+```
+
+
+**3. What is the most common hour of the day for a fatal crash?**
+
+To work out the most common hour of the day for a fatal crash let’s work with the time column. We use thehour() function from the lubridate package to extract the hour from the time.
+
+```{r}
+cdata = cdata %>% mutate(hour = lubridate::hour(time))
+```
+We can now tabulate or visualise the hour column.
+```{r}
+cdata %>% ggplot() + aes(x = hour) + geom_bar()
+```
+We can see that the most common hour of the day for fatalities is 3pm. Does this necessarily mean that it is most dangerous to drive at 3pm?
+
+**4. What is the most common day of the week for a fatal crash?**
+
+```{r}
+# cdata %>% count(dayweek)
+cdata %>% ggplot() + aes(x = dayweek) + geom_bar()
+```
+Saturday is the most common day for fatal crashes. Note that the bar chart isn’t great because the days are in alphabetical order. Let’s fix that:
+
+```{r}
+df_2020 = subset(cdata,year==2020)
+df_2020= df_2020 %>% mutate(dayweek = factor(dayweek, levels = c("Monday", 
+    "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")))
+# cdata %>% count(dayweek)
+df_2020 %>% ggplot() + aes(x = dayweek) + geom_bar() + labs(y = "Number of fatalities", x = "")
+```
+It is now a lot easier to interpret the plot.
+
+
+**5. What is the most common month for a fatal crash?**
+
+```{r}
+# cdata %>% count(month)
+cdata %>% ggplot() + aes(x = month) + geom_bar()
+```
+Let’s create a nicer variable with month names rather than just numbers.
+```{r}
+cdata = cdata %>% mutate(month_named = factor(month, levels = 1:12, 
+    labels = month.abb))
+cdata %>% ggplot() + aes(x = month_named) + geom_bar() + labs(y = "Number of fatalities", 
+    x = "")
+```
+
+**6. Are fatal crashes uniformly distributed across the months of the year? Filter the data down to one year (e.g. 2019) to do this test. You should write out a full hypothesis test and make an appropriate conclusion.** 
+
+```{r}
+mcount = cdata %>% filter(year == 2019) %>% dplyr::count(month_named)
+mcount
+```
+To test if fatal crashes are uniformly distributed across the months of the year:
+
+1. H0:p1=p2=p3,…,p12=112 vs H1: At least one of the equalities does not hold.
+2. Assumption: ei=npi≥5
+```{r}
+mcount = mcount %>% mutate(expected = (1/12) * sum(n))
+mcount$expected >= 5
+```
+3. Calculate the chi-test statistic.
+```{r}
+(Tstat = sum(((mcount$n - mcount$expected)^2)/mcount$expected))
+```
+4. Observed test statistic: t0= 9.34.
+5. p-value: P(x_squared≥ 9.34) = 0.59.
+```{r}
+(pv = 1 - pchisq(Tstat, df = 11))
+```
+6. Decision: Since the p-value is quite large (p = 0.59), we do not reject the null hypothesis at the 5% level of significance. We conclude that there is no significant difference between the number of fatal crashes across the months of the year hence the observed pattern of crashes are consistent with the hypothesis of a uniform distribution across the months of the year.
+
+We could also do it using chisq.test()
+```{r}
+chisq.test(mcount$n)
+```
+
+
+
+
 
 
  

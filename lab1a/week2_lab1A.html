@@ -373,12 +373,12 @@ summary {
 <div id="australian-road-fatalities" class="section level2">
 <h2>2.1 Australian road fatalities</h2>
 <pre class="r"><code>library(&quot;tidyverse&quot;) # loads readr, dplyr, ggplot2, ...</code></pre>
-<pre><code>## ── Attaching packages ───────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>## ── Attaching packages ──────── tidyverse 1.3.0 ──</code></pre>
 <pre><code>## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
 ## ✓ tibble  3.0.3     ✓ dplyr   1.0.2
 ## ✓ tidyr   1.1.1     ✓ stringr 1.4.0
 ## ✓ readr   1.3.1     ✓ forcats 0.5.0</code></pre>
-<pre><code>## ── Conflicts ──────────── tidyverse_conflicts() ──
+<pre><code>## ── Conflicts ─────────── tidyverse_conflicts() ──
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>bitre_link = &quot;https://data.gov.au/data/dataset/5b530fb8-526e-4fbf-b0f6-aa24e84e4277/resource/fd646fdc-7788-4bea-a736-e4aeb0dd09a8/download/ardd_fatalities.csv&quot;
@@ -580,10 +580,52 @@ chisq.test(obs_f_2,p=expected_probs_2)</code></pre>
 </div>
 <div id="australian-road-fatalities-1" class="section level2">
 <h2>Australian road fatalities</h2>
-<ol style="list-style-type: decimal">
-<li>How are missing values recorded, and why might they occur? 2.How many fatalities occurred since 1989? How many fatal crashes have there been since 1989?</li>
-<li>What is the most common hour of the day for a fatal crash? What is the most common day of the week for a fatal crash? What is the most common month for a fatal crash? Are fatal crashes uniformly distributed across the months of the year? Filter the data down to one year (e.g. 2019) to do this test. You should write out a full hypothesis test and make an appropriate conclusion.</li>
-</ol>
+<pre class="r"><code>bitre_link = &quot;https://data.gov.au/data/dataset/5b530fb8-526e-4fbf-b0f6-aa24e84e4277/resource/fd646fdc-7788-4bea-a736-e4aeb0dd09a8/download/ardd_fatalities.csv&quot;
+fdata = readr::read_csv(bitre_link, na = &quot;-9&quot;, guess_max = 1e6) %&gt;% 
+  janitor::clean_names()</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   `Crash ID` = col_double(),
+##   Month = col_double(),
+##   Year = col_double(),
+##   Time = col_time(format = &quot;&quot;),
+##   Age = col_double()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre class="r"><code># fdata
+cdata = fdata %&gt;% 
+  select(-road_user, -gender, -age, -age_group) %&gt;% 
+  distinct()  %&gt;% 
+  # Here we create groups based on unique crash ids. Hence we have 2 groups, as crash_id 20164024 occurs twice, each in the group.
+ group_by(crash_id) %&gt;% slice(1) %&gt;%
+    ungroup() %&gt;% 
+  mutate(hour = lubridate::hour(time))
+cdata</code></pre>
+<pre><code>## # A tibble: 46,367 x 20
+##    crash_id state month  year dayweek time  crash_type bus_involvement
+##       &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;tim&gt; &lt;chr&gt;      &lt;chr&gt;          
+##  1 19891001 NSW       6  1989 Thursd… 16:15 Multiple   No             
+##  2 19891002 NSW       8  1989 Wednes… 01:15 Pedestrian No             
+##  3 19891003 NSW       1  1989 Sunday  21:15 Multiple   No             
+##  4 19891004 NSW      10  1989 Friday  12:30 Pedestrian No             
+##  5 19891005 NSW       6  1989 Tuesday 07:45 Multiple   No             
+##  6 19891006 NSW       9  1989 Thursd… 01:45 Single     No             
+##  7 19891007 NSW       4  1989 Thursd… 10:05 Multiple   No             
+##  8 19891008 NSW       3  1989 Saturd… 18:00 Multiple   No             
+##  9 19891009 NSW      10  1989 Saturd… 05:00 Single     No             
+## 10 19891010 NSW       3  1989 Wednes… 08:30 Multiple   No             
+## # … with 46,357 more rows, and 12 more variables:
+## #   heavy_rigid_truck_involvement &lt;chr&gt;, articulated_truck_involvement &lt;chr&gt;,
+## #   speed_limit &lt;chr&gt;, national_remoteness_areas &lt;chr&gt;, sa4_name_2016 &lt;chr&gt;,
+## #   national_lga_name_2017 &lt;chr&gt;, national_road_type &lt;chr&gt;,
+## #   christmas_period &lt;chr&gt;, easter_period &lt;chr&gt;, day_of_week &lt;chr&gt;,
+## #   time_of_day &lt;chr&gt;, hour &lt;int&gt;</code></pre>
+<pre class="r"><code># slice(mtcars,1)
+# mtcars</code></pre>
+<p><strong>1.How are missing values recorded, and why might they occur?</strong></p>
+<p>The missing numeric values in the data set are denoted by ‘-9’. This might occur when police can not determine specific details about the fatality, such as the age of the killed person or the speed limit at the crash site. Text entries may contain ‘Unknown’ if police could not determine those details of the crash.</p>
+<p>2.How many fatalities occurred since 1989? How many fatal crashes have there been since 1989? 3. What is the most common hour of the day for a fatal crash? 4. What is the most common day of the week for a fatal crash? 5. What is the most common month for a fatal crash? 6. Are fatal crashes uniformly distributed across the months of the year? Filter the data down to one year (e.g. 2019) to do this test. You should write out a full hypothesis test and make an appropriate conclusion.</p>
 </div>
 
 
