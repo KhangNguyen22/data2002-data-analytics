@@ -1,0 +1,74 @@
+---
+title: "week2_lab1A"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(janitor)
+```
+
+## Quick Quiz
+
+Answer:
+A:Height
+B: Age
+C: Weight
+D: Salary per year
+
+## 2.1 Australian road fatalities
+```{r}
+library("tidyverse") # loads readr, dplyr, ggplot2, ...
+bitre_link = "https://data.gov.au/data/dataset/5b530fb8-526e-4fbf-b0f6-aa24e84e4277/resource/fd646fdc-7788-4bea-a736-e4aeb0dd09a8/download/ardd_fatalities.csv"
+# here's a link to a copy I took in case the above link dies.
+# https://raw.githubusercontent.com/DATA2002/data/master/ardd_fatalities.csv
+fdata = readr::read_csv(bitre_link)
+# If you download the data file first and save it as FILE_NAME.csv
+# and it is in the same folder, you can use:
+# fdata = readr::read_csv("FILE_NAME.csv")
+```
+### Find me the unique states of this dataframe
+```{r}
+# head(fdata)
+unique(as.vector(t(fdata["State"])))
+```
+
+## 2.2 Cereal
+```{r}
+cereal = readr::read_csv("https://github.com/DATA2002/data/raw/master/Cereal.csv", 
+    na = "-1")
+glimpse(cereal)
+```
+## 2.3 Hair and eye colour
+```{r}
+HairEyeColor
+```
+
+## 4 Exercises
+### 4.1. Tablet devices
+![Tabletd devices cross-tabulation data](images/tablet_devices.png)
+Notice how this has categorical data.
+Q: Does the data provide sufficient evidence to indicate that the figures obtained in the current survey agree with the percentages in 2012?
+
+Word evidence and cross-tabulation table suggests chi-square test. Our observed data is current survey frequency and our expected data is 2012 percentages. 
+
+WTF: 2012 percentages into 2012 expected frequencies, so we can perform our chi-square test.
+
+```{r}
+# Observed frequencies
+
+observed_frequencies = c(102, 32, 12, 4)
+# Expected probabilities
+expected_probabilities = c(0.69, 0.21, 0.07, 0.03)
+n = sum(observed_frequencies)
+expected_frequencies = n * expected_probabilities
+
+e_table <- data.frame(User_Segment=c("Business-Professional","Government","Education","Home"),observed_frequencies,expected_probabilities,expected_frequencies)
+
+e_table %>% adorn_totals()
+# rbind(table, data.frame(User_Segment = "Total", t(colSums(table[, -1]))))
+```
+BUT we have a problem! In each cell of expected_frequencies, the expected frequency must be >= 5, but Home is only 4.5! So combine together to create revised table.
+
+
+

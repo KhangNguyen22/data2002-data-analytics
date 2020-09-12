@@ -1,0 +1,5 @@
+"0","penguins %>% ggplot() +"
+"0","  aes(x=bill_length_mm, y=bill_depth_mm) +"
+"0","  geom_point(aes(colour = species)) +"
+"0","  geom_smooth(method=""lm"", se= FALSE) +"
+"0","  geom_smooth(aes(colour = species),method=""lm"", se= FALSE) "

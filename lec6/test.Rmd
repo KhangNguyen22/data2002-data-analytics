@@ -1,0 +1,39 @@
+---
+title: "Simpson's Paradox"
+output: html_document
+---
+
+```{r setup(chunkname), include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r import_data, message=FALSE, results="hide"}
+# Simpson's paradox
+
+library(tidyverse)
+## Don't use install packages
+# install.packages("palmerpenguins")
+library(palmerpenguins)
+?penguins
+# https://github.com/allisonhorst/palmerpenguins
+glimpse(penguins)
+
+# plot bill length against depth
+```
+
+## Plot bill length against depth
+
+```{r}
+penguins %>% ggplot() +
+  aes(x=bill_length_mm, y=bill_depth_mm) +
+  geom_point(aes(colour = species)) +
+  geom_smooth(method="lm", se= FALSE) +
+  geom_smooth(aes(colour = species),method="lm", se= FALSE) 
+# Use geom_point to plot the points on scatterplot, geom_smooth to find the regressional line
+
+```
+# Need to consider the confounding factors for the above graph
+ Individual groups we get to see the trend, but combined the correlation looks negative.
+
+
+
