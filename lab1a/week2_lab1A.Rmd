@@ -137,17 +137,23 @@ As p value > 0.01, we do not reject null hypothesis. The data is consistent with
 bitre_link = "https://data.gov.au/data/dataset/5b530fb8-526e-4fbf-b0f6-aa24e84e4277/resource/fd646fdc-7788-4bea-a736-e4aeb0dd09a8/download/ardd_fatalities.csv"
 fdata = readr::read_csv(bitre_link, na = "-9", guess_max = 1e6) %>% 
   janitor::clean_names()
-fdata
+# fdata
 cdata = fdata %>% 
   select(-road_user, -gender, -age, -age_group) %>% 
-  distinct() %>%   
-  group_by(crash_id) %>% 
-  slice(1) %>% 
-  ungroup() %>%
+  distinct()  %>% 
+  # Here we create groups based on unique crash ids. Hence we have 2 groups, as crash_id 20164024 occurs twice, each in the group.
+ group_by(crash_id) %>% slice(1) %>%
+    ungroup() %>% 
   mutate(hour = lubridate::hour(time))
-# cdata
+cdata
+# slice(mtcars,1)
+# mtcars
 ```
 
+```{r}
+slice(mtcars,1)
+mtcars[which.max(mtcars$qsec),]
+```
 
 1. How are missing values recorded, and why might they occur?
 2.How many fatalities occurred since 1989? How many fatal crashes have there been since 1989?
