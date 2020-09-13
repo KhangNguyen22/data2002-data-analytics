@@ -1,0 +1,87 @@
+---
+title: "lab1b"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Quick quiz
+
+**An appropriate test to see whether the proportion of births for DATA2002 students is 0.25 for each of the 4 seasons is:**
+
+a. **Chi-squared goodness of fit test**
+
+Reason: There are 1 categorical variable(seasons:4 types;summer,autumn,winter,spring) and 1 population variable. If there we 2 or more population variables, this would be a chi-square test of independence.
+
+b. Chi-squared test of independence
+c. Test if the correlation coefficient is significantly different to zero
+d. Check if the CI for the log odds ratio contains 1
+
+**In a test to see whether the proportion of births for DATA2002 students is 0.25 for each of the 4 seasons, assuming that the null hypothesis is true, the distribution of the test statistic is:**
+
+a. **chi-squared with 3 degrees of freedom χ2**
+b. chi-squared with 4 degrees of freedom χ2
+c. standard normal Z∼N(0,1)
+d. t distribution with 3 degrees of freedom t3
+e. t distribution with 4 degrees of freedom t4
+
+**A casino is worried about whether or not its die have been tampered with. To test this, a dealer rolls 4 dice 100 times and records the number of evens (2, 4 or 6) that appear.**
+![](images/t1.png)
+
+**What distribution does the test statistic for a chi-squared goodness of fit follow in this example?**
+a. chi-squared with 1 degree of freedom 
+b. chi-squared with 2 degrees of freedom 
+c. chi-squared with 3 degrees of freedom 
+d. **chi-squared with 4 degrees of freedom**
+Reason: as goodness of fit test, we use df = k-1 =5-1 = 4. We didn’t need to estimate any parameters, so our chi-squared test degrees of freedom is the number of categories minus 1. Also don’t need to collapse any categories, because the expected cell counts will all be greater than 5, but this is shown later on. Can check it pretty easily by considering the probability of getting no evens (or all evens) as (1/2)^4 = 1/16 and then multiplying that by 100 to get the smallest expected cell count of 100/16=6.25.
+
+Note: yes, we see 0 number of evens is 1, but we only combine together categories when our expected cells contain a frequency less than 5. 
+
+e. chi-squared with 5 degrees of freedom 
+
+**Goals per soccer game arrive at random moments, and could be reasonably modelled by a Poisson process. If so, the total number of goals scored in a soccer game should be a Poisson random variable. Here are the number of goals scored in each of the n=104 Fifa world cup games in 2015**
+```{r}
+goals <- c(1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 2, 2, 4, 0, 10, 0, 1, 1, 
+    2, 3, 0, 4, 1, 3, 6, 0, 1, 0, 10, 1, 2, 1, 0, 1, 1, 2, 3, 3, 3, 
+    1, 2, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 0, 1, 0, 2, 2, 0, 1, 2, 1, 
+    1, 0, 1, 1, 0, 2, 2, 1, 0, 5, 2, 1, 4, 1, 1, 0, 0, 1, 3, 0, 1, 
+    0, 1, 2, 2, 0, 2, 1, 1, 1, 0, 1, 0, 1, 2, 1, 2, 0, 2, 1, 0, 1, 
+    5, 2)
+observed_goals = table(goals)
+observed_goals
+```
+We can fit a Poisson random variable with mean parameter lamda calculated as (hence, we estimate lambda, need to remove one degrees of freedom):
+```{r}
+(lambda = mean(goals))
+```
+And work out the expected cell counts as follows:
+```{r}
+# dpois is our probability density function = PMF. B.S. stat contains this equation. Returns a vector of our PDF
+# ppois shows the probability of having
+expected_goals = 104 * c(dpois(0:9, lambda), ppois(9, lambda, lower.tail = FALSE))
+round(expected_goals, 2)
+expected_goals[-(1:4)]
+```
+**How many degrees of freedom do we have?**
+
+Notice, how some of our expected frequency cells are less than 5, this means we have to combine them so that all expected frequency cell counts >= 5. We collapse the last 7 columns, so we have 5 left over. Using DF formula, df = 5 -1 -1 (from estimated lambda) = 3.
+
+
+## 2 Group exercise
+**1. What are the key differences between prospective and retrospective study?**
+**2. What are relative risks? What are odds-ratios?**
+**3. Why would you use one over the other?**
+
+## 3 Exercises
+### 3.1. Dishonest dice
+
+A casino is worried about whether or not its die have been tampered with. To test this, a dealer rolls 4 dice 100 times and records how many even numbers (2, 4 or 6) appear.
+![](images/t1.png)
+
+Can the scientist infer at the 5% significance level that the number of even when n=4 dice are rolled follows a binomial random variable with p=1/2?
+
+### 3.2. Mammograms
+
+### 3.3. Education
