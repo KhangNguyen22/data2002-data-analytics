@@ -1,0 +1,83 @@
+---
+title: "lab1c"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Quick quiz
+
+Q1.1. B). We want to see if 2 categorical variables are independent.
+Q1.2. C)
+Q1.3. Yes, it does look like there's a relationship between age group and violence viewing.
+Q1.4. Yes or no. Whatever way, you can argue.
+
+## Group work
+```{r}
+library("gt")
+library("")
+survey = readr::read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTf8eDSN_2QbMTyVvO5bdYKZSEEF2bufDdYnLnL-TsR8LM-6x-xu1cxmDMohlbLrkMJn9DE7EG7pg5P/pub?gid=1724783278&single=true&output=csv")
+# str(survey)
+colnames(survey) %>% tibble() %>% gt::gt()
+```
+
+## 3 Exercises
+### 3.1. Personality type
+$H_0:$ Probability distribution (proportions) of the business students = Probability distribution of social science students.
+$H_1:$ Probability distribution (proportions) of the business students is not equal to probability distribution of social science students.
+
+**Assumptions**: $e_{ij} \geq 5$ and independent observations.
+
+**Decision**: As p-value > 0.05, we do not reject the null hypothesis.
+
+```{r}
+counts = c(41, 52, 46, 61, 58, 72, 75, 63, 80, 65)
+c_mat = matrix(counts, nrow = 2, byrow = TRUE)
+colnames(c_mat) = c("Open", "Conscientious", "Extrovert", "Agreeable", 
+    "Neurotic")
+rownames(c_mat) = c("Business", "Social Science")
+```
+To find chi square test (need to turn off Yates' correction, by using correct=FALSE),
+```{r}
+chisq.test(c_mat,correct=FALSE)
+test = chisq.test(c_mat)
+test$statistic
+test$p.value
+# use names to inspect a variable that contains a list.
+names(test)
+```
+Now, to show it manually... No need to this manually for assignment.
+We want to find the sum of population totals each one.
+```{r}
+# MARGIN = 1 means apply the sum FUNction 
+# down rows. Alternative: rowSums(tab)
+(yr = apply(c_mat, MARGIN = 1, FUN = sum))
+```
+```{r}
+# MARGIN = 2 means apply the sum FUNction 
+# across columns. Alternative: colSums(tab)
+(yc = apply(c_mat, MARGIN = 2,FUN = sum))
+```
+```{r}
+(yr.mat = matrix(yr, nrow = r, ncol = c, byrow = FALSE))
+```
+
+### 3.2. Shocking
+```{r}
+counts = c(12,5,4,9)
+c_mat = matrix(counts,nrow=2,byrow = TRUE)
+
+# i)
+fisher.test(c_mat)
+# ii & iii)
+chisq.test(c_mat, correct = FALSE)
+chisq.test(c_mat, correct = TRUE)
+# iv)
+chisq.test(c_mat, simulate.p.value = TRUE, B = 1000)
+
+```
+
+### 3.1. Personality type
+
