@@ -1,0 +1,226 @@
+---
+title: "490503902_Assignment"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(janitor)
+library(ggplot2)
+library(skimr)
+library(visdat)
+```
+Load data into R
+Clean Data (1. Use one code chunk to perform all cleaning at once. 2. Write a couple of paragraphs describing rationale are all that's required)
+
+```{r, message=FALSE}
+print("hello")
+```
+
+Every graph or plot needs to referenced in text and explained.
+
+Perform analysis.
+
+## 1. Is this a random sample of DATA2002 students?
+Yes, this is a sample, but is it truly random? The way the test data collected was through voluntary choice and was advertised... This suggests it was not random for the
+
+Also, to be a truly random sample of the DATA2002 population, the sample must be a true representation of all the types of people from the DATA2002 population.
+
+## 2. What are the potential biases? Which variables are most likely to be subjected to this bias?
+## 3. Are there any questions that needed improvement to generate useful data?
+Shoe size is impossible to clean!
+## 4. Does the number of COVID tests follow a Poisson distribution?
+## 5. Perform two other hypothesis tests. Give some rationale for why you selected these hypothesis tests and interpret the results. Be sure to mention any limitations in the data that may impact your findings.
+
+## Cleaning survey data
+
+### Read in the data
+```{r, message=FALSE}
+
+raw = read_csv("DATA2X02 class survey 2020 (Responses) - Form responses 1.csv")
+raw$`Postcode of where you live during semester`
+
+```
+Clean the column names with the Janitor package
+
+```{r test, results="hide"}
+x = raw %>% janitor::clean_names()
+colnames(x)
+colnames(x) = stringr::str_replace(string = colnames(x),
+                                   pattern = "what_is_your_",
+                                   replacement = ""
+                                   )
+colnames(x) = stringr::str_replace(string = colnames(x),
+                                   pattern = "on_average_how_many_hours_per_week_did_you_",
+                                   replacement = ""
+                                   )
+```
+Manually shorten them:
+```{r}
+colnames(x)[2] = "covid_test"
+# keep repeating the above to change column names
+colnames(x)[4] = "postcode"
+colnames(x)[5] = "dentist"
+colnames(x)[6] = "university_work"
+colnames(x)[7] = "social_media"
+colnames(x)[8] = "dog_or_cat"
+colnames(x)[9] = "live_with_parents"
+colnames(x)[10] = "exercising"
+colnames(x)[12] = "asthma"
+colnames(x)[13] = "paid_work"
+colnames(x)[14] = "fav_season"
+colnames(x)[16] = "height"
+colnames(x)[17] = "floss_frequency"
+colnames(x)[18] = "glasses"
+colnames(x)[20] = "steak_preference"
+colnames(x)[21] = "stress_level"
+
+# ggplot(x[18],aes(c("Yes","No"))) + geom_bar(stat = "identity")
+summary(x[21])
+# Use table to check out column vector
+table(x[18])[2]
+# summary(runif(3))
+```
+
+```{r}
+## Change postcode to character
+x = x %>% mutate(
+  postcode = as.character(postcode)
+)
+
+```
+
+
+## Quick look at the data
+```{r}
+x %>% group_by(fav_season) %>%
+skimr::skim()
+skimr::skim(x)
+# visdat::vis_miss(x)
+```
+
+Visualise missingness in the data set
+
+```{r}
+visdat::vis_miss(x)
+```
+
+
+
+## Numeric variables
+
+```{r}
+x %>% dplyr::select(where(is.numeric)) %>% colnames()
+# Alternatively, could have selected manually
+
+x %>% dplyr::select(covid_test) %>% colnames()
+
+# Check data type
+d <- data.frame(emp_id = c("yes",2.3,"no"))
+sapply(d[1],class)
+class(x[18])
+sapply(x[18],class)
+```
+
+# Plot numeric variables
+```{r}
+# use barcharts as rounded to nearrest number
+# x %>% ggplot(aes(x=glasses)) + geom_bar()
+p1 = x %>% ggplot(aes(x = covid_test)) + geom_bar()
+p2 = x %>% ggplot(aes(x = stress_level)) + geom_bar()
+p3 = x %>% ggplot(aes(x = university_work)) + geom_bar()
+p4 = x %>% ggplot(aes(x = exercising)) + geom_histogram()
+p5 = x %>% ggplot(aes(x = paid_work)) + geom_histogram()
+p6 = x %>% ggplot(aes(x = shoe_size)) + geom_histogram()
+p7 = x %>% ggplot(aes(x = height)) + geom_histogram()
+gridExtra::grid.arrange(p1, p2, p3, p4, p5, p6, p7, ncol = 3)
+```
+
+#### Height
+```{r}
+table(x$height)
+
+x = x %>% dplyr::mutate(
+  height = dplyr::case_when(
+    height < 2.3 ~ height*100,
+    TRUE ~ height
+  )
+)
+
+x %>% ggplot(aes(x = height)) + geom_histogram()
+
+```
+
+
+## Categorical variables
+### Gender
+```{r}
+x %>% select(where(is.character)) %>% colnames()
+# use lubridate package for timestamp to date time object.
+
+x1 = x %>% mutate(
+  gender = toupper(gender),
+  gender = stringr::str_sub(gender, start = 1, end = 1),
+  gender = case_when(
+    gender == "F" ~ "Female",
+    gender == "M" ~ "Male",
+    gender == "N" ~ "Non-binary"
+  )
+)
+# x1 %>% janitor::tabyl(gender) 
+```
+Or do the following:
+
+```{r}
+library(gendercodeR)
+x%>% janitor::tabyl(gender) 
+x = x %>% mutate(
+  gender = gendercodeR::recode_gender(gender)
+)
+
+```
+### Eye colour 
+```{r}
+# x %>% janitor::tabyl(eye_colour)
+# x %>% filter(eye_colour == "orange")
+# If you want categories with more than 6 entries, use fct_lump
+x = x %>% 
+  mutate(
+    eye_colour = tolower(eye_colour),
+    eye_colour = forcats::fct_lump(eye_colour, n = 6)
+  )
+
+x %>% 
+  janitor::tabyl(eye_colour) %>% 
+  arrange(desc(n)) %>% # arrange in descending order
+  gt::gt() %>% 
+  gt::fmt_percent(columns = c("percent","valid_percent"),
+                  decimals = 0) %>% 
+  gt::tab_source_note("Table 4: Summary of eye colour proportions.")
+```
+```{r}
+# x %>% janitor::tabyl(social_media)
+```
+```{r}
+# x %>% ggplot() + aes (x=steak_preference, fill= steak_preference) + geom_bar()
+steak_levels = c("Rare", "Medium-rare", "Medium", 
+                 "Medium-well done", "Well done", 
+      
+                            "I don't eat beef")
+x = x %>% 
+  mutate(
+    steak_preference = factor(steak_preference, levels = steak_levels)
+  )
+x %>% ggplot() + aes (x=steak_preference, fill= steak_preference) + geom_bar()
+
+```
+
+
+
+
+
+
+
