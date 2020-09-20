@@ -104,6 +104,7 @@ clean_df$timestamp <-  lubridate::dmy_hms(clean_df$timestamp)
 # Create 2 other dataframes based on clean_df ready for hypothesis testing
 df_postcode <- clean_df[is.na(clean_df$postcode)==FALSE,]
 df_exercising <- clean_df[is.na(clean_df$exercising)==FALSE,]
+glimpse(clean_df)
 ```
 
 
@@ -124,28 +125,52 @@ I only fully cleaned variables(postcode and exercising) for which I will use for
 
 ## Is this a random sample of DATA2002 students?
 
-To answer this question, we need to define what is a random sample. A  sample is a subset of population chosen by a statistician. 
+To answer this question, we need to define what is a random sample. 
 
-equal probability of being chosen. This is not the case as the survey is geared more towards studious students who regularly check Edstem posts. Further, since the 
- 
- 
-Yes, this is a sample with only 174 people recorded in the survey but is it truly random? The way the test data collected was through voluntary choice and was advertised... This suggests it was not random for the
+A  sample is a subset of population. A random sample is a sample where each person has an equal independent probability of being chosen from a population. 
 
-Also, to be a truly random sample of the DATA2002 population, the sample must be a true representation of all the types of people from the DATA2002 population.
-
-We are not sure if the sample population is representative of the true population.
-
+Yes, this is a sample with only 174 people which is less than the total population, but is it  random?  The test data was collected  through a Google form survey via voluntary choice and was advertised on Edstem. This suggests that the sample is not random as survey participants were more likely to be studious students who read Edstem posts and so is not representative of the true population of DATA2002. Hence, **no**, this is not a random sample of DATA2002. To be random would require a random selection from a database of DATA2002 students that made it compulsory to do the survey.
 
 ## What are the potential biases? Which variables are most likely to be subjected to this bias?
+**Potential biases**:
+
+* **Selection bias**: Due to the sampling design through voluntary participation, this meant that only motivated students who read the Edstem post were selected to participate. A reduction in selection bias would not occur if a larger sample was taken through greater advertising.
+
+* **Sensitive questions**: Some of the questions in the survey were sensitive questions, which prompted participants to fill in answers that are not objectively true. For example, the **height variable** would have the tendency for participants to increase their height due to the fear of appearing short. Another variable would be the **exercising variable** where participants may want to appear fitter by exaggerating how many hours they exercise. **Paid work** would have a bias of increased hours as participants may want to appear to be hard working. 
+
+**Glasses** variable would have bias from
+
+
+* **Recall Bias**: **Floss frequency** and **dentist** variable suffer from recall bias as participants may want to appear more
+
 
 
 ## Are there any questions that needed improvement to generate useful data?
 
+Yes!
 Shoe size is impossible to clean! Why?
 
 
 ## Does the number of COVID tests follow a Poisson distribution?
 **Do a chi-square hypothesis test**
+
+To test this question, we will use a chi-square...
+
+$H_0:$ The number of COVID tests does not follow a Poisson distribution
+
+$H_1:$ The number of COVID tests does follow a Poisson distribution
+
+**Assumptions**:
+**Need to apply filter**
+
+**Decision**:
+
+
+## Perform two other hypothesis tests. 
+### Give some rationale for why you selected these hypothesis tests and interpret the results. Be sure to mention any limitations in the data that may impact your findings.
+
+**Do a chi-square hypothesis test**
+
 To test this question, we will use a chi-square...
 
 $H_0:$ The number of COVID tests does not follow a Poisson distribution
@@ -155,14 +180,3 @@ $H_1:$ The number of COVID tests does follow a Poisson distribution
 **Need to apply filter**
 
 **Decision**:
-
-
-## Perform two other hypothesis tests. Give some rationale for why you selected these hypothesis tests and interpret the results. Be sure to mention any limitations in the data that may impact your findings.
-
-## Cleaning survey data
-
-### Read in the data
-
-
-
-
