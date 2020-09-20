@@ -1591,8 +1591,12 @@ div.tocify {
 <li><p>Item 2</p></li>
 </ul>
 </div>
+<div id="introduction" class="section level1">
+<h1><span class="header-section-number">2</span> Introduction</h1>
+<p>This report…</p>
+</div>
 <div id="data-cleaning-key-points" class="section level1">
-<h1><span class="header-section-number">2</span> Data Cleaning key points</h1>
+<h1><span class="header-section-number">3</span> Data Cleaning key points</h1>
 <pre class="r"><code># CITATION The following 100 line cleaning code is mostly based on the following work and is only slightly modified for the use of this report.
 # Author: Garth Tarr
 # Date: 10/09/2020
@@ -1671,30 +1675,7 @@ clean_df$timestamp &lt;-  lubridate::dmy_hms(clean_df$timestamp)
 # Create 2 other dataframes based on clean_df ready for hypothesis testing
 df_postcode &lt;- clean_df[is.na(clean_df$postcode)==FALSE,]
 df_exercising &lt;- clean_df[is.na(clean_df$exercising)==FALSE,]
-glimpse(clean_df)</code></pre>
-<pre><code>## Rows: 172
-## Columns: 21
-## $ timestamp         &lt;dttm&gt; 2020-09-02 22:07:21, 2020-09-02 22:08:45, 2020-09-…
-## $ covid_tests       &lt;dbl&gt; 1, 0, 0, 5, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0, 0, …
-## $ gender            &lt;chr&gt; &quot;Female&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;…
-## $ postcode          &lt;chr&gt; &quot;2154&quot;, &quot;441000&quot;, &quot;2120&quot;, &quot;511442&quot;, &quot;2042&quot;, &quot;2046&quot;,…
-## $ dentist           &lt;chr&gt; &quot;Less than 6 months&quot;, &quot;More than 2 years&quot;, &quot;Less th…
-## $ university_work   &lt;dbl&gt; 38, 40, 3, 40, 6, 30, 36, 50, 40, 20, 50, 25, 30, N…
-## $ social_media      &lt;chr&gt; &quot;N/A&quot;, &quot;Bilibili / Youtobe&quot;, &quot;Facebook&quot;, &quot;WeChat&quot;, …
-## $ dog_or_cat        &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;…
-## $ live_with_parents &lt;chr&gt; &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;N…
-## $ exercising        &lt;dbl&gt; 0.0, 2.0, 8.0, 8.0, 5.0, 4.0, 5.0, 3.0, 0.0, 7.0, 3…
-## $ eye_colour        &lt;chr&gt; &quot;Brown&quot;, &quot;Black&quot;, &quot;Black&quot;, &quot;black&quot;, &quot;Black&quot;, &quot;Green…
-## $ asthma            &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;…
-## $ paid_work         &lt;dbl&gt; 0, 0, 2, 0, 8, 10, 10, NA, 10, 10, 0, 12, 0, 0, 0, …
-## $ fav_season        &lt;chr&gt; &quot;Winter&quot;, &quot;Autumn&quot;, &quot;Autumn&quot;, &quot;Spring&quot;, &quot;Autumn&quot;, &quot;…
-## $ shoe_size         &lt;dbl&gt; 6.0, 42.0, 10.0, 45.0, NA, 12.0, 11.0, 13.0, 7.0, 4…
-## $ height            &lt;dbl&gt; 160, 178, 178, 175, NA, 193, 174, 187, 165, 176, 16…
-## $ floss_frequency   &lt;chr&gt; &quot;Weekly&quot;, &quot;Less than once a week&quot;, &quot;Less than once …
-## $ glasses           &lt;chr&gt; &quot;Yes&quot;, &quot;No&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;Yes&quot;…
-## $ dominant_hand     &lt;chr&gt; &quot;Right handed&quot;, &quot;Right handed&quot;, &quot;Right handed&quot;, &quot;Ri…
-## $ steak_preference  &lt;fct&gt; Medium-rare, Medium, I don&#39;t eat beef, Medium, Medi…
-## $ stress_level      &lt;dbl&gt; 7, 9, 4, 9, 2, 3, 6, 6, 5, 7, 6, 8, 6, 4, 9, 1, 4, …</code></pre>
+# glimpse(clean_df)</code></pre>
 <ul>
 <li><p><strong>Imported class_survey.csv</strong> into R and cleaned the data by shortening the column names and renamed columns. This improves readibility as well as conciseness.</p></li>
 <li><p><strong>Removed 2 survey observations</strong> where survey was submitted without any input because these observations are useless and do not add any new information to the survey data.</p></li>
@@ -1708,37 +1689,47 @@ glimpse(clean_df)</code></pre>
 </ol></li>
 </ul>
 <p>I only fully cleaned variables(postcode and exercising) for which I will use for our data analysis by removing null values and checking if the values of the variable made sense.</p>
+</div>
+<div id="methodology" class="section level1">
+<h1><span class="header-section-number">4</span> Methodology</h1>
 <div id="is-this-a-random-sample-of-data2002-students" class="section level2">
-<h2><span class="header-section-number">2.1</span> Is this a random sample of DATA2002 students?</h2>
+<h2><span class="header-section-number">4.1</span> Is this a random sample of DATA2002 students?</h2>
 <p>To answer this question, we need to define what is a random sample.</p>
 <p>A sample is a subset of population. A random sample is a sample where each person has an equal independent probability of being chosen from a population.</p>
 <p>Yes, this is a sample with only 174 people which is less than the total population, but is it random? The test data was collected through a Google form survey via voluntary choice and was advertised on Edstem. This suggests that the sample is not random as survey participants were more likely to be studious students who read Edstem posts and so is not representative of the true population of DATA2002. Hence, <strong>no</strong>, this is not a random sample of DATA2002. To be random would require a random selection from a database of DATA2002 students that made it compulsory to do the survey.</p>
 </div>
 <div id="what-are-the-potential-biases-which-variables-are-most-likely-to-be-subjected-to-this-bias" class="section level2">
-<h2><span class="header-section-number">2.2</span> What are the potential biases? Which variables are most likely to be subjected to this bias?</h2>
+<h2><span class="header-section-number">4.2</span> What are the potential biases? Which variables are most likely to be subjected to this bias?</h2>
 <p><strong>Potential biases</strong>:</p>
 <ul>
 <li><p><strong>Selection bias</strong>: Due to the sampling design through voluntary participation, this meant that only motivated students who read the Edstem post were selected to participate. A reduction in selection bias would not occur if a larger sample was taken through greater advertising.</p></li>
-<li><p><strong>Sensitive questions</strong>: Some of the questions in the survey were sensitive questions, which prompted participants to fill in answers that are not objectively true. For example, the <strong>height variable</strong> would have the tendency for participants to increase their height due to the fear of appearing short. Another variable would be the <strong>exercising variable</strong> where participants may want to appear fitter by exaggerating how many hours they exercise. <strong>Paid work</strong> would have a bias of increased hours as participants may want to appear to be hard working. <strong>Glasses</strong> variable would have bias from</p></li>
-<li><p><strong>Recall Bias</strong>: <strong>Floss frequency</strong> and <strong>dentist</strong> variable suffer from recal bias as participants may want to appear more</p></li>
+<li><p><strong>Sensitive questions</strong>: Some of the questions in the survey were sensitive questions, which prompted participants to fill in answers that are not objectively true. For example, the <strong>height variable</strong> would have the tendency for participants to increase their height due to the fear of appearing short. Another variable would be the <strong>exercising variable</strong> where participants may want to appear fitter by exaggerating how many hours they exercise. <strong>Paid work</strong> would have a bias of increased hours as participants may want to appear to be hard working.</p></li>
+</ul>
+<p><strong>Glasses</strong> variable would have bias from</p>
+<ul>
+<li><strong>Recall Bias</strong>: <strong>Floss frequency</strong> and <strong>dentist</strong> variable suffer from recall bias as participants may want to appear more</li>
 </ul>
 </div>
 <div id="are-there-any-questions-that-needed-improvement-to-generate-useful-data" class="section level2">
-<h2><span class="header-section-number">2.3</span> Are there any questions that needed improvement to generate useful data?</h2>
+<h2><span class="header-section-number">4.3</span> Are there any questions that needed improvement to generate useful data?</h2>
 <p>Yes! Shoe size is impossible to clean! Why?</p>
 </div>
+</div>
+<div id="results" class="section level1">
+<h1><span class="header-section-number">5</span> Results</h1>
 <div id="does-the-number-of-covid-tests-follow-a-poisson-distribution" class="section level2">
-<h2><span class="header-section-number">2.4</span> Does the number of COVID tests follow a Poisson distribution?</h2>
+<h2><span class="header-section-number">5.1</span> Does the number of COVID tests follow a Poisson distribution?</h2>
 <p><strong>Do a chi-square hypothesis test</strong></p>
 <p>To test this question, we will use a chi-square…</p>
-<p><span class="math inline">\(H_0:\)</span> The number of COVID tests does not follow a Poisson distribution <span class="math inline">\(H_1:\)</span> The number of COVID tests does follow a Poisson distribution</p>
+<p><span class="math inline">\(H_0:\)</span> The number of COVID tests does not follow a Poisson distribution</p>
+<p><span class="math inline">\(H_1:\)</span> The number of COVID tests does follow a Poisson distribution</p>
 <p><strong>Assumptions</strong>: <strong>Need to apply filter</strong></p>
 <p><strong>Decision</strong>:</p>
 </div>
 <div id="perform-two-other-hypothesis-tests." class="section level2">
-<h2><span class="header-section-number">2.5</span> Perform two other hypothesis tests.</h2>
+<h2><span class="header-section-number">5.2</span> Perform two other hypothesis tests.</h2>
 <div id="give-some-rationale-for-why-you-selected-these-hypothesis-tests-and-interpret-the-results.-be-sure-to-mention-any-limitations-in-the-data-that-may-impact-your-findings." class="section level3">
-<h3><span class="header-section-number">2.5.1</span> Give some rationale for why you selected these hypothesis tests and interpret the results. Be sure to mention any limitations in the data that may impact your findings.</h3>
+<h3><span class="header-section-number">5.2.1</span> Give some rationale for why you selected these hypothesis tests and interpret the results. Be sure to mention any limitations in the data that may impact your findings.</h3>
 <p><strong>Do a chi-square hypothesis test</strong></p>
 <p>To test this question, we will use a chi-square…</p>
 <p><span class="math inline">\(H_0:\)</span> The number of COVID tests does not follow a Poisson distribution <span class="math inline">\(H_1:\)</span> The number of COVID tests does follow a Poisson distribution</p>
@@ -1746,6 +1737,9 @@ glimpse(clean_df)</code></pre>
 <p><strong>Decision</strong>:</p>
 </div>
 </div>
+</div>
+<div id="conclusion-and-recommendations" class="section level1">
+<h1><span class="header-section-number">6</span> Conclusion and recommendations</h1>
 </div>
 
 

@@ -22,6 +22,9 @@ What are we analysing?
 
 * Item 2
 
+# Introduction
+This report...
+
 # Data Cleaning key points
 
 
@@ -104,7 +107,7 @@ clean_df$timestamp <-  lubridate::dmy_hms(clean_df$timestamp)
 # Create 2 other dataframes based on clean_df ready for hypothesis testing
 df_postcode <- clean_df[is.na(clean_df$postcode)==FALSE,]
 df_exercising <- clean_df[is.na(clean_df$exercising)==FALSE,]
-glimpse(clean_df)
+# glimpse(clean_df)
 ```
 
 
@@ -122,6 +125,7 @@ glimpse(clean_df)
 I only fully cleaned variables(postcode and exercising) for which I will use for our data analysis by removing null values and checking if the values of the variable made sense. 
 
 
+# Methodology
 
 ## Is this a random sample of DATA2002 students?
 
@@ -151,6 +155,7 @@ Yes!
 Shoe size is impossible to clean! Why?
 
 
+# Results
 ## Does the number of COVID tests follow a Poisson distribution?
 **Do a chi-square hypothesis test**
 
@@ -180,3 +185,5 @@ $H_1:$ The number of COVID tests does follow a Poisson distribution
 **Need to apply filter**
 
 **Decision**:
+
+# Conclusion and recommendations
