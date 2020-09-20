@@ -31,10 +31,14 @@ Load data into R
 Clean Data (1. Use one code chunk to perform all cleaning at once. 2. Write a couple of paragraphs describing rationale are all that's required)
 
 ```{r, message=FALSE, tidy=TRUE}
-# The CITATION
+# CITATION
 raw = read_csv("class_survey.csv")
 # changes all spaces into underscores and lowercases the whole string for column names
 clean_df = raw %>% janitor::clean_names()
+
+## Remove people who automatically submitted without doing survey. Reduce from 174 rows to 172 rows
+clean_df <- clean_df[rowSums(is.na(clean_df))<20,]
+
 # Shorten the names of specific columns
 colnames(clean_df) = stringr::str_replace(string = colnames(clean_df),
                                    pattern = "what_is_your_",
@@ -64,13 +68,44 @@ colnames(clean_df)[21] = "stress_level"
 clean_df = clean_df %>% mutate(
   postcode = as.character(postcode)
 )
-table(clean_df["postcode"])
-skimr::skim(clean_df)
+## Change all height to cm
+clean_df = clean_df %>% dplyr::mutate(
+  height = dplyr::case_when(
+    height < 2.3 ~ height*100,
+    TRUE ~ height
+  )
+)
+
+## Group gender into 3 categories 
+
+clean_df = clean_df %>% mutate(
+  gender = toupper(gender),
+  gender = stringr::str_sub(gender, start = 1, end = 1),
+  gender = case_when(
+    gender == "F" ~ "Female",
+    gender == "M" ~ "Male",
+    gender == "N" ~ "Non-binary"
+  )
+)
+steak_levels = c("Rare", "Medium-rare", "Medium", 
+                 "Medium-well done", "Well done", 
+      
+                            "I don't eat beef")
+clean_df = clean_df %>% 
+  mutate(
+    steak_preference = factor(steak_preference, levels = steak_levels)
+  )
+
+clean_df$steak_preference
+
 # Change timestamp to POSIXct for easier handling
 clean_df$timestamp <-  dmy_hms(clean_df$timestamp)
+df_postcode <- clean_df[is.na(clean_df$postcode)==FALSE,]
+df_exercising <- clean_df[is.na(clean_df$exercising)==FALSE,]
 
-clean_df %>% filter(is.na(clean_df$gender))
 
+
+# clean_df[is.na(clean_df$postcode)==TRUE,]
 # head(clean_df[1])
 # m <- sapply(clean_df[1],as.POSIXct)
 # m
@@ -93,11 +128,22 @@ class(clean_df$timestamp)
 # "2020-01-01" "2015-10-01" "2033-05-01"
 ```
 
-In
+```{r}
+data <- rbind(c(1,2,3), c(1, NA, 4), c(4,6,7), c(NA, NA, NA), c(4, 8, NA)) # sample data
+rowSums(data)
+ncol(data)
+is.na(data)
+data[rowSums(is.na(data))<3,]
+```
 
+
+In
+We cleaned only the columns in which we will use for our data analysis.
 Only the following columns were cleaned.
 
 3 paragraphs to explain what was cleaned.
+
+Removed 2 useless rows
 
 
 Every graph or plot needs to referenced in text and explained.
@@ -135,6 +181,7 @@ $H_0:$ The number of COVID tests does not follow a Poisson distribution
 $H_1:$ The number of COVID tests does follow a Poisson distribution
 
 **Assumptions**:
+**Need to apply filter**
 
 **Decision**:
 
