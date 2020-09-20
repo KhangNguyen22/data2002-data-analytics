@@ -1703,11 +1703,14 @@ df_exercising &lt;- clean_df[is.na(clean_df$exercising)==FALSE,]
 <p><strong>Potential biases</strong>:</p>
 <ul>
 <li><p><strong>Selection bias</strong>: Due to the sampling design through voluntary participation, this meant that only motivated students who read the Edstem post were selected to participate. A reduction in selection bias would not occur if a larger sample was taken through greater advertising.</p></li>
-<li><p><strong>Sensitive questions</strong>: Some of the questions in the survey were sensitive questions, which prompted participants to fill in answers that are not objectively true. For example, the <strong>height variable</strong> would have the tendency for participants to increase their height due to the fear of appearing short. Another variable would be the <strong>exercising variable</strong> where participants may want to appear fitter by exaggerating how many hours they exercise. <strong>Paid work</strong> would have a bias of increased hours as participants may want to appear to be hard working.</p></li>
-</ul>
-<p><strong>Glasses</strong> variable would have bias from</p>
+<li><p><strong>Sensitive questions</strong>: Some of the questions in the survey were sensitive questions, which prompted participants to fill in answers that are not objectively true.</p>
 <ul>
-<li><strong>Recall Bias</strong>: <strong>Floss frequency</strong> and <strong>dentist</strong> variable suffer from recall bias as participants may want to appear more</li>
+<li>The <strong>height variable</strong> would have the tendency for participants to increase their height due to the fear of appearing short.</li>
+<li>Another variable would be the <strong>exercising variable</strong> where participants may want to appear fitter by exaggerating how many hours they exercise.</li>
+<li><strong>Paid work</strong> would have a bias of increased hours as participants may want to appear to be hard working.</li>
+<li><strong>Glasses</strong> variable may have bias as individuals may be insecure about wearing glasses and so opt not to choose not wearing glasses or contacts.</li>
+</ul></li>
+<li><p><strong>Recall Bias</strong>: <strong>Floss frequency</strong> and <strong>dentist</strong> variable suffer from recall bias as participants personal perception may skew their memory of these variables. The desire to appear hygienic and ideal can make the data inaccurate and unrealistic.</p></li>
 </ul>
 </div>
 <div id="are-there-any-questions-that-needed-improvement-to-generate-useful-data" class="section level2">
@@ -1719,10 +1722,11 @@ df_exercising &lt;- clean_df[is.na(clean_df$exercising)==FALSE,]
 <h1><span class="header-section-number">5</span> Results</h1>
 <div id="does-the-number-of-covid-tests-follow-a-poisson-distribution" class="section level2">
 <h2><span class="header-section-number">5.1</span> Does the number of COVID tests follow a Poisson distribution?</h2>
-<p><strong>Do a chi-square hypothesis test</strong></p>
-<p>To test this question, we will use a chi-square…</p>
-<p><span class="math inline">\(H_0:\)</span> The number of COVID tests does not follow a Poisson distribution</p>
-<p><span class="math inline">\(H_1:\)</span> The number of COVID tests does follow a Poisson distribution</p>
+<p>To test this question, we will use a <strong>chi-square goodness-of-fit test</strong> and conduct the test through a hypothesis testing framework. The <strong>chi-square goodness-of-fit test</strong> was chosen because we have one categorical variable(covid_tests) and one population(DATA2002), which we want to determine whether the data follows a Poisson distribution.</p>
+<p>For a Poisson distribution, we need to find the average rate <span class="math inline">\(\lambda\)</span> per unit of time. Since we do not know the exact timeframe in which individuals took covid tests, we can assume that it is finite and is between March 2020 to September 2020. To find lambda, we use the following equation:</p>
+<p><span class="math inline">\(\lambda = \frac{1}{\mu}\)</span> where <span class="math inline">\(\mu\)</span> is the average number of covid tests.</p>
+<p><span class="math inline">\(H_0:\)</span> The number of COVID tests follows a Poisson distribution</p>
+<p><span class="math inline">\(H_1:\)</span> The number of COVID tests does not follow a Poisson distribution</p>
 <p><strong>Assumptions</strong>: <strong>Need to apply filter</strong></p>
 <p><strong>Decision</strong>:</p>
 </div>

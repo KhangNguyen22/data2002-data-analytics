@@ -15,6 +15,7 @@ library(janitor)
 library(ggplot2)
 library(skimr)
 library(visdat)
+library(gt)
 ```
 # Executive summary
 * Item 1
@@ -22,8 +23,12 @@ What are we analysing?
 
 * Item 2
 
+## NEED TO FINISH
+
 # Introduction
 This report...
+
+## NEED TO FINISH
 
 # Data Cleaning key points
 
@@ -140,30 +145,48 @@ Yes, this is a sample with only 174 people which is less than the total populati
 
 * **Selection bias**: Due to the sampling design through voluntary participation, this meant that only motivated students who read the Edstem post were selected to participate. A reduction in selection bias would not occur if a larger sample was taken through greater advertising.
 
-* **Sensitive questions**: Some of the questions in the survey were sensitive questions, which prompted participants to fill in answers that are not objectively true. For example, the **height variable** would have the tendency for participants to increase their height due to the fear of appearing short. Another variable would be the **exercising variable** where participants may want to appear fitter by exaggerating how many hours they exercise. **Paid work** would have a bias of increased hours as participants may want to appear to be hard working. 
 
-**Glasses** variable would have bias from
+* **Sensitive questions**: Some of the questions in the survey were sensitive questions, which prompted participants to fill in answers that are not objectively true. 
+  * The **height variable** would have the tendency for participants to increase their height due to the fear of appearing short. 
+  * Another variable would be the **exercising variable** where participants may want to appear fitter by exaggerating how many hours they exercise. 
+  * **Paid work** would have a bias of increased hours as participants may want to appear to be hard working.
+  * **Glasses** variable may have bias as individuals may be insecure about wearing glasses and so opt not to choose not wearing glasses or contacts.
 
 
-* **Recall Bias**: **Floss frequency** and **dentist** variable suffer from recall bias as participants may want to appear more
+* **Recall Bias**: **Floss frequency** and **dentist** variable suffer from recall bias as participants personal perception may skew their memory of these variables. The desire to appear hygienic and ideal can make the data inaccurate and unrealistic.
 
 
 
 ## Are there any questions that needed improvement to generate useful data?
 
+## NEED TO FINISH
 Yes!
 Shoe size is impossible to clean! Why?
 
 
 # Results
 ## Does the number of COVID tests follow a Poisson distribution?
-**Do a chi-square hypothesis test**
 
-To test this question, we will use a chi-square...
+To test this question, we will use a **chi-square goodness-of-fit test** and conduct the test through a hypothesis testing framework. The **chi-square goodness-of-fit test** was chosen because we have one categorical variable(covid_tests) and one population(DATA2002), which we want to determine whether the data follows a Poisson distribution.
 
-$H_0:$ The number of COVID tests does not follow a Poisson distribution
+For a Poisson distribution, we need to find the average rate $\lambda$ per unit of time. Since we do not know the exact timeframe in which individuals took covid tests, we can assume that it is finite and is between March 2020 to September 2020. To find lambda, we use the following equation: 
 
-$H_1:$ The number of COVID tests does follow a Poisson distribution
+$\lambda = \frac{1}{\mu}$ where $\mu$ is the average number of covid tests.
+
+```{r, fig.width=3,fig.height=3,fig.align=center}
+a <- table(clean_df$covid_tests)
+col_names <- c(names(a))
+results <- as.vector(a)
+freq_df <- data.frame(number_of_covid_test=col_names,freq=results)
+# Display the current data frequency
+clean_df %>% ggplot(aes(x=covid_tests)) +geom_bar()
+freq_df %>% gt()
+```
+
+
+$H_0:$ The number of COVID tests follows a Poisson distribution
+
+$H_1:$ The number of COVID tests does not follow a Poisson distribution
 
 **Assumptions**:
 **Need to apply filter**
