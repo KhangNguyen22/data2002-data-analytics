@@ -171,17 +171,29 @@ To test this question, we will use a **chi-square goodness-of-fit test** and con
 
 For a Poisson distribution, we need to find the average rate $\lambda$ per unit of time. Since we do not know the exact timeframe in which individuals took covid tests, we can assume that it is finite and is between March 2020 to September 2020. To find lambda, we use the following equation: 
 
-$\lambda = \frac{1}{\mu}$ where $\mu$ is the average number of covid tests.
+$\lambda = \mu$ where $\mu$ is the average number of covid tests in the interval.
 
-```{r, fig.width=3,fig.height=3,fig.align=center}
+```{r, fig.caption="figure 1:covid test frequency table", fig.width=3,fig.height=3,fig.align='center'}
 a <- table(clean_df$covid_tests)
-col_names <- c(names(a))
+col_names <- c(as.numeric(names(a)))
 results <- as.vector(a)
 freq_df <- data.frame(number_of_covid_test=col_names,freq=results)
 # Display the current data frequency
-clean_df %>% ggplot(aes(x=covid_tests)) +geom_bar()
 freq_df %>% gt()
 ```
+```{r, fig.caption="figure 2:covid test frequency bar chart", fig.width=3,fig.height=3,fig.align='center'}
+clean_df %>% ggplot(aes(x=covid_tests)) +geom_bar()
+```
+Figure 2 bar chart visualise the data in figure 1. We will use the figure 1 to calculate $\lambda$.
+```{r, fig.cap="This is our lambda value"}
+n = sum(results)
+num_groups = length(col_names)
+lam = sum(results*col_names)/n
+print(lam)
+p <- dpois(col_names,lambda = lam)
+```
+
+
 
 
 $H_0:$ The number of COVID tests follows a Poisson distribution
@@ -189,6 +201,7 @@ $H_0:$ The number of COVID tests follows a Poisson distribution
 $H_1:$ The number of COVID tests does not follow a Poisson distribution
 
 **Assumptions**:
+
 **Need to apply filter**
 
 **Decision**:
