@@ -1587,19 +1587,95 @@ div.tocify {
 <div id="executive-summary" class="section level1">
 <h1><span class="header-section-number">1</span> Executive summary</h1>
 <ul>
-<li>Item 1</li>
-<li>Item 2</li>
+<li><p>Item 1 What are we analysing?</p></li>
+<li><p>Item 2</p></li>
 </ul>
 </div>
 <div id="data-cleaning-key-points" class="section level1">
 <h1><span class="header-section-number">2</span> Data Cleaning key points</h1>
-<p><strong>Lost a mark if they didn’t remove nonsensical values or otherwise didn’t clean the data before testing or didn’t talk about how the data was cleaned.</strong></p>
-<p>Load data into R Clean Data (1. Use one code chunk to perform all cleaning at once. 2. Write a couple of paragraphs describing rationale are all that’s required)</p>
-<pre class="r"><code>print(&quot;hello&quot;)</code></pre>
-<pre><code>## [1] &quot;hello&quot;</code></pre>
-<p>In</p>
-<p>Every graph or plot needs to referenced in text and explained.</p>
-<p>Perform analysis.</p>
+<pre class="r"><code># CITATION
+raw = read_csv(&quot;class_survey.csv&quot;)
+# changes all spaces into underscores and lowercases the whole string for column names
+clean_df = raw %&gt;% janitor::clean_names()
+
+## Remove people who automatically submitted without doing survey. Reduce from 174 rows to 172 rows
+clean_df &lt;- clean_df[rowSums(is.na(clean_df))&lt;20,]
+
+# Shorten the names of specific columns
+colnames(clean_df) = stringr::str_replace(string = colnames(clean_df),
+                                   pattern = &quot;what_is_your_&quot;,
+                                   replacement = &quot;&quot;
+                                   )
+colnames(clean_df) = stringr::str_replace(string = colnames(clean_df),
+                                   pattern = &quot;on_average_how_many_hours_per_week_did_you_&quot;,
+                                   replacement = &quot;&quot;
+                                   )
+colnames(clean_df)[2] = &quot;covid_tests&quot;
+colnames(clean_df)[4] = &quot;postcode&quot;
+colnames(clean_df)[5] = &quot;dentist&quot;
+colnames(clean_df)[6] = &quot;university_work&quot;
+colnames(clean_df)[7] = &quot;social_media&quot;
+colnames(clean_df)[8] = &quot;dog_or_cat&quot;
+colnames(clean_df)[9] = &quot;live_with_parents&quot;
+colnames(clean_df)[10] = &quot;exercising&quot;
+colnames(clean_df)[12] = &quot;asthma&quot;
+colnames(clean_df)[13] = &quot;paid_work&quot;
+colnames(clean_df)[14] = &quot;fav_season&quot;
+colnames(clean_df)[16] = &quot;height&quot;
+colnames(clean_df)[17] = &quot;floss_frequency&quot;
+colnames(clean_df)[18] = &quot;glasses&quot;
+colnames(clean_df)[20] = &quot;steak_preference&quot;
+colnames(clean_df)[21] = &quot;stress_level&quot;
+## Change postcode to character
+clean_df = clean_df %&gt;% mutate(
+  postcode = as.character(postcode)
+)
+## Change all height to cm
+clean_df = clean_df %&gt;% dplyr::mutate(
+  height = dplyr::case_when(
+    height &lt; 2.3 ~ height*100,
+    TRUE ~ height
+  )
+)
+
+## Group gender into 3 categories 
+
+clean_df = clean_df %&gt;% mutate(
+  gender = toupper(gender),
+  gender = stringr::str_sub(gender, start = 1, end = 1),
+  gender = case_when(
+    gender == &quot;F&quot; ~ &quot;Female&quot;,
+    gender == &quot;M&quot; ~ &quot;Male&quot;,
+    gender == &quot;N&quot; ~ &quot;Non-binary&quot;
+  )
+)
+steak_levels = c(&quot;Rare&quot;, &quot;Medium-rare&quot;, &quot;Medium&quot;, 
+                 &quot;Medium-well done&quot;, &quot;Well done&quot;, 
+      
+                            &quot;I don&#39;t eat beef&quot;)
+clean_df = clean_df %&gt;% 
+  mutate(
+    steak_preference = factor(steak_preference, levels = steak_levels)
+  )
+# Change timestamp to POSIXct for easier handling
+clean_df$timestamp &lt;-  lubridate::dmy_hms(clean_df$timestamp)
+
+# Create 2 other dataframes based on clean_df ready for hypothesis testing
+df_postcode &lt;- clean_df[is.na(clean_df$postcode)==FALSE,]
+df_exercising &lt;- clean_df[is.na(clean_df$exercising)==FALSE,]</code></pre>
+<ul>
+<li><p><strong>Imported class_survey.csv</strong> into R and cleaned the data by shortening the column names and renamed columns. This improves readibility as well as conciseness.</p></li>
+<li><p><strong>Removed 2 survey observations</strong> where survey was submitted without any input because these observations are useless and do not add any new information to the survey data.</p></li>
+<li><p><strong>Converted postcode into character</strong> data type as postcode is a categorical variable. I changed all height into cm, grouped gender into 3 categories (male,female and non-binary) and gave an order to steak preferences output.</p></li>
+<li><p>Further, I changed the timestamp variable from character data type to POSIXct data type for easier handling of date time object.</p></li>
+<li><p>After cleaning, there are 3 main data frames used in this report.</p>
+<ol style="list-style-type: decimal">
+<li><strong>clean_df</strong> = This data frame contains <strong>172 rows</strong> of observations, containing all the observations that have a covid tests value. This data frame will be used in <strong>section 2.4</strong></li>
+<li><strong>df_postcode</strong> = This data frame is based on the clean_df and contains only <strong>156 rows</strong> of observations due to the removal of NA values in the postcode variable. This dataframe will be used in <strong>section 2.5</strong>.</li>
+<li><strong>df_exercising</strong> = This data frame is based on the clean_df and contains only <strong>166 rows</strong> of observations due to the removal of NA values in the postcode variable. This dataframe will be used in <strong>section 2.5</strong>.</li>
+</ol></li>
+</ul>
+<p>I only fully cleaned variables(postcode and exercising) for which I will use for our data analysis by removing null values and checking if the values of the variable made sense.</p>
 <div id="is-this-a-random-sample-of-data2002-students" class="section level2">
 <h2><span class="header-section-number">2.1</span> Is this a random sample of DATA2002 students?</h2>
 <p>To answer this question, we need to define what is a random sample. A random sample is a</p>
@@ -1619,6 +1695,8 @@ div.tocify {
 <h2><span class="header-section-number">2.4</span> Does the number of COVID tests follow a Poisson distribution?</h2>
 <p><strong>Do a chi-square hypothesis test</strong> To test this question, we will use a chi-square…</p>
 <p><span class="math inline">\(H_0:\)</span> The number of COVID tests does not follow a Poisson distribution <span class="math inline">\(H_1:\)</span> The number of COVID tests does follow a Poisson distribution</p>
+<p><strong>Assumptions</strong>: <strong>Need to apply filter</strong></p>
+<p><strong>Decision</strong>:</p>
 </div>
 <div id="perform-two-other-hypothesis-tests.-give-some-rationale-for-why-you-selected-these-hypothesis-tests-and-interpret-the-results.-be-sure-to-mention-any-limitations-in-the-data-that-may-impact-your-findings." class="section level2">
 <h2><span class="header-section-number">2.5</span> Perform two other hypothesis tests. Give some rationale for why you selected these hypothesis tests and interpret the results. Be sure to mention any limitations in the data that may impact your findings.</h2>
