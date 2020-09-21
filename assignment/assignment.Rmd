@@ -120,7 +120,7 @@ clean_df$timestamp <-  lubridate::dmy_hms(clean_df$timestamp)
 # Create 2 other dataframes based on clean_df ready for hypothesis testing
 df_postcode <- clean_df[is.na(clean_df$postcode)==FALSE,]
 df_exercising <- clean_df[is.na(clean_df$exercising)==FALSE,]
-# glimpse(clean_df)
+glimpse(clean_df)
 ```
 
 
@@ -146,7 +146,7 @@ To answer this question, we need to define what is a random sample.
 
 A  sample is a subset of population. A random sample is a sample where each person has an equal independent probability of being chosen from a population. 
 
-Yes, this is a sample with only 174 people which is less than the total population, but is it  random?  The test data was collected  through a Google form survey via voluntary choice and was advertised on Edstem. This suggests that the sample is not random as survey participants were more likely to be studious students who read Edstem posts and so is not representative of the true population of DATA2002. Hence, **no**, this is not a random sample of DATA2002. To be random would require a random selection from a database of DATA2002 students that made it compulsory to do the survey.
+Yes, this is a sample with only 174 people which is less than the total population of 572 students, but is it  random?  The test data was collected  through a Google form survey via voluntary choice and was advertised on Edstem. This suggests that the sample is not random as survey participants were more likely to be studious students who read Edstem posts and so is not representative of the true population of DATA2002. Hence, **no**, this is not a random sample of DATA2002. To be random would require a random selection from a database of DATA2002 students that made it compulsory to do the survey.
 
 ## What are the potential biases? Which variables are most likely to be subjected to this bias?
 **Potential biases**:
@@ -244,13 +244,39 @@ As our p-value is less than 5% significance level, we reject the null hypothesis
 ## Perform two other hypothesis tests. 
 ### Give some rationale for why you selected these hypothesis tests and interpret the results. Be sure to mention any limitations in the data that may impact your findings.
 
-Question: Is there a correlation between DATA2002 students who live with their parents spend a greater time exercising 
+Question: Is there a correlation between DATA2002 students who live with their parents and the hours spent exercising per week?
 
+
+**Do a chi-square hypothesis test of Independence**
+To test this question, we will use a **chi-square hypothesis test of Independence**. The dataframe used in this question will be df_exercising instead of df_clean, because in df_exercising, the null values for exercising column have been removed.
+
+WHY? - To use a test of independence, we need one population (DATA2002 students) and 2 categorical variables (lives with their parents & exercising). We want to test if the 2 variables are independent, hence the test of independence is most appropriate.
+
+
+$H_0:$ Living with parent status is independent of the hours spent exercising per week. 
+
+$H_1:$  Living with parent status is dependent on the hours spent exercising per week.
+
+**Assumptions**:
+* Every expected cell count is $\geq$ 5. To check this:
+**Observed cell table**
+```{r}
+table(df_exercising$live_with_parents,df_exercising$exercising)
+```
+
+
+
+
+**Need to apply filter**
+
+**Decision**:
+
+All we know is there is a correlation between the 2 variables in the dataset, but we don't know what causes it.
+Limitations of data
 
 **Do a chi-square hypothesis test of Independence**
  Lives with Parents v hours a week spent exercising
 To test this question, we will use a chi-square...
-WHY?
 
 $H_0:$ Lives
 $H_1:$ The number of COVID tests does follow a Poisson distribution
@@ -260,19 +286,7 @@ $H_1:$ The number of COVID tests does follow a Poisson distribution
 **Need to apply filter**
 
 **Decision**:
-
-**Do a chi-square hypothesis test of Independence**
- Lives with Parents v hours a week spent exercising
-To test this question, we will use a chi-square...
-
-$H_0:$ Lives
-$H_1:$ The number of COVID tests does follow a Poisson distribution
-
-**Assumptions**:
-
-**Need to apply filter**
-
-**Decision**:
+All we know We don't know if
 
 # Conclusion 
 To conclude, we 
