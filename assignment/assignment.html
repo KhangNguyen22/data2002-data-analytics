@@ -1687,7 +1687,30 @@ clean_df$timestamp &lt;-  lubridate::dmy_hms(clean_df$timestamp)
 # Create 2 other dataframes based on clean_df ready for hypothesis testing
 df_postcode &lt;- clean_df[is.na(clean_df$postcode)==FALSE,]
 df_exercising &lt;- clean_df[is.na(clean_df$exercising)==FALSE,]
-# glimpse(clean_df)</code></pre>
+glimpse(clean_df)</code></pre>
+<pre><code>## Rows: 172
+## Columns: 21
+## $ timestamp         &lt;dttm&gt; 2020-09-02 22:07:21, 2020-09-02 22:08:45, 2020-09-…
+## $ covid_tests       &lt;dbl&gt; 1, 0, 0, 5, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0, 0, …
+## $ gender            &lt;chr&gt; &quot;Female&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;…
+## $ postcode          &lt;chr&gt; &quot;2154&quot;, &quot;441000&quot;, &quot;2120&quot;, &quot;511442&quot;, &quot;2042&quot;, &quot;2046&quot;,…
+## $ dentist           &lt;chr&gt; &quot;Less than 6 months&quot;, &quot;More than 2 years&quot;, &quot;Less th…
+## $ university_work   &lt;dbl&gt; 38, 40, 3, 40, 6, 30, 36, 50, 40, 20, 50, 25, 30, N…
+## $ social_media      &lt;chr&gt; &quot;N/A&quot;, &quot;Bilibili / Youtobe&quot;, &quot;Facebook&quot;, &quot;WeChat&quot;, …
+## $ dog_or_cat        &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;…
+## $ live_with_parents &lt;chr&gt; &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;N…
+## $ exercising        &lt;dbl&gt; 0.0, 2.0, 8.0, 8.0, 5.0, 4.0, 5.0, 3.0, 0.0, 7.0, 3…
+## $ eye_colour        &lt;chr&gt; &quot;Brown&quot;, &quot;Black&quot;, &quot;Black&quot;, &quot;black&quot;, &quot;Black&quot;, &quot;Green…
+## $ asthma            &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;…
+## $ paid_work         &lt;dbl&gt; 0, 0, 2, 0, 8, 10, 10, NA, 10, 10, 0, 12, 0, 0, 0, …
+## $ fav_season        &lt;chr&gt; &quot;Winter&quot;, &quot;Autumn&quot;, &quot;Autumn&quot;, &quot;Spring&quot;, &quot;Autumn&quot;, &quot;…
+## $ shoe_size         &lt;dbl&gt; 6.0, 42.0, 10.0, 45.0, NA, 12.0, 11.0, 13.0, 7.0, 4…
+## $ height            &lt;dbl&gt; 160, 178, 178, 175, NA, 193, 174, 187, 165, 176, 16…
+## $ floss_frequency   &lt;chr&gt; &quot;Weekly&quot;, &quot;Less than once a week&quot;, &quot;Less than once …
+## $ glasses           &lt;chr&gt; &quot;Yes&quot;, &quot;No&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;Yes&quot;…
+## $ dominant_hand     &lt;chr&gt; &quot;Right handed&quot;, &quot;Right handed&quot;, &quot;Right handed&quot;, &quot;Ri…
+## $ steak_preference  &lt;fct&gt; Medium-rare, Medium, I don&#39;t eat beef, Medium, Medi…
+## $ stress_level      &lt;dbl&gt; 7, 9, 4, 9, 2, 3, 6, 6, 5, 7, 6, 8, 6, 4, 9, 1, 4, …</code></pre>
 <ul>
 <li><p><strong>Imported class_survey.csv</strong> into R and cleaned the data by shortening the column names and renamed columns. This improves readibility as well as conciseness.</p></li>
 <li><p><strong>Removed 2 survey observations</strong> where survey was submitted without any input because these observations are useless and do not add any new information to the survey data.</p></li>
@@ -1708,7 +1731,7 @@ df_exercising &lt;- clean_df[is.na(clean_df$exercising)==FALSE,]
 <h2><span class="header-section-number">4.1</span> Is this a random sample of DATA2002 students?</h2>
 <p>To answer this question, we need to define what is a random sample.</p>
 <p>A sample is a subset of population. A random sample is a sample where each person has an equal independent probability of being chosen from a population.</p>
-<p>Yes, this is a sample with only 174 people which is less than the total population, but is it random? The test data was collected through a Google form survey via voluntary choice and was advertised on Edstem. This suggests that the sample is not random as survey participants were more likely to be studious students who read Edstem posts and so is not representative of the true population of DATA2002. Hence, <strong>no</strong>, this is not a random sample of DATA2002. To be random would require a random selection from a database of DATA2002 students that made it compulsory to do the survey.</p>
+<p>Yes, this is a sample with only 174 people which is less than the total population of 572 students, but is it random? The test data was collected through a Google form survey via voluntary choice and was advertised on Edstem. This suggests that the sample is not random as survey participants were more likely to be studious students who read Edstem posts and so is not representative of the true population of DATA2002. Hence, <strong>no</strong>, this is not a random sample of DATA2002. To be random would require a random selection from a database of DATA2002 students that made it compulsory to do the survey.</p>
 </div>
 <div id="what-are-the-potential-biases-which-variables-are-most-likely-to-be-subjected-to-this-bias" class="section level2">
 <h2><span class="header-section-number">4.2</span> What are the potential biases? Which variables are most likely to be subjected to this bias?</h2>
@@ -1750,7 +1773,7 @@ freq_df %&gt;% gt()</code></pre>
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#gyipqwceyo .gt_table {
+#lcoualmepn .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1775,7 +1798,7 @@ freq_df %&gt;% gt()</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#gyipqwceyo .gt_heading {
+#lcoualmepn .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1787,7 +1810,7 @@ freq_df %&gt;% gt()</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#gyipqwceyo .gt_title {
+#lcoualmepn .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1797,7 +1820,7 @@ freq_df %&gt;% gt()</code></pre>
   border-bottom-width: 0;
 }
 
-#gyipqwceyo .gt_subtitle {
+#lcoualmepn .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1807,13 +1830,13 @@ freq_df %&gt;% gt()</code></pre>
   border-top-width: 0;
 }
 
-#gyipqwceyo .gt_bottom_border {
+#lcoualmepn .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#gyipqwceyo .gt_col_headings {
+#lcoualmepn .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1828,7 +1851,7 @@ freq_df %&gt;% gt()</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#gyipqwceyo .gt_col_heading {
+#lcoualmepn .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1848,7 +1871,7 @@ freq_df %&gt;% gt()</code></pre>
   overflow-x: hidden;
 }
 
-#gyipqwceyo .gt_column_spanner_outer {
+#lcoualmepn .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1860,15 +1883,15 @@ freq_df %&gt;% gt()</code></pre>
   padding-right: 4px;
 }
 
-#gyipqwceyo .gt_column_spanner_outer:first-child {
+#lcoualmepn .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#gyipqwceyo .gt_column_spanner_outer:last-child {
+#lcoualmepn .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#gyipqwceyo .gt_column_spanner {
+#lcoualmepn .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1880,7 +1903,7 @@ freq_df %&gt;% gt()</code></pre>
   width: 100%;
 }
 
-#gyipqwceyo .gt_group_heading {
+#lcoualmepn .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1902,7 +1925,7 @@ freq_df %&gt;% gt()</code></pre>
   vertical-align: middle;
 }
 
-#gyipqwceyo .gt_empty_group_heading {
+#lcoualmepn .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1917,15 +1940,15 @@ freq_df %&gt;% gt()</code></pre>
   vertical-align: middle;
 }
 
-#gyipqwceyo .gt_from_md > :first-child {
+#lcoualmepn .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#gyipqwceyo .gt_from_md > :last-child {
+#lcoualmepn .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#gyipqwceyo .gt_row {
+#lcoualmepn .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1944,7 +1967,7 @@ freq_df %&gt;% gt()</code></pre>
   overflow-x: hidden;
 }
 
-#gyipqwceyo .gt_stub {
+#lcoualmepn .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1956,7 +1979,7 @@ freq_df %&gt;% gt()</code></pre>
   padding-left: 12px;
 }
 
-#gyipqwceyo .gt_summary_row {
+#lcoualmepn .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1966,7 +1989,7 @@ freq_df %&gt;% gt()</code></pre>
   padding-right: 5px;
 }
 
-#gyipqwceyo .gt_first_summary_row {
+#lcoualmepn .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1976,7 +1999,7 @@ freq_df %&gt;% gt()</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#gyipqwceyo .gt_grand_summary_row {
+#lcoualmepn .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1986,7 +2009,7 @@ freq_df %&gt;% gt()</code></pre>
   padding-right: 5px;
 }
 
-#gyipqwceyo .gt_first_grand_summary_row {
+#lcoualmepn .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1996,11 +2019,11 @@ freq_df %&gt;% gt()</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#gyipqwceyo .gt_striped {
+#lcoualmepn .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#gyipqwceyo .gt_table_body {
+#lcoualmepn .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2009,7 +2032,7 @@ freq_df %&gt;% gt()</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#gyipqwceyo .gt_footnotes {
+#lcoualmepn .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2023,13 +2046,13 @@ freq_df %&gt;% gt()</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#gyipqwceyo .gt_footnote {
+#lcoualmepn .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#gyipqwceyo .gt_sourcenotes {
+#lcoualmepn .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2043,46 +2066,46 @@ freq_df %&gt;% gt()</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#gyipqwceyo .gt_sourcenote {
+#lcoualmepn .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#gyipqwceyo .gt_left {
+#lcoualmepn .gt_left {
   text-align: left;
 }
 
-#gyipqwceyo .gt_center {
+#lcoualmepn .gt_center {
   text-align: center;
 }
 
-#gyipqwceyo .gt_right {
+#lcoualmepn .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#gyipqwceyo .gt_font_normal {
+#lcoualmepn .gt_font_normal {
   font-weight: normal;
 }
 
-#gyipqwceyo .gt_font_bold {
+#lcoualmepn .gt_font_bold {
   font-weight: bold;
 }
 
-#gyipqwceyo .gt_font_italic {
+#lcoualmepn .gt_font_italic {
   font-style: italic;
 }
 
-#gyipqwceyo .gt_super {
+#lcoualmepn .gt_super {
   font-size: 65%;
 }
 
-#gyipqwceyo .gt_footnote_marks {
+#lcoualmepn .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="gyipqwceyo" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="lcoualmepn" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -2215,17 +2238,212 @@ test1</code></pre>
 <h2><span class="header-section-number">5.2</span> Perform two other hypothesis tests.</h2>
 <div id="give-some-rationale-for-why-you-selected-these-hypothesis-tests-and-interpret-the-results.-be-sure-to-mention-any-limitations-in-the-data-that-may-impact-your-findings." class="section level3">
 <h3><span class="header-section-number">5.2.1</span> Give some rationale for why you selected these hypothesis tests and interpret the results. Be sure to mention any limitations in the data that may impact your findings.</h3>
-<p>Question: Is there a correlation between DATA2002 students who live with their parents spend a greater time exercising</p>
+<p>Question: Is there a correlation between DATA2002 students who live with their parents and the hours spent exercising per week?</p>
+<p><strong>Do a chi-square hypothesis test of Independence</strong> To test this question, we will use a <strong>chi-square hypothesis test of Independence</strong>. The dataframe used in this question will be df_exercising instead of df_clean, because in df_exercising, the null values for exercising column have been removed.</p>
+<p>WHY? - To use a test of independence, we need one population (DATA2002 students) and 2 categorical variables (lives with their parents &amp; exercising). We want to test if the 2 variables are independent, hence the test of independence is most appropriate.</p>
+<p><strong>Hypothesis test</strong></p>
+<p><span class="math inline">\(H_0:\)</span> Living with parent status is independent of the hours spent exercising per week.</p>
+<p><span class="math inline">\(H_1:\)</span> Living with parent status is dependent on the hours spent exercising per week.</p>
+<p><strong>Assumptions</strong>: * Every expected cell count is <span class="math inline">\(\geq\)</span> 5. To check this: <strong>Observed cell table</strong></p>
+<pre class="r"><code>ob &lt;- table(df_exercising$live_with_parents,df_exercising$exercising)
+# rowSums(ob)
+knitr::kable(ob,caption=&quot;Figure 4: Observed cell table&quot;)</code></pre>
+<table>
+<caption>Figure 4: Observed cell table</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">0</th>
+<th align="right">0.5</th>
+<th align="right">1</th>
+<th align="right">2</th>
+<th align="right">2.5</th>
+<th align="right">3</th>
+<th align="right">3.5</th>
+<th align="right">4</th>
+<th align="right">5</th>
+<th align="right">6</th>
+<th align="right">7</th>
+<th align="right">8</th>
+<th align="right">9</th>
+<th align="right">10</th>
+<th align="right">12</th>
+<th align="right">14</th>
+<th align="right">16</th>
+<th align="right">20</th>
+<th align="right">21</th>
+<th align="right">70</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">No</td>
+<td align="right">6</td>
+<td align="right">1</td>
+<td align="right">8</td>
+<td align="right">7</td>
+<td align="right">1</td>
+<td align="right">7</td>
+<td align="right">1</td>
+<td align="right">5</td>
+<td align="right">12</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">Yes</td>
+<td align="right">9</td>
+<td align="right">1</td>
+<td align="right">5</td>
+<td align="right">8</td>
+<td align="right">1</td>
+<td align="right">12</td>
+<td align="right">2</td>
+<td align="right">12</td>
+<td align="right">20</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">11</td>
+<td align="right">1</td>
+<td align="right">7</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>f &lt;-chisq.test(ob) 
+knitr::kable(round(f$expected,2),caption=&quot;Figure 5: Expected cell table&quot;)</code></pre>
+<table style="width:100%;">
+<caption>Figure 5: Expected cell table</caption>
+<colgroup>
+<col width="3%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="5%"></col>
+<col width="4%"></col>
+<col width="5%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+<col width="4%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">0</th>
+<th align="right">0.5</th>
+<th align="right">1</th>
+<th align="right">2</th>
+<th align="right">2.5</th>
+<th align="right">3</th>
+<th align="right">3.5</th>
+<th align="right">4</th>
+<th align="right">5</th>
+<th align="right">6</th>
+<th align="right">7</th>
+<th align="right">8</th>
+<th align="right">9</th>
+<th align="right">10</th>
+<th align="right">12</th>
+<th align="right">14</th>
+<th align="right">16</th>
+<th align="right">20</th>
+<th align="right">21</th>
+<th align="right">70</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">No</td>
+<td align="right">5.06</td>
+<td align="right">0.67</td>
+<td align="right">4.39</td>
+<td align="right">5.06</td>
+<td align="right">0.67</td>
+<td align="right">6.41</td>
+<td align="right">1.01</td>
+<td align="right">5.73</td>
+<td align="right">10.8</td>
+<td align="right">3.04</td>
+<td align="right">4.05</td>
+<td align="right">3.71</td>
+<td align="right">0.34</td>
+<td align="right">3.04</td>
+<td align="right">0.34</td>
+<td align="right">0.34</td>
+<td align="right">0.34</td>
+<td align="right">0.34</td>
+<td align="right">0.34</td>
+<td align="right">0.34</td>
+</tr>
+<tr class="even">
+<td align="left">Yes</td>
+<td align="right">9.94</td>
+<td align="right">1.33</td>
+<td align="right">8.61</td>
+<td align="right">9.94</td>
+<td align="right">1.33</td>
+<td align="right">12.59</td>
+<td align="right">1.99</td>
+<td align="right">11.27</td>
+<td align="right">21.2</td>
+<td align="right">5.96</td>
+<td align="right">7.95</td>
+<td align="right">7.29</td>
+<td align="right">0.66</td>
+<td align="right">5.96</td>
+<td align="right">0.66</td>
+<td align="right">0.66</td>
+<td align="right">0.66</td>
+<td align="right">0.66</td>
+<td align="right">0.66</td>
+<td align="right">0.66</td>
+</tr>
+</tbody>
+</table>
+<p>In Figure 4, we can see our observed cell table. This table is used to generate the figure 5 Expected table by using the following formula:</p>
+<p><span class="math display">\[e_{ij} = \frac{y_{i\bullet} y_{\bullet j}}{n}\]</span> where <span class="math inline">\(y_{i\bullet}\)</span> is the marginal row total and <span class="math inline">\(y_{\bullet j}\)</span> is the marginal column total.</p>
+<p>From Figure 5, we see that there are some expected cell counts that are less than 5, hence we should merge columns, opting for right to left merge.</p>
+<pre class="r"><code>chisq.test(df_exercising$live_with_parents,df_exercising$exercising)</code></pre>
+<pre><code>## Warning in stats::chisq.test(x, y, ...): Chi-squared approximation may be
+## incorrect</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test
+## 
+## data:  df_exercising$live_with_parents and df_exercising$exercising
+## X-squared = 19.996, df = 19, p-value = 0.3948</code></pre>
+<p><strong>Need to apply filter</strong></p>
+<p><strong>Decision</strong>:</p>
+<p>All we know is there is a correlation between the 2 variables in the dataset, but we don’t know what causes it. Limitations of data</p>
 <p><strong>Do a chi-square hypothesis test of Independence</strong> Lives with Parents v hours a week spent exercising To test this question, we will use a chi-square…</p>
 <p><span class="math inline">\(H_0:\)</span> Lives <span class="math inline">\(H_1:\)</span> The number of COVID tests does follow a Poisson distribution</p>
 <p><strong>Assumptions</strong>:</p>
 <p><strong>Need to apply filter</strong></p>
-<p><strong>Decision</strong>:</p>
-<p><strong>Do a chi-square hypothesis test of Independence</strong> Lives with Parents v hours a week spent exercising To test this question, we will use a chi-square…</p>
-<p><span class="math inline">\(H_0:\)</span> Lives <span class="math inline">\(H_1:\)</span> The number of COVID tests does follow a Poisson distribution</p>
-<p><strong>Assumptions</strong>:</p>
-<p><strong>Need to apply filter</strong></p>
-<p><strong>Decision</strong>:</p>
+<p><strong>Decision</strong>: All we know We don’t know if</p>
 </div>
 </div>
 </div>

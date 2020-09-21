@@ -252,6 +252,7 @@ To test this question, we will use a **chi-square hypothesis test of Independenc
 
 WHY? - To use a test of independence, we need one population (DATA2002 students) and 2 categorical variables (lives with their parents & exercising). We want to test if the 2 variables are independent, hence the test of independence is most appropriate.
 
+**Hypothesis test**
 
 $H_0:$ Living with parent status is independent of the hours spent exercising per week. 
 
@@ -260,8 +261,23 @@ $H_1:$  Living with parent status is dependent on the hours spent exercising per
 **Assumptions**:
 * Every expected cell count is $\geq$ 5. To check this:
 **Observed cell table**
-```{r}
-table(df_exercising$live_with_parents,df_exercising$exercising)
+```{r, warning=FALSE}
+ob <- table(df_exercising$live_with_parents,df_exercising$exercising)
+# rowSums(ob)
+knitr::kable(ob,caption="Figure 4: Observed cell table")
+f <-chisq.test(ob) 
+knitr::kable(round(f$expected,2),caption="Figure 5: Expected cell table")
+```
+In Figure 4, we can see our observed cell table. This table is used to generate the figure 5 Expected table by using the following formula:
+
+$$e_{ij} = \frac{y_{i\bullet} y_{\bullet j}}{n}$$ where $y_{i\bullet}$ is the marginal row total and $y_{\bullet j}$ is the marginal column total.
+
+
+From Figure 5, we see that there are some expected cell counts that are less than 5, hence we should merge columns, opting for right to left merge.
+
+
+```{r 2_p_value, message=FALSE}
+chisq.test(df_exercising$live_with_parents,df_exercising$exercising)
 ```
 
 
