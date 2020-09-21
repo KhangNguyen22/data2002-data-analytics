@@ -1587,12 +1587,8 @@ div.tocify {
 <div id="executive-summary" class="section level1">
 <h1><span class="header-section-number">1</span> Executive summary</h1>
 <ul>
-<li><p>Item 1 What are we analysing?</p></li>
-<li><p>Item 2</p></li>
+<li>This report uses the hypothesis testing framework to answer questions relating to the DATA2002 class survey 2020. It was discovered that the number of covid tests appears to follow a Poisson distribution, however, we unsure if this is a fact. Further, there appears to be no relationship between the variable of student’s living with their parents and the hours spent exercising per week. Moreover, there appears that there is no relationship between favourite season and asthma. Due to the limited and non-randomised data collected by the survey, the findings in this report are inaccurate of the true behaviour of DATA2002 students and require further research to enhance reliability/accuracy of findings.</li>
 </ul>
-<div id="need-to-finish" class="section level2">
-<h2><span class="header-section-number">1.1</span> NEED TO FINISH</h2>
-</div>
 </div>
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">2</span> Introduction</h1>
@@ -1603,9 +1599,6 @@ div.tocify {
 <li><p>The third question focuses on whether there is a relationship between favourite season and asthma. This question is important as it is natural to believe that a a person who suffers from asthma may opt to choose a favourite season, where they suffer the least. To answer this question, we will use a <strong>Chi-square test of independence</strong>.</p></li>
 </ol>
 <p>This report uses the hypothesis testing framework to answer the above questions.</p>
-<div id="need-to-finish-1" class="section level2">
-<h2><span class="header-section-number">2.1</span> NEED TO FINISH</h2>
-</div>
 </div>
 <div id="data-cleaning-key-points" class="section level1">
 <h1><span class="header-section-number">3</span> Data Cleaning key points</h1>
@@ -1688,7 +1681,30 @@ clean_df$timestamp &lt;-  lubridate::dmy_hms(clean_df$timestamp)
 df_season &lt;- clean_df[is.na(clean_df$fav_season)==FALSE,]
 df_exercising &lt;- clean_df[is.na(clean_df$exercising)==FALSE,]
 # skimr::skim(df_season)
-# glimpse(clean_df)</code></pre>
+glimpse(clean_df)</code></pre>
+<pre><code>## Rows: 172
+## Columns: 21
+## $ timestamp         &lt;dttm&gt; 2020-09-02 22:07:21, 2020-09-02 22:08:45, 2020-09-…
+## $ covid_tests       &lt;dbl&gt; 1, 0, 0, 5, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0, 0, …
+## $ gender            &lt;chr&gt; &quot;Female&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;…
+## $ postcode          &lt;chr&gt; &quot;2154&quot;, &quot;441000&quot;, &quot;2120&quot;, &quot;511442&quot;, &quot;2042&quot;, &quot;2046&quot;,…
+## $ dentist           &lt;chr&gt; &quot;Less than 6 months&quot;, &quot;More than 2 years&quot;, &quot;Less th…
+## $ university_work   &lt;dbl&gt; 38, 40, 3, 40, 6, 30, 36, 50, 40, 20, 50, 25, 30, N…
+## $ social_media      &lt;chr&gt; &quot;N/A&quot;, &quot;Bilibili / Youtobe&quot;, &quot;Facebook&quot;, &quot;WeChat&quot;, …
+## $ dog_or_cat        &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;…
+## $ live_with_parents &lt;chr&gt; &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;N…
+## $ exercising        &lt;dbl&gt; 0.0, 2.0, 8.0, 8.0, 5.0, 4.0, 5.0, 3.0, 0.0, 7.0, 3…
+## $ eye_colour        &lt;chr&gt; &quot;Brown&quot;, &quot;Black&quot;, &quot;Black&quot;, &quot;black&quot;, &quot;Black&quot;, &quot;Green…
+## $ asthma            &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;…
+## $ paid_work         &lt;dbl&gt; 0, 0, 2, 0, 8, 10, 10, NA, 10, 10, 0, 12, 0, 0, 0, …
+## $ fav_season        &lt;chr&gt; &quot;Winter&quot;, &quot;Autumn&quot;, &quot;Autumn&quot;, &quot;Spring&quot;, &quot;Autumn&quot;, &quot;…
+## $ shoe_size         &lt;dbl&gt; 6.0, 42.0, 10.0, 45.0, NA, 12.0, 11.0, 13.0, 7.0, 4…
+## $ height            &lt;dbl&gt; 160, 178, 178, 175, NA, 193, 174, 187, 165, 176, 16…
+## $ floss_frequency   &lt;chr&gt; &quot;Weekly&quot;, &quot;Less than once a week&quot;, &quot;Less than once …
+## $ glasses           &lt;chr&gt; &quot;Yes&quot;, &quot;No&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;Yes&quot;…
+## $ dominant_hand     &lt;chr&gt; &quot;Right handed&quot;, &quot;Right handed&quot;, &quot;Right handed&quot;, &quot;Ri…
+## $ steak_preference  &lt;fct&gt; Medium-rare, Medium, I don&#39;t eat beef, Medium, Medi…
+## $ stress_level      &lt;dbl&gt; 7, 9, 4, 9, 2, 3, 6, 6, 5, 7, 6, 8, 6, 4, 9, 1, 4, …</code></pre>
 <ul>
 <li><p><strong>Imported class_survey.csv</strong> into R and cleaned the data by shortening the column names and renamed columns. This improves readibility as well as conciseness.</p></li>
 <li><p><strong>Removed 2 survey observations</strong> where survey was submitted without any input because these observations are useless and do not add any new information to the survey data.</p></li>
@@ -1724,15 +1740,12 @@ df_exercising &lt;- clean_df[is.na(clean_df$exercising)==FALSE,]
 <li><strong>Glasses</strong> variable may have bias as individuals may be insecure about wearing glasses and so opt not to choose not wearing glasses or contacts.</li>
 </ul></li>
 <li><p><strong>Recall Bias</strong>: <strong>Floss frequency</strong> and <strong>dentist</strong> variable suffer from recall bias as participants personal perception may skew their memory of these variables. The desire to appear hygienic and ideal can make the data inaccurate and unrealistic.</p></li>
-<li><p><strong>Non-response bias</strong>: Some DATA2002 individuals who were aware of the survey may have chose not to do the survey, as it was not compulsory and didn’t have any marks associated to it. These students are missing from the data.</p></li>
+<li><p><strong>Non-response bias</strong>: Some DATA2002 individuals who were aware of the survey may have chosen not to do the survey, as it was not compulsory and didn’t have any marks associated to it. These students are missing from the data.</p></li>
 </ul>
 </div>
 <div id="are-there-any-questions-that-needed-improvement-to-generate-useful-data" class="section level2">
 <h2><span class="header-section-number">4.3</span> Are there any questions that needed improvement to generate useful data?</h2>
-</div>
-<div id="need-to-finish-2" class="section level2">
-<h2><span class="header-section-number">4.4</span> NEED TO FINISH</h2>
-<p>Yes! Shoe size is impossible to clean! Why?</p>
+<p>Yes! * <strong>Shoe size</strong> - Shoe size is impossible to clean for in the survey question, there was no requirement to specify what system the size is in.</p>
 </div>
 </div>
 <div id="results" class="section level1">
@@ -1741,7 +1754,7 @@ df_exercising &lt;- clean_df[is.na(clean_df$exercising)==FALSE,]
 <h2><span class="header-section-number">5.1</span> Does the number of COVID tests follow a Poisson distribution?</h2>
 <p>To test this question, we will use a <strong>chi-square goodness-of-fit test</strong> and conduct the test through a hypothesis testing framework at 5% significance level. The <strong>chi-square goodness-of-fit test</strong> was chosen because we have one categorical variable(covid_tests) and one population(DATA2002), which we want to determine whether the data follows a Poisson distribution.</p>
 <p>For a Poisson distribution, we need to find the average rate <span class="math inline">\(\lambda\)</span> per unit of time. Since we do not know the exact timeframe in which individuals took covid tests, we can assume that it is finite and is between March 2020 to September 2020. To find lambda sample, we use the following equation:</p>
-<p><span class="math inline">\(\lambda = \frac{\sum(c*f)}{n}\)</span> where <strong>c</strong> is a categorical variable value, <strong>f</strong> is our corresponding frequency of <strong>c</strong> and <strong>n</strong> is the total number of observations.</p>
+<p><span class="math display">\[\lambda = \frac{\sum(c*f)}{n}\]</span> where <strong>c</strong> is a categorical variable value, <strong>f</strong> is our corresponding frequency of <strong>c</strong> and <strong>n</strong> is the total number of observations.</p>
 <pre class="r"><code>a &lt;- table(clean_df$covid_tests)
 col_names &lt;- c(as.numeric(names(a)))
 results &lt;- as.vector(a)
@@ -1752,7 +1765,7 @@ freq_df %&gt;% gt()</code></pre>
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#zueifbpfoi .gt_table {
+#onsumhyrzf .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1777,7 +1790,7 @@ freq_df %&gt;% gt()</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#zueifbpfoi .gt_heading {
+#onsumhyrzf .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1789,7 +1802,7 @@ freq_df %&gt;% gt()</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#zueifbpfoi .gt_title {
+#onsumhyrzf .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1799,7 +1812,7 @@ freq_df %&gt;% gt()</code></pre>
   border-bottom-width: 0;
 }
 
-#zueifbpfoi .gt_subtitle {
+#onsumhyrzf .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1809,13 +1822,13 @@ freq_df %&gt;% gt()</code></pre>
   border-top-width: 0;
 }
 
-#zueifbpfoi .gt_bottom_border {
+#onsumhyrzf .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#zueifbpfoi .gt_col_headings {
+#onsumhyrzf .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1830,7 +1843,7 @@ freq_df %&gt;% gt()</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#zueifbpfoi .gt_col_heading {
+#onsumhyrzf .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1850,7 +1863,7 @@ freq_df %&gt;% gt()</code></pre>
   overflow-x: hidden;
 }
 
-#zueifbpfoi .gt_column_spanner_outer {
+#onsumhyrzf .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1862,15 +1875,15 @@ freq_df %&gt;% gt()</code></pre>
   padding-right: 4px;
 }
 
-#zueifbpfoi .gt_column_spanner_outer:first-child {
+#onsumhyrzf .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#zueifbpfoi .gt_column_spanner_outer:last-child {
+#onsumhyrzf .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#zueifbpfoi .gt_column_spanner {
+#onsumhyrzf .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1882,7 +1895,7 @@ freq_df %&gt;% gt()</code></pre>
   width: 100%;
 }
 
-#zueifbpfoi .gt_group_heading {
+#onsumhyrzf .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1904,7 +1917,7 @@ freq_df %&gt;% gt()</code></pre>
   vertical-align: middle;
 }
 
-#zueifbpfoi .gt_empty_group_heading {
+#onsumhyrzf .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1919,15 +1932,15 @@ freq_df %&gt;% gt()</code></pre>
   vertical-align: middle;
 }
 
-#zueifbpfoi .gt_from_md > :first-child {
+#onsumhyrzf .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#zueifbpfoi .gt_from_md > :last-child {
+#onsumhyrzf .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#zueifbpfoi .gt_row {
+#onsumhyrzf .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1946,7 +1959,7 @@ freq_df %&gt;% gt()</code></pre>
   overflow-x: hidden;
 }
 
-#zueifbpfoi .gt_stub {
+#onsumhyrzf .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1958,7 +1971,7 @@ freq_df %&gt;% gt()</code></pre>
   padding-left: 12px;
 }
 
-#zueifbpfoi .gt_summary_row {
+#onsumhyrzf .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1968,7 +1981,7 @@ freq_df %&gt;% gt()</code></pre>
   padding-right: 5px;
 }
 
-#zueifbpfoi .gt_first_summary_row {
+#onsumhyrzf .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1978,7 +1991,7 @@ freq_df %&gt;% gt()</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#zueifbpfoi .gt_grand_summary_row {
+#onsumhyrzf .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1988,7 +2001,7 @@ freq_df %&gt;% gt()</code></pre>
   padding-right: 5px;
 }
 
-#zueifbpfoi .gt_first_grand_summary_row {
+#onsumhyrzf .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1998,11 +2011,11 @@ freq_df %&gt;% gt()</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#zueifbpfoi .gt_striped {
+#onsumhyrzf .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#zueifbpfoi .gt_table_body {
+#onsumhyrzf .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2011,7 +2024,7 @@ freq_df %&gt;% gt()</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#zueifbpfoi .gt_footnotes {
+#onsumhyrzf .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2025,13 +2038,13 @@ freq_df %&gt;% gt()</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#zueifbpfoi .gt_footnote {
+#onsumhyrzf .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#zueifbpfoi .gt_sourcenotes {
+#onsumhyrzf .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2045,46 +2058,46 @@ freq_df %&gt;% gt()</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#zueifbpfoi .gt_sourcenote {
+#onsumhyrzf .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#zueifbpfoi .gt_left {
+#onsumhyrzf .gt_left {
   text-align: left;
 }
 
-#zueifbpfoi .gt_center {
+#onsumhyrzf .gt_center {
   text-align: center;
 }
 
-#zueifbpfoi .gt_right {
+#onsumhyrzf .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#zueifbpfoi .gt_font_normal {
+#onsumhyrzf .gt_font_normal {
   font-weight: normal;
 }
 
-#zueifbpfoi .gt_font_bold {
+#onsumhyrzf .gt_font_bold {
   font-weight: bold;
 }
 
-#zueifbpfoi .gt_font_italic {
+#onsumhyrzf .gt_font_italic {
   font-style: italic;
 }
 
-#zueifbpfoi .gt_super {
+#onsumhyrzf .gt_super {
   font-size: 65%;
 }
 
-#zueifbpfoi .gt_footnote_marks {
+#onsumhyrzf .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="zueifbpfoi" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="onsumhyrzf" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -2436,10 +2449,9 @@ knitr::kable(round(f$expected,2),caption=&quot;Figure 5: Expected cell table&quo
 </ul>
 <pre class="r"><code># table(df_stress$covid_tests)
 t &lt;- table(df_season$asthma,df_season$fav_season)
-rt &lt;-  chisq.test(t)</code></pre>
-<pre><code>## Warning in stats::chisq.test(x, y, ...): Chi-squared approximation may be
-## incorrect</code></pre>
-<pre class="r"><code>knitr::kable(round(rt$expected,2),caption=&quot;Figure 6: Expected cell table&quot;)</code></pre>
+rt &lt;-  chisq.test(t)
+
+knitr::kable(round(rt$expected,2),caption=&quot;Figure 6: Expected cell table&quot;)</code></pre>
 <table>
 <caption>Figure 6: Expected cell table</caption>
 <thead>

@@ -18,7 +18,7 @@ library(visdat)
 library(gt)
 ```
 # Executive summary
-* This report uses the hypothesis testing framework to answer questions relating to the DATA2002 class survey 2020. It was discovered that the number of covid tests appears to follow a Poisson distribution, however, we unsure if this is a fact. Further, there appears to be no relationship between the variable of student's living with their parents and the hours spent exercising per week. Moreover, there appears that there is no relationship between favourite season and asthma. Due to the limited and non-randomised data collected by the survey, the findings in this report are inaccurate of the true behaviour of DATA2002 and require further research to enhance reliability/accuracy of findings.
+* This report uses the hypothesis testing framework to answer questions relating to the DATA2002 class survey 2020. It was discovered that the number of covid tests appears to follow a Poisson distribution, however, we unsure if this is a fact. Further, there appears to be no relationship between the variable of student's living with their parents and the hours spent exercising per week. Moreover, there appears that there is no relationship between favourite season and asthma. Due to the limited and non-randomised data collected by the survey, the findings in this report are inaccurate of the true behaviour of DATA2002 students and require further research to enhance reliability/accuracy of findings.
 
 
 # Introduction
@@ -31,8 +31,6 @@ This report focuses on answering 3 main questions regarding the DATA2002 class s
 3. The third question focuses on whether there is a relationship between favourite season and asthma. This question is important as it is natural to believe that a a person who suffers from asthma may opt to choose a favourite season, where they suffer the least. To answer this question, we will use a **Chi-square test of independence**.
 
 This report uses the hypothesis testing framework to answer the above questions.
-
-## NEED TO FINISH
 
 # Data Cleaning key points
 
@@ -117,8 +115,7 @@ clean_df$timestamp <-  lubridate::dmy_hms(clean_df$timestamp)
 df_season <- clean_df[is.na(clean_df$fav_season)==FALSE,]
 df_exercising <- clean_df[is.na(clean_df$exercising)==FALSE,]
 # skimr::skim(df_season)
-# glimpse(clean_df)
-
+glimpse(clean_df)
 ```
 
 
@@ -167,9 +164,11 @@ Yes, this is a sample with only 174 people which is less than the total populati
 
 ## Are there any questions that needed improvement to generate useful data?
 
-## NEED TO FINISH
 Yes!
-Shoe size is impossible to clean! Why?
+
+* **Shoe size** - Shoe size is impossible to clean for in the survey question, there was no requirement to specify what system the size is in such as if the show size is in UK or EU or CM or US. Further, there was no requirement to specify if the shoe size was in male or female size, which adds to ambiguity of the data. Addressing theses issues would greatly improve the usefulness of the shoe size variable.
+
+* **How do you like your steak cooked?** - This question could
 
 
 # Results
@@ -179,7 +178,7 @@ To test this question, we will use a **chi-square goodness-of-fit test** and con
 
 For a Poisson distribution, we need to find the average rate $\lambda$ per unit of time. Since we do not know the exact timeframe in which individuals took covid tests, we can assume that it is finite and is between March 2020 to September 2020. To find lambda sample, we use the following equation: 
 
-$\lambda = \frac{\sum(c*f)}{n}$ where **c** is a categorical variable value, **f** is our corresponding frequency of **c** and **n** is the total number of observations.
+$$\lambda = \frac{\sum(c*f)}{n}$$ where **c** is a categorical variable value, **f** is our corresponding frequency of **c** and **n** is the total number of observations.
 
 ```{r, fig.caption="figure 1:covid test frequency table", fig.width=3,fig.height=3,fig.align='center'}
 a <- table(clean_df$covid_tests)
@@ -304,10 +303,11 @@ $H_1:$ The favourite season is not independent of a student's asthma.
 
 * Each expected cell frequency is $\geq 5$. This needs to be examined:
 
-```{r s, message=FALSE, error=FALSE}
+```{r s, message=FALSE,warning=FALSE,error=FALSE}
 # table(df_stress$covid_tests)
 t <- table(df_season$asthma,df_season$fav_season)
 rt <-  chisq.test(t)
+
 knitr::kable(round(rt$expected,2),caption="Figure 6: Expected cell table")
 
 rt$expected[,3] <- rt$expected[,3] + rt$expected[,4]
