@@ -1598,11 +1598,11 @@ div.tocify {
 <h1><span class="header-section-number">2</span> Introduction</h1>
 <p>This report focuses on answering 3 main questions regarding the DATA2002 class survey 2020.</p>
 <ol style="list-style-type: decimal">
-<li><p>The first question being whether the number of covid tests collected in survey follows a Poisson distribution. Finding if the number of covid tests follows a given distribution will enable one to better predict the behaviour of DATA2002 students.</p></li>
-<li><p>The second question is whether there is a dependency relationship between living with parents and the hours a week spent exercising. It is common belief that individuals living at home have greater cost savings, both in terms of monetary and time, hence a relationship would confirm this belief for DATA2002 students.</p></li>
-<li></li>
+<li><p>The first question being whether the number of covid tests collected in survey follows a Poisson distribution. Finding if the number of covid tests follows a given distribution will enable one to better predict the behaviour of DATA2002 students. This question uses a <strong>Chi-square goodness-of-fit test</strong>.</p></li>
+<li><p>The second question is whether there is a dependency relationship between living with parents and the hours a week spent exercising. It is common belief that individuals living at home have greater cost savings, both in terms of monetary and time, hence a relationship would confirm this belief for DATA2002 students. This uses a <strong>Fisher’s exact test</strong>.</p></li>
+<li><p>The third question focuses on whether there is a relationship between favourite season and asthma. This question is important as it is natural to believe that a a person who suffers from asthma may opt to choose a favourite season, where they suffer the least. To answer this question, we will use a <strong>Chi-square test of independence</strong>.</p></li>
 </ol>
-<p>This report uses a hypothesis testing framework to answer the above questions.</p>
+<p>This report uses the hypothesis testing framework to answer the above questions.</p>
 <div id="need-to-finish-1" class="section level2">
 <h2><span class="header-section-number">2.1</span> NEED TO FINISH</h2>
 </div>
@@ -1685,32 +1685,10 @@ clean_df = clean_df %&gt;%
 clean_df$timestamp &lt;-  lubridate::dmy_hms(clean_df$timestamp)
 
 # Create 2 other dataframes based on clean_df ready for hypothesis testing
-df_postcode &lt;- clean_df[is.na(clean_df$postcode)==FALSE,]
+df_season &lt;- clean_df[is.na(clean_df$fav_season)==FALSE,]
 df_exercising &lt;- clean_df[is.na(clean_df$exercising)==FALSE,]
-glimpse(clean_df)</code></pre>
-<pre><code>## Rows: 172
-## Columns: 21
-## $ timestamp         &lt;dttm&gt; 2020-09-02 22:07:21, 2020-09-02 22:08:45, 2020-09-…
-## $ covid_tests       &lt;dbl&gt; 1, 0, 0, 5, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0, 0, …
-## $ gender            &lt;chr&gt; &quot;Female&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;…
-## $ postcode          &lt;chr&gt; &quot;2154&quot;, &quot;441000&quot;, &quot;2120&quot;, &quot;511442&quot;, &quot;2042&quot;, &quot;2046&quot;,…
-## $ dentist           &lt;chr&gt; &quot;Less than 6 months&quot;, &quot;More than 2 years&quot;, &quot;Less th…
-## $ university_work   &lt;dbl&gt; 38, 40, 3, 40, 6, 30, 36, 50, 40, 20, 50, 25, 30, N…
-## $ social_media      &lt;chr&gt; &quot;N/A&quot;, &quot;Bilibili / Youtobe&quot;, &quot;Facebook&quot;, &quot;WeChat&quot;, …
-## $ dog_or_cat        &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;…
-## $ live_with_parents &lt;chr&gt; &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;N…
-## $ exercising        &lt;dbl&gt; 0.0, 2.0, 8.0, 8.0, 5.0, 4.0, 5.0, 3.0, 0.0, 7.0, 3…
-## $ eye_colour        &lt;chr&gt; &quot;Brown&quot;, &quot;Black&quot;, &quot;Black&quot;, &quot;black&quot;, &quot;Black&quot;, &quot;Green…
-## $ asthma            &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;…
-## $ paid_work         &lt;dbl&gt; 0, 0, 2, 0, 8, 10, 10, NA, 10, 10, 0, 12, 0, 0, 0, …
-## $ fav_season        &lt;chr&gt; &quot;Winter&quot;, &quot;Autumn&quot;, &quot;Autumn&quot;, &quot;Spring&quot;, &quot;Autumn&quot;, &quot;…
-## $ shoe_size         &lt;dbl&gt; 6.0, 42.0, 10.0, 45.0, NA, 12.0, 11.0, 13.0, 7.0, 4…
-## $ height            &lt;dbl&gt; 160, 178, 178, 175, NA, 193, 174, 187, 165, 176, 16…
-## $ floss_frequency   &lt;chr&gt; &quot;Weekly&quot;, &quot;Less than once a week&quot;, &quot;Less than once …
-## $ glasses           &lt;chr&gt; &quot;Yes&quot;, &quot;No&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;Yes&quot;…
-## $ dominant_hand     &lt;chr&gt; &quot;Right handed&quot;, &quot;Right handed&quot;, &quot;Right handed&quot;, &quot;Ri…
-## $ steak_preference  &lt;fct&gt; Medium-rare, Medium, I don&#39;t eat beef, Medium, Medi…
-## $ stress_level      &lt;dbl&gt; 7, 9, 4, 9, 2, 3, 6, 6, 5, 7, 6, 8, 6, 4, 9, 1, 4, …</code></pre>
+# skimr::skim(df_season)
+# glimpse(clean_df)</code></pre>
 <ul>
 <li><p><strong>Imported class_survey.csv</strong> into R and cleaned the data by shortening the column names and renamed columns. This improves readibility as well as conciseness.</p></li>
 <li><p><strong>Removed 2 survey observations</strong> where survey was submitted without any input because these observations are useless and do not add any new information to the survey data.</p></li>
@@ -1718,12 +1696,12 @@ glimpse(clean_df)</code></pre>
 <li><p>Further, I changed the timestamp variable from character data type to POSIXct data type for easier handling of date time object.</p></li>
 <li><p>After cleaning, there are 3 main data frames used in this report.</p>
 <ol style="list-style-type: decimal">
-<li><strong>clean_df</strong> = This data frame contains <strong>172 rows</strong> of observations, containing all the observations that have a covid tests value. This data frame will be used in <strong>section 2.4</strong></li>
-<li><strong>df_postcode</strong> = This data frame is based on the clean_df and contains only <strong>156 rows</strong> of observations due to the removal of NA values in the postcode variable. This dataframe will be used in <strong>section 2.5</strong>.</li>
-<li><strong>df_exercising</strong> = This data frame is based on the clean_df and contains only <strong>166 rows</strong> of observations due to the removal of NA values in the postcode variable. This dataframe will be used in <strong>section 2.5</strong>.</li>
+<li><strong>clean_df</strong> = This data frame contains <strong>172 rows</strong> of observations, containing all the observations that have a covid tests value. This data frame will be used in <strong>section 4.1</strong></li>
+<li><strong>df_exercising</strong> = This data frame is based on the clean_df and contains only <strong>166 rows</strong> of observations due to the removal of NA values in the postcode variable. This dataframe will be used in <strong>section 4.2</strong>.</li>
+<li><strong>df_season</strong> = This data frame is based on the clean_df and contains only <strong>170 rows</strong> of observations due to the removal of NA values in the fav_season variable. This dataframe will be used in <strong>section 4.3</strong>.</li>
 </ol></li>
 </ul>
-<p>I only fully cleaned variables(postcode and exercising) for which I will use for our data analysis by removing null values and checking if the values of the variable made sense.</p>
+<p>I only fully cleaned variables (fav_season and exercising) for which I will use for our data analysis by removing null values and checking if the values of the variable made sense.</p>
 </div>
 <div id="methodology" class="section level1">
 <h1><span class="header-section-number">4</span> Methodology</h1>
@@ -1746,6 +1724,7 @@ glimpse(clean_df)</code></pre>
 <li><strong>Glasses</strong> variable may have bias as individuals may be insecure about wearing glasses and so opt not to choose not wearing glasses or contacts.</li>
 </ul></li>
 <li><p><strong>Recall Bias</strong>: <strong>Floss frequency</strong> and <strong>dentist</strong> variable suffer from recall bias as participants personal perception may skew their memory of these variables. The desire to appear hygienic and ideal can make the data inaccurate and unrealistic.</p></li>
+<li><p><strong>Non-response bias</strong>: Some DATA2002 individuals who were aware of the survey may have chose not to do the survey, as it was not compulsory and didn’t have any marks associated to it. These students are missing from the data.</p></li>
 </ul>
 </div>
 <div id="are-there-any-questions-that-needed-improvement-to-generate-useful-data" class="section level2">
@@ -1773,7 +1752,7 @@ freq_df %&gt;% gt()</code></pre>
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#jmopscmjxt .gt_table {
+#zueifbpfoi .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1798,7 +1777,7 @@ freq_df %&gt;% gt()</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#jmopscmjxt .gt_heading {
+#zueifbpfoi .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1810,7 +1789,7 @@ freq_df %&gt;% gt()</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#jmopscmjxt .gt_title {
+#zueifbpfoi .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1820,7 +1799,7 @@ freq_df %&gt;% gt()</code></pre>
   border-bottom-width: 0;
 }
 
-#jmopscmjxt .gt_subtitle {
+#zueifbpfoi .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1830,13 +1809,13 @@ freq_df %&gt;% gt()</code></pre>
   border-top-width: 0;
 }
 
-#jmopscmjxt .gt_bottom_border {
+#zueifbpfoi .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#jmopscmjxt .gt_col_headings {
+#zueifbpfoi .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1851,7 +1830,7 @@ freq_df %&gt;% gt()</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#jmopscmjxt .gt_col_heading {
+#zueifbpfoi .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1871,7 +1850,7 @@ freq_df %&gt;% gt()</code></pre>
   overflow-x: hidden;
 }
 
-#jmopscmjxt .gt_column_spanner_outer {
+#zueifbpfoi .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1883,15 +1862,15 @@ freq_df %&gt;% gt()</code></pre>
   padding-right: 4px;
 }
 
-#jmopscmjxt .gt_column_spanner_outer:first-child {
+#zueifbpfoi .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#jmopscmjxt .gt_column_spanner_outer:last-child {
+#zueifbpfoi .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#jmopscmjxt .gt_column_spanner {
+#zueifbpfoi .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1903,7 +1882,7 @@ freq_df %&gt;% gt()</code></pre>
   width: 100%;
 }
 
-#jmopscmjxt .gt_group_heading {
+#zueifbpfoi .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1925,7 +1904,7 @@ freq_df %&gt;% gt()</code></pre>
   vertical-align: middle;
 }
 
-#jmopscmjxt .gt_empty_group_heading {
+#zueifbpfoi .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1940,15 +1919,15 @@ freq_df %&gt;% gt()</code></pre>
   vertical-align: middle;
 }
 
-#jmopscmjxt .gt_from_md > :first-child {
+#zueifbpfoi .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#jmopscmjxt .gt_from_md > :last-child {
+#zueifbpfoi .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#jmopscmjxt .gt_row {
+#zueifbpfoi .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1967,7 +1946,7 @@ freq_df %&gt;% gt()</code></pre>
   overflow-x: hidden;
 }
 
-#jmopscmjxt .gt_stub {
+#zueifbpfoi .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1979,7 +1958,7 @@ freq_df %&gt;% gt()</code></pre>
   padding-left: 12px;
 }
 
-#jmopscmjxt .gt_summary_row {
+#zueifbpfoi .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1989,7 +1968,7 @@ freq_df %&gt;% gt()</code></pre>
   padding-right: 5px;
 }
 
-#jmopscmjxt .gt_first_summary_row {
+#zueifbpfoi .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1999,7 +1978,7 @@ freq_df %&gt;% gt()</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#jmopscmjxt .gt_grand_summary_row {
+#zueifbpfoi .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2009,7 +1988,7 @@ freq_df %&gt;% gt()</code></pre>
   padding-right: 5px;
 }
 
-#jmopscmjxt .gt_first_grand_summary_row {
+#zueifbpfoi .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2019,11 +1998,11 @@ freq_df %&gt;% gt()</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#jmopscmjxt .gt_striped {
+#zueifbpfoi .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#jmopscmjxt .gt_table_body {
+#zueifbpfoi .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2032,7 +2011,7 @@ freq_df %&gt;% gt()</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#jmopscmjxt .gt_footnotes {
+#zueifbpfoi .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2046,13 +2025,13 @@ freq_df %&gt;% gt()</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#jmopscmjxt .gt_footnote {
+#zueifbpfoi .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#jmopscmjxt .gt_sourcenotes {
+#zueifbpfoi .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2066,46 +2045,46 @@ freq_df %&gt;% gt()</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#jmopscmjxt .gt_sourcenote {
+#zueifbpfoi .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#jmopscmjxt .gt_left {
+#zueifbpfoi .gt_left {
   text-align: left;
 }
 
-#jmopscmjxt .gt_center {
+#zueifbpfoi .gt_center {
   text-align: center;
 }
 
-#jmopscmjxt .gt_right {
+#zueifbpfoi .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#jmopscmjxt .gt_font_normal {
+#zueifbpfoi .gt_font_normal {
   font-weight: normal;
 }
 
-#jmopscmjxt .gt_font_bold {
+#zueifbpfoi .gt_font_bold {
   font-weight: bold;
 }
 
-#jmopscmjxt .gt_font_italic {
+#zueifbpfoi .gt_font_italic {
   font-style: italic;
 }
 
-#jmopscmjxt .gt_super {
+#zueifbpfoi .gt_super {
   font-size: 65%;
 }
 
-#jmopscmjxt .gt_footnote_marks {
+#zueifbpfoi .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="jmopscmjxt" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="zueifbpfoi" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -2166,7 +2145,7 @@ print(&quot;This is our poisson random variable: p&quot;) </code></pre>
 <p><span class="math inline">\(H_1:\)</span> The number of COVID tests does not follow a Poisson distribution</p>
 <p><strong>Assumptions</strong>:</p>
 <ul>
-<li>Observations are independent from each other: YES.</li>
+<li>Observations are independent from each other: YES. Each participant is likely to have completed the survey by themselves, without the aid of others.</li>
 <li>Expected cell counts for each category of Poisson distribution has a frequency <span class="math inline">\(\geq\)</span> 5. This is a problem which figure 3 shows below.</li>
 </ul>
 <pre class="r"><code>ey = n*p
@@ -2238,7 +2217,7 @@ test1</code></pre>
 <h2><span class="header-section-number">5.2</span> Perform two other hypothesis tests. Give some rationale for why you selected these hypothesis tests and interpret the results. Be sure to mention any limitations in the data that may impact your findings.</h2>
 <div id="is-there-a-correlation-between-data2002-students-who-live-with-their-parents-and-the-hours-spent-exercising-per-week" class="section level3">
 <h3><span class="header-section-number">5.2.1</span> Is there a correlation between DATA2002 students who live with their parents and the hours spent exercising per week?</h3>
-<p><strong>Do a Fisher’s exact test</strong> To test this question, we will use a <strong>Fisher’s exact test</strong> to test for variable independence. The dataframe used in this question will be df_exercising instead of df_clean, because in df_exercising, the null values for the exercising column have been removed.</p>
+<p>To test this question, we will use a <strong>Fisher’s exact test</strong> to test for variable independence. The dataframe used in this question will be df_exercising instead of df_clean, because in df_exercising, the null values for the exercising column have been removed.</p>
 <p>WHY? - To use a test of independence, we need one population (DATA2002 students) and 2 categorical variables (lives with their parents &amp; exercising). We want to test if the 2 variables are independent, but the expected cell counts are less than 5, hence this suggests our sample size is very small. Our expected cell counts which are less than 5 make 62.5% of expected table so we use a Fisher’s exact test.</p>
 <p><strong>Hypothesis test</strong></p>
 <p><span class="math inline">\(H_0:\)</span> Living with parent status is independent of the hours spent exercising per week.</p>
@@ -2432,7 +2411,7 @@ knitr::kable(round(f$expected,2),caption=&quot;Figure 5: Expected cell table&quo
 <pre class="r"><code>n1 &lt;- sum(f$expected&lt;5)/(sum(f$expected&lt;=5)+sum(f$expected&gt;5))</code></pre>
 <p>In Figure 4, we can see our observed cell table. This table is used to generate the figure 5 Expected table from our chi-square test function by using the following formula:</p>
 <p><span class="math display">\[e_{ij} = \frac{y_{i\bullet} y_{\bullet j}}{n}\]</span> where <span class="math inline">\(y_{i\bullet}\)</span> is the marginal row total and <span class="math inline">\(y_{\bullet j}\)</span> is the marginal column total.</p>
-<p>From Figure 5, we can see that 62.5% of the expected cell counts are less than 5, this means we must do a fisher’s exact tests.</p>
+<p>From Figure 5, we can see that 62.5% of the expected cell counts are less than 5, this means we must do a Fisher’s exact tests.</p>
 <pre class="r"><code>fisher.test(ob,workspace=2000000)</code></pre>
 <pre><code>## 
 ##  Fisher&#39;s Exact Test for Count Data
@@ -2443,19 +2422,97 @@ knitr::kable(round(f$expected,2),caption=&quot;Figure 5: Expected cell table&quo
 <p><strong>Decision</strong>:</p>
 <p>A p-value of 0.2518 is greater than 0.05 and so we do not reject the null hypothesis, which is a DATA2002 student’s living with parent status is independent of the hours spent exercising per week. Despite not rejecting the null hypothesis, we do not accept the null hypothesis. Limitations of data include the sample being too small and not randomised, which means our sample is not a true representation of the DATA2002 population. Also, this data contains 166 rows of observations instead of the original 174 rows. The 8 removed rows suggests that there are reasons why participants may have chosen not to input the data (e.g. if a participant is disabled, they may not be inclined to put in data). Another limitation is that time spent exercising per week is subjective and could fluctuate week by week, so any inferences made from the data is limited.</p>
 </div>
-<div id="is-there-a-relationship-between-number-of-covid-tests-and-postcodes" class="section level3">
-<h3><span class="header-section-number">5.2.2</span> Is there a relationship between number of covid tests and postcodes?</h3>
-<p><strong>Do a chi-square hypothesis test of Independence</strong></p>
-<p>Rationale: Due to influx of covid-19 cases in certain postcodes in Australia, there is likely to be some correlation to the number of people testing. However, since testing is voluntary, we do not know how many students will go testing. Doing a hypothesis test will help us determine the particular behaviour of DATA2002 student and their likelihood to get tested, given their postcode.</p>
-<p>To answer this question, we will use a chi-square hypothesis test of Independence.</p>
-<p><span class="math inline">\(H_0:\)</span> The number of covid tests is independent of a student’s postcode.</p>
-<p><span class="math inline">\(H_1:\)</span> The number of covid tests is not independent of a student’s postcode.</p>
-<p><strong>Assumptions</strong>: *</p>
+<div id="is-there-a-relationship-between-favourite-season-and-asthma" class="section level3">
+<h3><span class="header-section-number">5.2.2</span> Is there a relationship between favourite season and asthma?</h3>
+<p>Rationale: A <strong>Chi-square hypothesis test of independence</strong> was chosen because we want to compare 2 categorical variables(fav_season and asthma) and determine if they are independent. This test is important for staff at the University of Sydney could increase their inventory of asthma puffers during a particular season and so save potential lives. Also, knowing if there is a correlation between favourite season and asthma could influence medical professionals treatment of asthma patients.</p>
+<p>To answer this question, we will use a chi-square hypothesis test of Independence. We will use the <strong>df_season</strong> dataframe, which contains 170 rows of observations due to removal of NA values in the stress_level variable.</p>
+<p><strong>Hypothesis test</strong></p>
+<p><span class="math inline">\(H_0:\)</span> The favourite season is independent of a student’s asthma.</p>
+<p><span class="math inline">\(H_1:\)</span> The favourite season is not independent of a student’s asthma.</p>
+<p><strong>Assumptions</strong>:</p>
 <ul>
-<li></li>
+<li><p>Observations are independent from each other: YES. Each participant is likely to have completed the survey by themselves, without the aid of others.</p></li>
+<li><p>Each expected cell frequency is <span class="math inline">\(\geq 5\)</span>. This needs to be examined:</p></li>
 </ul>
-<p><strong>Need to apply filter</strong></p>
-<p><strong>Decision</strong>: All we know We don’t know if</p>
+<pre class="r"><code># table(df_stress$covid_tests)
+t &lt;- table(df_season$asthma,df_season$fav_season)
+rt &lt;-  chisq.test(t)</code></pre>
+<pre><code>## Warning in stats::chisq.test(x, y, ...): Chi-squared approximation may be
+## incorrect</code></pre>
+<pre class="r"><code>knitr::kable(round(rt$expected,2),caption=&quot;Figure 6: Expected cell table&quot;)</code></pre>
+<table>
+<caption>Figure 6: Expected cell table</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Autumn</th>
+<th align="right">Spring</th>
+<th align="right">Summer</th>
+<th align="right">Winter</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">No</td>
+<td align="right">34.59</td>
+<td align="right">41.51</td>
+<td align="right">42.37</td>
+<td align="right">28.54</td>
+</tr>
+<tr class="even">
+<td align="left">Yes</td>
+<td align="right">5.41</td>
+<td align="right">6.49</td>
+<td align="right">6.63</td>
+<td align="right">4.46</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>rt$expected[,3] &lt;- rt$expected[,3] + rt$expected[,4]
+# Combine summer and winter for expected table
+rt$expected &lt;- rt$expected[,-4]
+
+knitr::kable(round(rt$expected,2),caption=&quot;Figure 7: Modified Expected cell table&quot;)</code></pre>
+<table>
+<caption>Figure 7: Modified Expected cell table</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Autumn</th>
+<th align="right">Spring</th>
+<th align="right">Summer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">No</td>
+<td align="right">34.59</td>
+<td align="right">41.51</td>
+<td align="right">70.91</td>
+</tr>
+<tr class="even">
+<td align="left">Yes</td>
+<td align="right">5.41</td>
+<td align="right">6.49</td>
+<td align="right">11.09</td>
+</tr>
+</tbody>
+</table>
+<p>Figure 6 demonstrates that there is a problem with the Winter/Yes cell containing 4.46 value, which is less than 5. This breaks our assumption, so we must modify the expected table by combining Winter and Summer together, as shown in Figure 7.</p>
+<pre class="r"><code># Combine summer and winter for actual table
+t[,3] &lt;- t[,3] + t[,4]
+t &lt;- t[,-4]
+d &lt;- chisq.test(t)
+d</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test
+## 
+## data:  t
+## X-squared = 3.223, df = 2, p-value = 0.1996</code></pre>
+<p>Our degrees of freedom is (number of rows - 1)*(number of columns - 1) = (2-1)(3-1)=2. Hence degrees of freedom is correct.</p>
+<p><strong>Decision</strong>:</p>
+<p>The p-value of 0.1996 is greater than 0.05 (our significance level), which means we do not reject the null hypothesis. This suggests but does not confirm that the asthma and favourite season of students are independent.</p>
+<p>Further sampling and tests are needed to confirm if there is not a correlation between asthma and favourite season. The data is limited in that being a small, non-randomised sample suffering from selection bias, our data may be skewed in favour of independence. A larger properly randomised sample could potentially result in a different result, which may be better reflective of the true DATA2002 population. Essentially, the outcome of this decision is not accurate, due to the underlying design of the survey.</p>
 </div>
 </div>
 </div>
