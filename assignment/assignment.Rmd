@@ -28,13 +28,13 @@ What are we analysing?
 # Introduction
 This report focuses on answering 3 main questions regarding the DATA2002 class survey 2020. 
 
-1. The first question being whether the number of covid tests collected in survey follows a Poisson distribution. Finding if the number of covid tests follows a given distribution will enable one to better predict the behaviour of DATA2002 students.
+1. The first question being whether the number of covid tests collected in survey follows a Poisson distribution. Finding if the number of covid tests follows a given distribution will enable one to better predict the behaviour of DATA2002 students. This question uses a **Chi-square goodness-of-fit test**.
 
-2. The second question is whether there is a dependency relationship between living with parents and the hours a week spent exercising. It is common belief that individuals living at home have greater cost savings, both in terms of monetary and time, hence a relationship would confirm this belief for DATA2002 students.
+2. The second question is whether there is a dependency relationship between living with parents and the hours a week spent exercising. It is common belief that individuals living at home have greater cost savings, both in terms of monetary and time, hence a relationship would confirm this belief for DATA2002 students. This uses a **Fisher's exact test**.
 
-3. 
+3. The third question focuses on whether the number of covid tests is independent from a student's stress level. This question is important as it is natural to believe that a stressful person is more likely to do covid tests. To answer this question, we will use a **Chi-square test of independence**.
 
-This report uses a hypothesis testing framework to answer the above questions.
+This report uses the hypothesis testing framework to answer the above questions.
 
 ## NEED TO FINISH
 
@@ -118,9 +118,9 @@ clean_df = clean_df %>%
 clean_df$timestamp <-  lubridate::dmy_hms(clean_df$timestamp)
 
 # Create 2 other dataframes based on clean_df ready for hypothesis testing
-df_postcode <- clean_df[is.na(clean_df$postcode)==FALSE,]
+df_stress <- clean_df[is.na(clean_df$stress_level)==FALSE,]
 df_exercising <- clean_df[is.na(clean_df$exercising)==FALSE,]
-glimpse(clean_df)
+# glimpse(clean_df)
 ```
 
 
@@ -131,11 +131,11 @@ glimpse(clean_df)
 * Further, I changed the timestamp variable from character data type to POSIXct data type for easier handling of date time object. 
 
 * After cleaning, there are 3 main data frames used in this report.
-  1. **clean_df** = This data frame contains **172 rows** of observations, containing all the observations that have a covid tests value. This data frame will be used in **section 2.4**
-  2. **df_postcode** = This data frame is based on the clean_df and contains only **156 rows** of observations due to the removal of NA values in the postcode variable. This dataframe will be used in **section 2.5**.
-  3. **df_exercising** =  This data frame is based on the clean_df and contains only **166 rows** of observations due to the removal of NA values in the postcode variable. This dataframe will be used in **section 2.5**.
+  1. **clean_df** = This data frame contains **172 rows** of observations, containing all the observations that have a covid tests value. This data frame will be used in **section 4.1**
+  2. **df_exercising** =  This data frame is based on the clean_df and contains only **166 rows** of observations due to the removal of NA values in the postcode variable. This dataframe will be used in **section 4.2**.
+  3. **df_stress** = This data frame is based on the clean_df and contains only **170 rows** of observations due to the removal of NA values in the stress_level variable. This dataframe will be used in **section 4.3**.
 
-I only fully cleaned variables(postcode and exercising) for which I will use for our data analysis by removing null values and checking if the values of the variable made sense. 
+I only fully cleaned variables (stress_level and exercising) for which I will use for our data analysis by removing null values and checking if the values of the variable made sense. 
 
 
 # Methodology
@@ -214,7 +214,7 @@ $H_1:$ The number of COVID tests does not follow a Poisson distribution
 
 **Assumptions**:
 
-* Observations are independent from each other: YES.
+* Observations are independent from each other: YES. Each participant is likely to have completed the survey by themselves, without the aid of others.
 * Expected cell counts for each category of Poisson distribution has a frequency $\geq$ 5. This is a problem which figure 3 shows below.
 
 ```{r}
@@ -241,14 +241,13 @@ test1
 As our p-value is less than 5% significance level, we reject the null hypothesis that the covid test follows the Poisson distribution. This does NOT mean we accept the alternative hypothesis. As we reject the null hypothesis in this report, this does not mean that the true distribution of DATA2002 covid tests does not follow a Poisson distribution. It may be a Poisson distribution if we took a much larger sample from the population.
 
 
-## Perform two other hypothesis tests. 
-### Give some rationale for why you selected these hypothesis tests and interpret the results. Be sure to mention any limitations in the data that may impact your findings.
+## Perform two other hypothesis tests. Give some rationale for why you selected these hypothesis tests and interpret the results. Be sure to mention any limitations in the data that may impact your findings.
 
-Question: Is there a correlation between DATA2002 students who live with their parents and the hours spent exercising per week?
+### Is there a correlation between DATA2002 students who live with their parents and the hours spent exercising per week?
 
 
 **Do a Fisher's exact test**
-To test this question, we will use a **chi-square hypothesis test of Independence**. The dataframe used in this question will be df_exercising instead of df_clean, because in df_exercising, the null values for exercising column have been removed.
+To test this question, we will use a **Fisher's exact test** to test for variable independence. The dataframe used in this question will be df_exercising instead of df_clean, because in df_exercising, the null values for the exercising column have been removed.
 
 WHY? - To use a test of independence, we need one population (DATA2002 students) and 2 categorical variables (lives with their parents & exercising). We want to test if the 2 variables are independent, but the expected cell counts are less than 5, hence this suggests our sample size is very small. Our expected cell counts which are less than 5 make 62.5% of expected table so we use a Fisher's exact test.
 
@@ -260,7 +259,7 @@ $H_1:$  Living with parent status is dependent on the hours spent exercising per
 
 **Assumptions**:
 
-* Each observation is independent of each other.
+* Each observation is independent of each other. YES, given the design of the survey, individuals are likely to have completed it by themselves without the aid of others.
 * Every expected cell count is $\geq$ 5. To check this:
 
 ```{r, warning=FALSE}
@@ -270,38 +269,59 @@ knitr::kable(ob,caption="Figure 4: Observed cell table")
 f <-chisq.test(ob)
 
 knitr::kable(round(f$expected,2),caption="Figure 5: Expected cell table")
-sum(f$expected<5)/(sum(f$expected<=5)+sum(f$expected>5))
+n1 <- sum(f$expected<5)/(sum(f$expected<=5)+sum(f$expected>5))
 ```
 In Figure 4, we can see our observed cell table. This table is used to generate the figure 5 Expected table from our chi-square test function by using the following formula:
 
 $$e_{ij} = \frac{y_{i\bullet} y_{\bullet j}}{n}$$ where $y_{i\bullet}$ is the marginal row total and $y_{\bullet j}$ is the marginal column total.
 
 
-From Figure 5, this means we must do a fisher's exact tests.
+From Figure 5, we can see that 62.5% of the expected cell counts are less than 5, this means we must do a fisher's exact tests.
 
 ```{r 2_p_value, message=FALSE}
 fisher.test(ob,workspace=2000000)
 ```
 **Decision**:
-A p-value of 0.2518 is greater than 0.05 and so we do not reject the null hypothesis, which is a DATA2002 student's living with parent status is independent of the hours spent exercising per week. Despite not rejecting the null hypothesis, we do not accept the null hypothesis. Limitations of data include the sample being too small to be a true representation of the DATA2002 population.
+
+A p-value of 0.2518 is greater than 0.05 and so we do not reject the null hypothesis, which is a DATA2002 student's living with parent status is independent of the hours spent exercising per week. Despite not rejecting the null hypothesis, we do not accept the null hypothesis. Limitations of data include the sample being too small and not randomised, which means our sample is not a true representation of the DATA2002 population. Also, this data contains 166 rows of observations instead of the original 174 rows. The 8 removed rows suggests that there are reasons why participants may have chosen not to input the data (e.g. if a participant is disabled, they may not be inclined to put in data). Another limitation is that time spent exercising per week is subjective and could fluctuate week by week, so any inferences made from the data is limited.
 
 
-All we know is there is a correlation between the 2 variables in the dataset, but we don't know what causes it.
-Limitations of data
+### Is there a relationship between number of covid tests and stress level?
 
 **Do a chi-square hypothesis test of Independence**
- Lives with Parents v hours a week spent exercising
-To test this question, we will use a chi-square...
 
-$H_0:$ Lives
-$H_1:$ The number of COVID tests does follow a Poisson distribution
+Rationale: Due to influx of covid-19 cases, more people are stressed and worried about becoming infected. There is likely to be some correlation of the stress level of DATA2002 student and the number of times one goes testing. However, since testing is voluntary, we do not know how many students will go testing. Doing a hypothesis test will help us determine if stress can be a factor in influencing the number of times one gets tested for covid.
+
+
+To answer this question, we will use a chi-square hypothesis test of Independence. We will use the **df_stress** dataframe, which contains 170 rows of observations due to removal of NA values in the stress_level variable.
+
+**Hypothesis test**
+
+$H_0:$ The number of covid tests is independent of a student's stress level.
+
+$H_1:$ The number of covid tests is not independent of a student's stress level.
 
 **Assumptions**:
+* Observations are independent from each other: YES. Each participant is likely to have completed the survey by themselves, without the aid of others.
+
+* Each expected cell frequency is $\geq 5$. This needs to be examined:
+
+```{r s, message=FALSE, error=FALSE}
+# table(df_stress$covid_tests)
+t <- table(df_stress$covid_tests,df_stress$stress_level)
+rt <-  chisq.test(t)
+a <- rt$expected[,1]+rt$expected[,2]+rt$expected[,3]+rt$expected[,4]
+sum(a[3:8])
+```
+Data
+
 
 **Need to apply filter**
 
 **Decision**:
 All we know We don't know if
+
+As our original expected cell table had multiple cells with frequency values less than 5, any
 
 # Conclusion 
 To conclude, we 
