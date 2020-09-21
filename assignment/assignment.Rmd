@@ -247,10 +247,10 @@ As our p-value is less than 5% significance level, we reject the null hypothesis
 Question: Is there a correlation between DATA2002 students who live with their parents and the hours spent exercising per week?
 
 
-**Do a chi-square hypothesis test of Independence**
+**Do a Fisher's exact test**
 To test this question, we will use a **chi-square hypothesis test of Independence**. The dataframe used in this question will be df_exercising instead of df_clean, because in df_exercising, the null values for exercising column have been removed.
 
-WHY? - To use a test of independence, we need one population (DATA2002 students) and 2 categorical variables (lives with their parents & exercising). We want to test if the 2 variables are independent, hence the test of independence is most appropriate.
+WHY? - To use a test of independence, we need one population (DATA2002 students) and 2 categorical variables (lives with their parents & exercising). We want to test if the 2 variables are independent, but the expected cell counts are less than 5, hence this suggests our sample size is very small. Our expected cell counts which are less than 5 make 62.5% of expected table so we use a Fisher's exact test.
 
 **Hypothesis test**
 
@@ -259,34 +259,32 @@ $H_0:$ Living with parent status is independent of the hours spent exercising pe
 $H_1:$  Living with parent status is dependent on the hours spent exercising per week.
 
 **Assumptions**:
+
+* Each observation is independent of each other.
 * Every expected cell count is $\geq$ 5. To check this:
-**Observed cell table**
+
 ```{r, warning=FALSE}
 ob <- table(df_exercising$live_with_parents,df_exercising$exercising)
 # rowSums(ob)
 knitr::kable(ob,caption="Figure 4: Observed cell table")
-f <-chisq.test(ob) 
+f <-chisq.test(ob)
+
 knitr::kable(round(f$expected,2),caption="Figure 5: Expected cell table")
+sum(f$expected<5)/(sum(f$expected<=5)+sum(f$expected>5))
 ```
-In Figure 4, we can see our observed cell table. This table is used to generate the figure 5 Expected table by using the following formula:
+In Figure 4, we can see our observed cell table. This table is used to generate the figure 5 Expected table from our chi-square test function by using the following formula:
 
 $$e_{ij} = \frac{y_{i\bullet} y_{\bullet j}}{n}$$ where $y_{i\bullet}$ is the marginal row total and $y_{\bullet j}$ is the marginal column total.
 
 
-From Figure 5, we see that there are some expected cell counts that are less than 5, hence we should merge columns, opting for right to left merge.
-
+From Figure 5, this means we must do a fisher's exact tests.
 
 ```{r 2_p_value, message=FALSE}
-
-chisq.test(df_exercising$live_with_parents,df_exercising$exercising)
+fisher.test(ob,workspace=2000000)
 ```
-
-
-
-
-**Need to apply filter**
-
 **Decision**:
+A p-value of 0.2518 is greater than 0.05 and so we do not reject the null hypothesis, which is a DATA2002 student's living with parent status is independent of the hours spent exercising per week. Despite not rejecting the null hypothesis, we do not accept the null hypothesis. Limitations of data include the sample being too small to be a true representation of the DATA2002 population.
+
 
 All we know is there is a correlation between the 2 variables in the dataset, but we don't know what causes it.
 Limitations of data
