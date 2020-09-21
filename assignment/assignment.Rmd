@@ -277,6 +277,7 @@ From Figure 5, we see that there are some expected cell counts that are less tha
 
 
 ```{r 2_p_value, message=FALSE}
+
 chisq.test(df_exercising$live_with_parents,df_exercising$exercising)
 ```
 
