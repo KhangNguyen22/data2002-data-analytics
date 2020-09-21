@@ -1596,7 +1596,13 @@ div.tocify {
 </div>
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">2</span> Introduction</h1>
-<p>This report…</p>
+<p>This report focuses on answering 3 main questions regarding the DATA2002 class survey 2020.</p>
+<ol style="list-style-type: decimal">
+<li><p>The first question being whether the number of covid tests collected in survey follows a Poisson distribution. Finding if the number of covid tests follows a given distribution will enable one to better predict the behaviour of DATA2002 students.</p></li>
+<li><p>The second question is whether there is a dependency relationship between living with parents and the hours a week spent exercising. It is common belief that individuals living at home have greater cost savings, both in terms of monetary and time, hence a relationship would confirm this belief for DATA2002 students.</p></li>
+<li></li>
+</ol>
+<p>This report uses a hypothesis testing framework to answer the above questions.</p>
 <div id="need-to-finish-1" class="section level2">
 <h2><span class="header-section-number">2.1</span> NEED TO FINISH</h2>
 </div>
@@ -1731,7 +1737,7 @@ df_exercising &lt;- clean_df[is.na(clean_df$exercising)==FALSE,]
 <h1><span class="header-section-number">5</span> Results</h1>
 <div id="does-the-number-of-covid-tests-follow-a-poisson-distribution" class="section level2">
 <h2><span class="header-section-number">5.1</span> Does the number of COVID tests follow a Poisson distribution?</h2>
-<p>To test this question, we will use a <strong>chi-square goodness-of-fit test</strong> and conduct the test through a hypothesis testing framework. The <strong>chi-square goodness-of-fit test</strong> was chosen because we have one categorical variable(covid_tests) and one population(DATA2002), which we want to determine whether the data follows a Poisson distribution.</p>
+<p>To test this question, we will use a <strong>chi-square goodness-of-fit test</strong> and conduct the test through a hypothesis testing framework at 5% significance level. The <strong>chi-square goodness-of-fit test</strong> was chosen because we have one categorical variable(covid_tests) and one population(DATA2002), which we want to determine whether the data follows a Poisson distribution.</p>
 <p>For a Poisson distribution, we need to find the average rate <span class="math inline">\(\lambda\)</span> per unit of time. Since we do not know the exact timeframe in which individuals took covid tests, we can assume that it is finite and is between March 2020 to September 2020. To find lambda sample, we use the following equation:</p>
 <p><span class="math inline">\(\lambda = \frac{\sum(c*f)}{n}\)</span> where <strong>c</strong> is a categorical variable value, <strong>f</strong> is our corresponding frequency of <strong>c</strong> and <strong>n</strong> is the total number of observations.</p>
 <pre class="r"><code>a &lt;- table(clean_df$covid_tests)
@@ -1744,7 +1750,7 @@ freq_df %&gt;% gt()</code></pre>
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#fmmzpijuml .gt_table {
+#gyipqwceyo .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1769,7 +1775,7 @@ freq_df %&gt;% gt()</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#fmmzpijuml .gt_heading {
+#gyipqwceyo .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1781,7 +1787,7 @@ freq_df %&gt;% gt()</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#fmmzpijuml .gt_title {
+#gyipqwceyo .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1791,7 +1797,7 @@ freq_df %&gt;% gt()</code></pre>
   border-bottom-width: 0;
 }
 
-#fmmzpijuml .gt_subtitle {
+#gyipqwceyo .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1801,13 +1807,13 @@ freq_df %&gt;% gt()</code></pre>
   border-top-width: 0;
 }
 
-#fmmzpijuml .gt_bottom_border {
+#gyipqwceyo .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#fmmzpijuml .gt_col_headings {
+#gyipqwceyo .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1822,7 +1828,7 @@ freq_df %&gt;% gt()</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#fmmzpijuml .gt_col_heading {
+#gyipqwceyo .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1842,7 +1848,7 @@ freq_df %&gt;% gt()</code></pre>
   overflow-x: hidden;
 }
 
-#fmmzpijuml .gt_column_spanner_outer {
+#gyipqwceyo .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1854,15 +1860,15 @@ freq_df %&gt;% gt()</code></pre>
   padding-right: 4px;
 }
 
-#fmmzpijuml .gt_column_spanner_outer:first-child {
+#gyipqwceyo .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#fmmzpijuml .gt_column_spanner_outer:last-child {
+#gyipqwceyo .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#fmmzpijuml .gt_column_spanner {
+#gyipqwceyo .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1874,7 +1880,7 @@ freq_df %&gt;% gt()</code></pre>
   width: 100%;
 }
 
-#fmmzpijuml .gt_group_heading {
+#gyipqwceyo .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1896,7 +1902,7 @@ freq_df %&gt;% gt()</code></pre>
   vertical-align: middle;
 }
 
-#fmmzpijuml .gt_empty_group_heading {
+#gyipqwceyo .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1911,15 +1917,15 @@ freq_df %&gt;% gt()</code></pre>
   vertical-align: middle;
 }
 
-#fmmzpijuml .gt_from_md > :first-child {
+#gyipqwceyo .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#fmmzpijuml .gt_from_md > :last-child {
+#gyipqwceyo .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#fmmzpijuml .gt_row {
+#gyipqwceyo .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1938,7 +1944,7 @@ freq_df %&gt;% gt()</code></pre>
   overflow-x: hidden;
 }
 
-#fmmzpijuml .gt_stub {
+#gyipqwceyo .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1950,7 +1956,7 @@ freq_df %&gt;% gt()</code></pre>
   padding-left: 12px;
 }
 
-#fmmzpijuml .gt_summary_row {
+#gyipqwceyo .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1960,7 +1966,7 @@ freq_df %&gt;% gt()</code></pre>
   padding-right: 5px;
 }
 
-#fmmzpijuml .gt_first_summary_row {
+#gyipqwceyo .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1970,7 +1976,7 @@ freq_df %&gt;% gt()</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#fmmzpijuml .gt_grand_summary_row {
+#gyipqwceyo .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1980,7 +1986,7 @@ freq_df %&gt;% gt()</code></pre>
   padding-right: 5px;
 }
 
-#fmmzpijuml .gt_first_grand_summary_row {
+#gyipqwceyo .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1990,11 +1996,11 @@ freq_df %&gt;% gt()</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#fmmzpijuml .gt_striped {
+#gyipqwceyo .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#fmmzpijuml .gt_table_body {
+#gyipqwceyo .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2003,7 +2009,7 @@ freq_df %&gt;% gt()</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#fmmzpijuml .gt_footnotes {
+#gyipqwceyo .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2017,13 +2023,13 @@ freq_df %&gt;% gt()</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#fmmzpijuml .gt_footnote {
+#gyipqwceyo .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#fmmzpijuml .gt_sourcenotes {
+#gyipqwceyo .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2037,46 +2043,46 @@ freq_df %&gt;% gt()</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#fmmzpijuml .gt_sourcenote {
+#gyipqwceyo .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#fmmzpijuml .gt_left {
+#gyipqwceyo .gt_left {
   text-align: left;
 }
 
-#fmmzpijuml .gt_center {
+#gyipqwceyo .gt_center {
   text-align: center;
 }
 
-#fmmzpijuml .gt_right {
+#gyipqwceyo .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#fmmzpijuml .gt_font_normal {
+#gyipqwceyo .gt_font_normal {
   font-weight: normal;
 }
 
-#fmmzpijuml .gt_font_bold {
+#gyipqwceyo .gt_font_bold {
   font-weight: bold;
 }
 
-#fmmzpijuml .gt_font_italic {
+#gyipqwceyo .gt_font_italic {
   font-style: italic;
 }
 
-#fmmzpijuml .gt_super {
+#gyipqwceyo .gt_super {
   font-size: 65%;
 }
 
-#fmmzpijuml .gt_footnote_marks {
+#gyipqwceyo .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="fmmzpijuml" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="gyipqwceyo" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -2132,6 +2138,7 @@ print(paste(c(&quot;This is our lambda value:&quot;,lam), collapse=&quot; &quot;
 <pre class="r"><code>p &lt;- dpois(col_names,lambda = lam)
 print(&quot;This is our poisson random variable: p&quot;) </code></pre>
 <pre><code>## [1] &quot;This is our poisson random variable: p&quot;</code></pre>
+<p><strong>Hypothesis test</strong></p>
 <p><span class="math inline">\(H_0:\)</span> The number of COVID tests follows a Poisson distribution</p>
 <p><span class="math inline">\(H_1:\)</span> The number of COVID tests does not follow a Poisson distribution</p>
 <p><strong>Assumptions</strong>:</p>
@@ -2141,13 +2148,13 @@ print(&quot;This is our poisson random variable: p&quot;) </code></pre>
 </ul>
 <pre class="r"><code>ey = n*p
 e_table &lt;- as.table(setNames(round(ey,4),col_names))
-knitr::kable(e_table, col.names = c(&quot;Number of covid tests  &quot;,&quot;Freq&quot;), caption = &quot;Figure 3&quot;)</code></pre>
+knitr::kable(e_table, col.names = c(&quot;Number of covid tests  &quot;,&quot;Expected Freq&quot;), caption = &quot;Figure 3&quot;)</code></pre>
 <table>
 <caption>Figure 3</caption>
 <thead>
 <tr class="header">
 <th align="left">Number of covid tests</th>
-<th align="right">Freq</th>
+<th align="right">Expected Freq</th>
 </tr>
 </thead>
 <tbody>
@@ -2185,14 +2192,30 @@ knitr::kable(e_table, col.names = c(&quot;Number of covid tests  &quot;,&quot;Fr
 </tr>
 </tbody>
 </table>
-<p>Figure 3 shows that covid tests 3,4,5,6 and 10 have a frequency less than 5, so we must combine them into a single categor</p>
-<p><strong>Need to apply filter</strong></p>
+<p>Figure 3 shows that covid tests 3,4,5,6 and 10 have a frequency less than 5, so we must combine them into a single group with 2. Hence, we create a new group called “2,3,4,5,6 and 10”. Note: our <strong>degrees of freedom</strong> is number of categories -1 - 1(if we needed to estimate lambda) and so is 3-1-1=1.</p>
+<p>To calculate p-value,</p>
+<pre class="r"><code>new_results &lt;- c(results[1:2],sum(results[3:8]))
+new_ey &lt;- c(ey[1:2],sum(ey[3:8]))
+## Adjust p so that probability sums to 1
+new_p &lt;- c(p[1:2],1-sum(p[1:2]))
+test1 &lt;- chisq.test(new_results,p=new_p)
+## Adjust chi square p value to have a degree of freedom of 1
+test1$parameter &lt;- c(df=1)
+test1$p.value &lt;- pchisq(test1$statistic,df=test1$parameter,lower.tail=FALSE)
+test1</code></pre>
+<pre><code>## 
+##  Chi-squared test for given probabilities
+## 
+## data:  new_results
+## X-squared = 19.643, df = 1, p-value = 9.336e-06</code></pre>
 <p><strong>Decision</strong>:</p>
+<p>As our p-value is less than 5% significance level, we reject the null hypothesis that the covid test follows the Poisson distribution. This does NOT mean we accept the alternative hypothesis. As we reject the null hypothesis in this report, this does not mean that the true distribution of DATA2002 covid tests does not follow a Poisson distribution. It may be a Poisson distribution if we took a much larger sample from the population.</p>
 </div>
 <div id="perform-two-other-hypothesis-tests." class="section level2">
 <h2><span class="header-section-number">5.2</span> Perform two other hypothesis tests.</h2>
 <div id="give-some-rationale-for-why-you-selected-these-hypothesis-tests-and-interpret-the-results.-be-sure-to-mention-any-limitations-in-the-data-that-may-impact-your-findings." class="section level3">
 <h3><span class="header-section-number">5.2.1</span> Give some rationale for why you selected these hypothesis tests and interpret the results. Be sure to mention any limitations in the data that may impact your findings.</h3>
+<p>Question: Is there a correlation between DATA2002 students who live with their parents spend a greater time exercising</p>
 <p><strong>Do a chi-square hypothesis test of Independence</strong> Lives with Parents v hours a week spent exercising To test this question, we will use a chi-square…</p>
 <p><span class="math inline">\(H_0:\)</span> Lives <span class="math inline">\(H_1:\)</span> The number of COVID tests does follow a Poisson distribution</p>
 <p><strong>Assumptions</strong>:</p>
@@ -2206,8 +2229,20 @@ knitr::kable(e_table, col.names = c(&quot;Number of covid tests  &quot;,&quot;Fr
 </div>
 </div>
 </div>
-<div id="conclusion-and-recommendations" class="section level1">
-<h1><span class="header-section-number">6</span> Conclusion and recommendations</h1>
+<div id="conclusion" class="section level1">
+<h1><span class="header-section-number">6</span> Conclusion</h1>
+<p>To conclude, we</p>
+</div>
+<div id="references-r-packages-used-in-report" class="section level1">
+<h1><span class="header-section-number">7</span> References (R packages used in report)</h1>
+<ul>
+<li>tidyverse</li>
+<li>janitor</li>
+<li>ggplot2</li>
+<li>skimr</li>
+<li>visdat</li>
+<li>gt</li>
+</ul>
 </div>
 
 
