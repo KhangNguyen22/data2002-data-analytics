@@ -167,11 +167,11 @@ Shoe size is impossible to clean! Why?
 # Results
 ## Does the number of COVID tests follow a Poisson distribution?
 
-To test this question, we will use a **chi-square goodness-of-fit test** and conduct the test through a hypothesis testing framework. The **chi-square goodness-of-fit test** was chosen because we have one categorical variable(covid_tests) and one population(DATA2002), which we want to determine whether the data follows a Poisson distribution.
+To test this question, we will use a **chi-square goodness-of-fit test** and conduct the test through a hypothesis testing framework at 5% significance level. The **chi-square goodness-of-fit test** was chosen because we have one categorical variable(covid_tests) and one population(DATA2002), which we want to determine whether the data follows a Poisson distribution.
 
-For a Poisson distribution, we need to find the average rate $\lambda$ per unit of time. Since we do not know the exact timeframe in which individuals took covid tests, we can assume that it is finite and is between March 2020 to September 2020. To find lambda, we use the following equation: 
+For a Poisson distribution, we need to find the average rate $\lambda$ per unit of time. Since we do not know the exact timeframe in which individuals took covid tests, we can assume that it is finite and is between March 2020 to September 2020. To find lambda sample, we use the following equation: 
 
-$\lambda = \frac{\sum(colu)}{n}$ where **n** is the total number of observations.
+$\lambda = \frac{\sum(c*f)}{n}$ where **c** is a categorical variable value, **f** is our corresponding frequency of **c** and **n** is the total number of observations.
 
 ```{r, fig.caption="figure 1:covid test frequency table", fig.width=3,fig.height=3,fig.align='center'}
 a <- table(clean_df$covid_tests)
@@ -187,17 +187,18 @@ clean_df %>% ggplot(aes(x=covid_tests)) +geom_bar()
 ```
 **Figure 2: covid test frequency bar chart**
 
-Figure 2 bar chart visualises the data in figure 1. We will use the figure 1 to calculate $\lambda$.
+Figure 2 bar chart visualises the data in figure 1. We will use the figure 1 to calculate $\lambda$ and Poisson random variable, which will be stored in the p variable.
 ```{r, fig.cap="This is our lambda value"}
 n = sum(results)
 num_groups = length(col_names)
 lam = sum(results*col_names)/n
 print(paste(c("This is our lambda value:",lam), collapse=" ")) 
 p <- dpois(col_names,lambda = lam)
+print("This is our poisson random variable: p") 
 ```
 
 
-
+**Hypothesis test**
 
 $H_0:$ The number of COVID tests follows a Poisson distribution
 
@@ -205,22 +206,60 @@ $H_1:$ The number of COVID tests does not follow a Poisson distribution
 
 **Assumptions**:
 
-**Need to apply filter**
+* Observations are independent from each other: YES.
+* Expected cell counts for each category of Poisson distribution has a frequency $\geq$ 5. This is a problem which figure 3 shows below.
 
+```{r}
+ey = n*p
+e_table <- as.table(setNames(round(ey,4),col_names))
+knitr::kable(e_table, col.names = c("Number of covid tests  ","Expected Freq"), caption = "Figure 3")
+```
+Figure 3 shows that covid tests 3,4,5,6 and 10 have a frequency less than 5, so we must combine them into a single group with 2. Hence, we create a new group called "2,3,4,5,6 and 10". Note: our **degrees of freedom** is number of categories -1 - 1(if we needed to estimate lambda) and so is 3-1-1=1.
+
+To calculate p-value,
+```{r}
+new_results <- c(results[1:2],sum(results[3:8]))
+new_ey <- c(ey[1:2],sum(ey[3:8]))
+## Adjust p so that probability sums to 1
+new_p <- c(p[1:2],1-sum(p[1:2]))
+test1 <- chisq.test(new_results,p=new_p)
+new_results
+## Adjust chi square p value to have a degree of freedom of 1
+test1$parameter <- c(df=1)
+test1$p.value <- pchisq(test1$statistic,df=test1$parameter,lower.tail=FALSE)
+test1
+```
 **Decision**:
+As our p-value is less than 5% significance level, we reject the null hypothesis that the covid test follows the Poisson distribution. This does NOT mean we accept the alternative hypothesis. As we reject the null hypothesis in this report, this does not mean that the true distribution of DATA2002 covid tests does not follow a Poisson distribution. It may be a Poisson distribution if we took a much larger sample from the population.
 
 
 ## Perform two other hypothesis tests. 
 ### Give some rationale for why you selected these hypothesis tests and interpret the results. Be sure to mention any limitations in the data that may impact your findings.
 
-**Do a chi-square hypothesis test**
 
+
+**Do a chi-square hypothesis test of Independence**
+ Lives with Parents v hours a week spent exercising
 To test this question, we will use a chi-square...
 
-$H_0:$ The number of COVID tests does not follow a Poisson distribution
+$H_0:$ Lives
 $H_1:$ The number of COVID tests does follow a Poisson distribution
 
 **Assumptions**:
+
+**Need to apply filter**
+
+**Decision**:
+
+**Do a chi-square hypothesis test of Independence**
+ Lives with Parents v hours a week spent exercising
+To test this question, we will use a chi-square...
+
+$H_0:$ Lives
+$H_1:$ The number of COVID tests does follow a Poisson distribution
+
+**Assumptions**:
+
 **Need to apply filter**
 
 **Decision**:
