@@ -18,7 +18,8 @@ library(visdat)
 library(gt)
 ```
 # Executive summary
-* This report uses the hypothesis testing framework to answer questions relating to the DATA2002 class survey 2020. It was discovered that the number of covid tests appears to follow a Poisson distribution, however, we unsure if this is a fact. Further, there appears to be no relationship between the variable of student's living with their parents and the hours spent exercising per week. Moreover, there appears that there is no relationship between favourite season and asthma. Due to the limited and non-randomised data collected by the survey, the findings in this report are inaccurate of the true behaviour of DATA2002 students and require further research to enhance reliability/accuracy of findings.
+
+This report uses the hypothesis testing framework to answer questions relating to the DATA2002 class survey 2020. It was discovered that the number of covid tests appears to follow a Poisson distribution, however, we unsure if this is a fact. Further, there appears to be no relationship between the variable of student's living with their parents and the hours spent exercising per week. Moreover, there appears that there is no relationship between favourite season and asthma. Due to the limited and non-randomised data collected by the survey, the findings in this report are inaccurate of the true behaviour of DATA2002 students and require further research to enhance reliability/accuracy of findings.
 
 
 # Introduction
@@ -115,11 +116,11 @@ clean_df$timestamp <-  lubridate::dmy_hms(clean_df$timestamp)
 df_season <- clean_df[is.na(clean_df$fav_season)==FALSE,]
 df_exercising <- clean_df[is.na(clean_df$exercising)==FALSE,]
 # skimr::skim(df_season)
-glimpse(clean_df)
+# glimpse(clean_df)
 ```
 
 
-* **Imported class_survey.csv** into R and cleaned the data by shortening the column names and renamed columns. This improves readibility as well as conciseness. 
+* **Imported class_survey.csv** into R and cleaned the data by shortening the column names and renamed columns. This improves readability as well as conciseness. 
 * **Removed 2 survey observations** where survey was submitted without any input because these observations are useless and do not add any new information to the survey data. 
 * **Converted postcode into character** data type as postcode is a categorical variable. I changed all height into cm, grouped gender into 3 categories (male,female and non-binary) and gave an order to steak preferences output.  
 
@@ -166,9 +167,17 @@ Yes, this is a sample with only 174 people which is less than the total populati
 
 Yes!
 
-* **Shoe size** - Shoe size is impossible to clean for in the survey question, there was no requirement to specify what system the size is in such as if the show size is in UK or EU or CM or US. Further, there was no requirement to specify if the shoe size was in male or female size, which adds to ambiguity of the data. Addressing theses issues would greatly improve the usefulness of the shoe size variable.
+* **What is your shoe size?** - Shoe size is impossible to clean for in the survey question, there was no requirement to specify what system the size is in such as if the show size is in UK or EU or CM or US. Further, there was no requirement to specify if the shoe size was in male or female size, which adds to ambiguity of the data. Addressing theses issues would greatly improve the usefulness of the shoe size variable.
 
-* **How do you like your steak cooked?** - This question could
+* **On a scale from 0 to 10, please indicate how stressed you have felt in the past week.** - This question is very contextual and can fluctuate a lot due to the time the survey is being conducted. For example, if the participant does the survey on a Monday, they may be more likely to say they feel stress, than if on a Friday.
+
+* **How tall are you?** - This question doesn't specify if it is in centimeters, meters or feet or inches. This means that there must be significant data cleaning to make the data usable. To improve question, specify the heights in a specific unit (e.g. meters).
+
+* **How many hours a week do you spend exercising?** - This question should have a drop down menu with discrete variables, else it allows participants to put in strange values such as 1.233333. This would help enhance the usefulness of this question.
+
+* **Did you have a dog or a cat when you were a child?** - This question produces results that are binary (YES or NO), but this does not help with inferring specifics about a participant. We do not know if they answered yes, whether they have a dog or a cat or both. To improve, give more categorical options for this question.
+
+* **Postcode of where you live during semester** - The variable postcode had so many unique postcodes that it was difficult to use for hypothesis test. The expected tables generated often contained less than 5 frequency values, because of many postcodes containing only 1 person. Hence, this variable was little use in doing hypothesis test. To improve usefulness, either limit the postcode to a certain region, or group the postcodes into specific regions. This would allow better analysis.
 
 
 # Results
@@ -176,7 +185,7 @@ Yes!
 
 To test this question, we will use a **chi-square goodness-of-fit test** and conduct the test through a hypothesis testing framework at 5% significance level. The **chi-square goodness-of-fit test** was chosen because we have one categorical variable(covid_tests) and one population(DATA2002), which we want to determine whether the data follows a Poisson distribution.
 
-For a Poisson distribution, we need to find the average rate $\lambda$ per unit of time. Since we do not know the exact timeframe in which individuals took covid tests, we can assume that it is finite and is between March 2020 to September 2020. To find lambda sample, we use the following equation: 
+For a Poisson distribution, we need to find the average rate $\lambda$ per unit of time. Since we do not know the exact time frame in which individuals took covid tests, we can assume that it is finite and is between March 2020 to September 2020. To find lambda sample, we use the following equation: 
 
 $$\lambda = \frac{\sum(c*f)}{n}$$ where **c** is a categorical variable value, **f** is our corresponding frequency of **c** and **n** is the total number of observations.
 
@@ -194,7 +203,7 @@ clean_df %>% ggplot(aes(x=covid_tests)) +geom_bar()
 ```
 **Figure 2: covid test frequency bar chart**
 
-Figure 2 bar chart visualises the data in figure 1. We will use the figure 1 to calculate $\lambda$ and Poisson random variable, which will be stored in the p variable.
+**Figure 2** bar chart visualises the data in **figure 1**. We will use the **figure 1** to calculate $\lambda$ and Poisson random variable, which will be stored in the p variable.
 ```{r, fig.cap="This is our lambda value"}
 n = sum(results)
 num_groups = length(col_names)
@@ -214,14 +223,14 @@ $H_1:$ The number of COVID tests does not follow a Poisson distribution
 **Assumptions**:
 
 * Observations are independent from each other: YES. Each participant is likely to have completed the survey by themselves, without the aid of others.
-* Expected cell counts for each category of Poisson distribution has a frequency $\geq$ 5. This is a problem which figure 3 shows below.
+* Expected cell counts for each category of Poisson distribution has a frequency $\geq$ 5. This is a problem which **figure 3** shows below.
 
 ```{r}
 ey = n*p
 e_table <- as.table(setNames(round(ey,4),col_names))
 knitr::kable(e_table, col.names = c("Number of covid tests  ","Expected Freq"), caption = "Figure 3")
 ```
-Figure 3 shows that covid tests 3,4,5,6 and 10 have a frequency less than 5, so we must combine them into a single group with 2. Hence, we create a new group called "2,3,4,5,6 and 10". Note: our **degrees of freedom** is number of categories -1 - 1(if we needed to estimate lambda) and so is 3-1-1=1.
+**Figure 3** shows that covid tests 3,4,5,6 and 10 have a frequency less than 5, so we must combine them into a single group with 2. Hence, we create a new group called "2,3,4,5,6 and 10". Note: our **degrees of freedom** is number of categories -1 - 1(if we needed to estimate lambda) and so is 3-1-1=1.
 
 To calculate p-value,
 ```{r}
@@ -235,14 +244,19 @@ test1$parameter <- c(df=1)
 test1$p.value <- pchisq(test1$statistic,df=test1$parameter,lower.tail=FALSE)
 test1
 ```
+```{r}
+print(paste(c("This is our critical value:",qchisq(0.05,1, lower.tail = FALSE)), collapse=" ")) 
+```
+
 **Decision**:
 
-As our p-value is less than 5% significance level, we reject the null hypothesis that the covid test follows the Poisson distribution. This does NOT mean we accept the alternative hypothesis. As we reject the null hypothesis in this report, this does not mean that the true distribution of DATA2002 covid tests does not follow a Poisson distribution. It may be a Poisson distribution if we took a much larger sample from the population.
+Our test statistic of 19.643 is greater than our critical value of 3.84 and so our test statistic lies in the rejection region. This is further confirmed by our p-value, which is less than 5% significance level. Hence, we reject the null hypothesis that the covid test follows the Poisson distribution. A p-value of less than 5% means that the probability of obtaining a sample as or more extreme than the observed sample assuming the null hypothesis is true is very rare, which suggests that our null hypothesis is not true.  This does NOT mean we accept the alternative hypothesis. As we reject the null hypothesis in this report, this does not mean that the true distribution of DATA2002 covid tests does not follow a Poisson distribution. It may be a Poisson distribution if we took a much larger sample from the population.
 
 
 ## Perform two other hypothesis tests. Give some rationale for why you selected these hypothesis tests and interpret the results. Be sure to mention any limitations in the data that may impact your findings.
 
 ### Is there a correlation between DATA2002 students who live with their parents and the hours spent exercising per week?
+
 
 
 To test this question, we will use a **Fisher's exact test** to test for variable independence. The dataframe used in this question will be df_exercising instead of df_clean, because in df_exercising, the null values for the exercising column have been removed.
@@ -269,12 +283,12 @@ f <-chisq.test(ob)
 knitr::kable(round(f$expected,2),caption="Figure 5: Expected cell table")
 n1 <- sum(f$expected<5)/(sum(f$expected<=5)+sum(f$expected>5))
 ```
-In Figure 4, we can see our observed cell table. This table is used to generate the figure 5 Expected table from our chi-square test function by using the following formula:
+In **Figure 4**, we can see our observed cell table. This table is used to generate the **figure 5** Expected table from our chi-square test function by using the following formula:
 
 $$e_{ij} = \frac{y_{i\bullet} y_{\bullet j}}{n}$$ where $y_{i\bullet}$ is the marginal row total and $y_{\bullet j}$ is the marginal column total.
 
 
-From Figure 5, we can see that 62.5% of the expected cell counts are less than 5, this means we must do a Fisher's exact tests.
+From **Figure 5**, we can see that 62.5% of the expected cell counts are less than 5, this means we must do a Fisher's exact tests.
 
 ```{r 2_p_value, message=FALSE}
 fisher.test(ob,workspace=2000000)
@@ -286,7 +300,8 @@ A p-value of 0.2518 is greater than 0.05 and so we do not reject the null hypoth
 
 ### Is there a relationship between favourite season and asthma?
 
-Rationale: A **Chi-square hypothesis test of independence** was chosen because we want to compare 2 categorical variables(fav_season and asthma) and determine if they are independent. This test is important for staff at the University of Sydney could increase their inventory of asthma puffers during a particular season and so save potential lives. Also, knowing if there is a correlation between favourite season and asthma could influence medical professionals treatment of asthma patients.  
+**Rationale:** 
+A **Chi-square hypothesis test of independence** was chosen because we want to compare 2 categorical variables(fav_season and asthma) and determine if they are independent. This test is important for staff at the University of Sydney could increase their inventory of asthma puffers during a particular season and so save potential lives. Also, knowing if there is a correlation between favourite season and asthma could influence medical professionals treatment of asthma patients.  
 
 
 To answer this question, we will use a chi-square hypothesis test of Independence. We will use the **df_season** dataframe, which contains 170 rows of observations due to removal of NA values in the stress_level variable.
@@ -316,7 +331,7 @@ rt$expected <- rt$expected[,-4]
 
 knitr::kable(round(rt$expected,2),caption="Figure 7: Modified Expected cell table")
 ```
-Figure 6 demonstrates that there is a problem with the Winter/Yes cell containing 4.46 value, which is less than 5. This breaks our assumption, so we must modify the expected table by combining Winter and Summer together, as shown in Figure 7.
+**Figure 6** demonstrates that there is a problem with the Winter/Yes cell containing 4.46 value, which is less than 5. This breaks our assumption, so we must modify the expected table by combining Winter and Summer together, as shown in **Figure 7**.
 
 
 ```{r}
@@ -328,17 +343,20 @@ d
 ```
 Our degrees of freedom is (number of rows - 1)*(number of columns - 1) = (2-1)(3-1)=2. Hence degrees of freedom is correct.
 
+```{r}
+print(paste(c("This is our critical value:",qchisq(0.05,2, lower.tail = FALSE)), collapse=" ")) 
+```
 
 
 **Decision**:
 
-The p-value of 0.1996 is greater than 0.05 (our significance level), which means we do not reject the null hypothesis. This suggests but does not confirm that the asthma and favourite season of students are independent.
+Our test statistic is 3.223 is less than critical value of 5.991465, this means that our test statistic does not lie in the rejection region. Similarly, the p-value of 0.1996 is greater than 0.05 (our significance level), which means we do not reject the null hypothesis. This suggests but does not confirm that the asthma and favourite season of students are independent.
 
 Further sampling and tests are needed to confirm if there is not a correlation between asthma and favourite season. The data is limited in that being a small, non-randomised sample suffering from selection bias, our data may be skewed in favour of independence. A larger properly randomised sample could potentially result in a different result, which may be better reflective of the true DATA2002 population. Essentially, the outcome of this decision is not accurate, due to the underlying design of the survey.
 
 
 # Conclusion 
-To conclude, we 
+To conclude, this report found that the
 
 
 # References (R packages used in report)

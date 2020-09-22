@@ -1586,9 +1586,7 @@ div.tocify {
 
 <div id="executive-summary" class="section level1">
 <h1><span class="header-section-number">1</span> Executive summary</h1>
-<ul>
-<li>This report uses the hypothesis testing framework to answer questions relating to the DATA2002 class survey 2020. It was discovered that the number of covid tests appears to follow a Poisson distribution, however, we unsure if this is a fact. Further, there appears to be no relationship between the variable of student’s living with their parents and the hours spent exercising per week. Moreover, there appears that there is no relationship between favourite season and asthma. Due to the limited and non-randomised data collected by the survey, the findings in this report are inaccurate of the true behaviour of DATA2002 students and require further research to enhance reliability/accuracy of findings.</li>
-</ul>
+<p>This report uses the hypothesis testing framework to answer questions relating to the DATA2002 class survey 2020. It was discovered that the number of covid tests appears to follow a Poisson distribution, however, we unsure if this is a fact. Further, there appears to be no relationship between the variable of student’s living with their parents and the hours spent exercising per week. Moreover, there appears that there is no relationship between favourite season and asthma. Due to the limited and non-randomised data collected by the survey, the findings in this report are inaccurate of the true behaviour of DATA2002 students and require further research to enhance reliability/accuracy of findings.</p>
 </div>
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">2</span> Introduction</h1>
@@ -1681,32 +1679,9 @@ clean_df$timestamp &lt;-  lubridate::dmy_hms(clean_df$timestamp)
 df_season &lt;- clean_df[is.na(clean_df$fav_season)==FALSE,]
 df_exercising &lt;- clean_df[is.na(clean_df$exercising)==FALSE,]
 # skimr::skim(df_season)
-glimpse(clean_df)</code></pre>
-<pre><code>## Rows: 172
-## Columns: 21
-## $ timestamp         &lt;dttm&gt; 2020-09-02 22:07:21, 2020-09-02 22:08:45, 2020-09-…
-## $ covid_tests       &lt;dbl&gt; 1, 0, 0, 5, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0, 0, …
-## $ gender            &lt;chr&gt; &quot;Female&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;Male&quot;, &quot;…
-## $ postcode          &lt;chr&gt; &quot;2154&quot;, &quot;441000&quot;, &quot;2120&quot;, &quot;511442&quot;, &quot;2042&quot;, &quot;2046&quot;,…
-## $ dentist           &lt;chr&gt; &quot;Less than 6 months&quot;, &quot;More than 2 years&quot;, &quot;Less th…
-## $ university_work   &lt;dbl&gt; 38, 40, 3, 40, 6, 30, 36, 50, 40, 20, 50, 25, 30, N…
-## $ social_media      &lt;chr&gt; &quot;N/A&quot;, &quot;Bilibili / Youtobe&quot;, &quot;Facebook&quot;, &quot;WeChat&quot;, …
-## $ dog_or_cat        &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;…
-## $ live_with_parents &lt;chr&gt; &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;N…
-## $ exercising        &lt;dbl&gt; 0.0, 2.0, 8.0, 8.0, 5.0, 4.0, 5.0, 3.0, 0.0, 7.0, 3…
-## $ eye_colour        &lt;chr&gt; &quot;Brown&quot;, &quot;Black&quot;, &quot;Black&quot;, &quot;black&quot;, &quot;Black&quot;, &quot;Green…
-## $ asthma            &lt;chr&gt; &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;…
-## $ paid_work         &lt;dbl&gt; 0, 0, 2, 0, 8, 10, 10, NA, 10, 10, 0, 12, 0, 0, 0, …
-## $ fav_season        &lt;chr&gt; &quot;Winter&quot;, &quot;Autumn&quot;, &quot;Autumn&quot;, &quot;Spring&quot;, &quot;Autumn&quot;, &quot;…
-## $ shoe_size         &lt;dbl&gt; 6.0, 42.0, 10.0, 45.0, NA, 12.0, 11.0, 13.0, 7.0, 4…
-## $ height            &lt;dbl&gt; 160, 178, 178, 175, NA, 193, 174, 187, 165, 176, 16…
-## $ floss_frequency   &lt;chr&gt; &quot;Weekly&quot;, &quot;Less than once a week&quot;, &quot;Less than once …
-## $ glasses           &lt;chr&gt; &quot;Yes&quot;, &quot;No&quot;, &quot;No&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;Yes&quot;, &quot;No&quot;, &quot;Yes&quot;…
-## $ dominant_hand     &lt;chr&gt; &quot;Right handed&quot;, &quot;Right handed&quot;, &quot;Right handed&quot;, &quot;Ri…
-## $ steak_preference  &lt;fct&gt; Medium-rare, Medium, I don&#39;t eat beef, Medium, Medi…
-## $ stress_level      &lt;dbl&gt; 7, 9, 4, 9, 2, 3, 6, 6, 5, 7, 6, 8, 6, 4, 9, 1, 4, …</code></pre>
+# glimpse(clean_df)</code></pre>
 <ul>
-<li><p><strong>Imported class_survey.csv</strong> into R and cleaned the data by shortening the column names and renamed columns. This improves readibility as well as conciseness.</p></li>
+<li><p><strong>Imported class_survey.csv</strong> into R and cleaned the data by shortening the column names and renamed columns. This improves readability as well as conciseness.</p></li>
 <li><p><strong>Removed 2 survey observations</strong> where survey was submitted without any input because these observations are useless and do not add any new information to the survey data.</p></li>
 <li><p><strong>Converted postcode into character</strong> data type as postcode is a categorical variable. I changed all height into cm, grouped gender into 3 categories (male,female and non-binary) and gave an order to steak preferences output.</p></li>
 <li><p>Further, I changed the timestamp variable from character data type to POSIXct data type for easier handling of date time object.</p></li>
@@ -1745,7 +1720,15 @@ glimpse(clean_df)</code></pre>
 </div>
 <div id="are-there-any-questions-that-needed-improvement-to-generate-useful-data" class="section level2">
 <h2><span class="header-section-number">4.3</span> Are there any questions that needed improvement to generate useful data?</h2>
-<p>Yes! * <strong>Shoe size</strong> - Shoe size is impossible to clean for in the survey question, there was no requirement to specify what system the size is in.</p>
+<p>Yes!</p>
+<ul>
+<li><p><strong>What is your shoe size?</strong> - Shoe size is impossible to clean for in the survey question, there was no requirement to specify what system the size is in such as if the show size is in UK or EU or CM or US. Further, there was no requirement to specify if the shoe size was in male or female size, which adds to ambiguity of the data. Addressing theses issues would greatly improve the usefulness of the shoe size variable.</p></li>
+<li><p><strong>On a scale from 0 to 10, please indicate how stressed you have felt in the past week.</strong> - This question is very contextual and can fluctuate a lot due to the time the survey is being conducted. For example, if the participant does the survey on a Monday, they may be more likely to say they feel stress, than if on a Friday.</p></li>
+<li><p><strong>How tall are you?</strong> - This question doesn’t specify if it is in centimeters, meters or feet or inches. This means that there must be significant data cleaning to make the data usable. To improve question, specify the heights in a specific unit (e.g. meters).</p></li>
+<li><p><strong>How many hours a week do you spend exercising?</strong> - This question should have a drop down menu with discrete variables, else it allows participants to put in strange values such as 1.233333. This would help enhance the usefulness of this question.</p></li>
+<li><p><strong>Did you have a dog or a cat when you were a child?</strong> - This question produces results that are binary (YES or NO), but this does not help with inferring specifics about a participant. We do not know if they answered yes, whether they have a dog or a cat or both. To improve, give more categorical options for this question.</p></li>
+<li><p><strong>Postcode of where you live during semester</strong> - The variable postcode had so many unique postcodes that it was difficult to use for hypothesis test. The expected tables generated often contained less than 5 frequency values, because of many postcodes containing only 1 person. Hence, this variable was little use in doing hypothesis test. To improve usefulness, either limit the postcode to a certain region, or group the postcodes into specific regions. This would allow better analysis.</p></li>
+</ul>
 </div>
 </div>
 <div id="results" class="section level1">
@@ -1753,7 +1736,7 @@ glimpse(clean_df)</code></pre>
 <div id="does-the-number-of-covid-tests-follow-a-poisson-distribution" class="section level2">
 <h2><span class="header-section-number">5.1</span> Does the number of COVID tests follow a Poisson distribution?</h2>
 <p>To test this question, we will use a <strong>chi-square goodness-of-fit test</strong> and conduct the test through a hypothesis testing framework at 5% significance level. The <strong>chi-square goodness-of-fit test</strong> was chosen because we have one categorical variable(covid_tests) and one population(DATA2002), which we want to determine whether the data follows a Poisson distribution.</p>
-<p>For a Poisson distribution, we need to find the average rate <span class="math inline">\(\lambda\)</span> per unit of time. Since we do not know the exact timeframe in which individuals took covid tests, we can assume that it is finite and is between March 2020 to September 2020. To find lambda sample, we use the following equation:</p>
+<p>For a Poisson distribution, we need to find the average rate <span class="math inline">\(\lambda\)</span> per unit of time. Since we do not know the exact time frame in which individuals took covid tests, we can assume that it is finite and is between March 2020 to September 2020. To find lambda sample, we use the following equation:</p>
 <p><span class="math display">\[\lambda = \frac{\sum(c*f)}{n}\]</span> where <strong>c</strong> is a categorical variable value, <strong>f</strong> is our corresponding frequency of <strong>c</strong> and <strong>n</strong> is the total number of observations.</p>
 <pre class="r"><code>a &lt;- table(clean_df$covid_tests)
 col_names &lt;- c(as.numeric(names(a)))
@@ -1765,7 +1748,7 @@ freq_df %&gt;% gt()</code></pre>
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#onsumhyrzf .gt_table {
+#fumnkghtnp .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1790,7 +1773,7 @@ freq_df %&gt;% gt()</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#onsumhyrzf .gt_heading {
+#fumnkghtnp .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1802,7 +1785,7 @@ freq_df %&gt;% gt()</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#onsumhyrzf .gt_title {
+#fumnkghtnp .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1812,7 +1795,7 @@ freq_df %&gt;% gt()</code></pre>
   border-bottom-width: 0;
 }
 
-#onsumhyrzf .gt_subtitle {
+#fumnkghtnp .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1822,13 +1805,13 @@ freq_df %&gt;% gt()</code></pre>
   border-top-width: 0;
 }
 
-#onsumhyrzf .gt_bottom_border {
+#fumnkghtnp .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#onsumhyrzf .gt_col_headings {
+#fumnkghtnp .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1843,7 +1826,7 @@ freq_df %&gt;% gt()</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#onsumhyrzf .gt_col_heading {
+#fumnkghtnp .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1863,7 +1846,7 @@ freq_df %&gt;% gt()</code></pre>
   overflow-x: hidden;
 }
 
-#onsumhyrzf .gt_column_spanner_outer {
+#fumnkghtnp .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1875,15 +1858,15 @@ freq_df %&gt;% gt()</code></pre>
   padding-right: 4px;
 }
 
-#onsumhyrzf .gt_column_spanner_outer:first-child {
+#fumnkghtnp .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#onsumhyrzf .gt_column_spanner_outer:last-child {
+#fumnkghtnp .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#onsumhyrzf .gt_column_spanner {
+#fumnkghtnp .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1895,7 +1878,7 @@ freq_df %&gt;% gt()</code></pre>
   width: 100%;
 }
 
-#onsumhyrzf .gt_group_heading {
+#fumnkghtnp .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1917,7 +1900,7 @@ freq_df %&gt;% gt()</code></pre>
   vertical-align: middle;
 }
 
-#onsumhyrzf .gt_empty_group_heading {
+#fumnkghtnp .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1932,15 +1915,15 @@ freq_df %&gt;% gt()</code></pre>
   vertical-align: middle;
 }
 
-#onsumhyrzf .gt_from_md > :first-child {
+#fumnkghtnp .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#onsumhyrzf .gt_from_md > :last-child {
+#fumnkghtnp .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#onsumhyrzf .gt_row {
+#fumnkghtnp .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1959,7 +1942,7 @@ freq_df %&gt;% gt()</code></pre>
   overflow-x: hidden;
 }
 
-#onsumhyrzf .gt_stub {
+#fumnkghtnp .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1971,7 +1954,7 @@ freq_df %&gt;% gt()</code></pre>
   padding-left: 12px;
 }
 
-#onsumhyrzf .gt_summary_row {
+#fumnkghtnp .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1981,7 +1964,7 @@ freq_df %&gt;% gt()</code></pre>
   padding-right: 5px;
 }
 
-#onsumhyrzf .gt_first_summary_row {
+#fumnkghtnp .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1991,7 +1974,7 @@ freq_df %&gt;% gt()</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#onsumhyrzf .gt_grand_summary_row {
+#fumnkghtnp .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2001,7 +1984,7 @@ freq_df %&gt;% gt()</code></pre>
   padding-right: 5px;
 }
 
-#onsumhyrzf .gt_first_grand_summary_row {
+#fumnkghtnp .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2011,11 +1994,11 @@ freq_df %&gt;% gt()</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#onsumhyrzf .gt_striped {
+#fumnkghtnp .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#onsumhyrzf .gt_table_body {
+#fumnkghtnp .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2024,7 +2007,7 @@ freq_df %&gt;% gt()</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#onsumhyrzf .gt_footnotes {
+#fumnkghtnp .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2038,13 +2021,13 @@ freq_df %&gt;% gt()</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#onsumhyrzf .gt_footnote {
+#fumnkghtnp .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#onsumhyrzf .gt_sourcenotes {
+#fumnkghtnp .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2058,46 +2041,46 @@ freq_df %&gt;% gt()</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#onsumhyrzf .gt_sourcenote {
+#fumnkghtnp .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#onsumhyrzf .gt_left {
+#fumnkghtnp .gt_left {
   text-align: left;
 }
 
-#onsumhyrzf .gt_center {
+#fumnkghtnp .gt_center {
   text-align: center;
 }
 
-#onsumhyrzf .gt_right {
+#fumnkghtnp .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#onsumhyrzf .gt_font_normal {
+#fumnkghtnp .gt_font_normal {
   font-weight: normal;
 }
 
-#onsumhyrzf .gt_font_bold {
+#fumnkghtnp .gt_font_bold {
   font-weight: bold;
 }
 
-#onsumhyrzf .gt_font_italic {
+#fumnkghtnp .gt_font_italic {
   font-style: italic;
 }
 
-#onsumhyrzf .gt_super {
+#fumnkghtnp .gt_super {
   font-size: 65%;
 }
 
-#onsumhyrzf .gt_footnote_marks {
+#fumnkghtnp .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="onsumhyrzf" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="fumnkghtnp" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -2223,8 +2206,10 @@ test1</code></pre>
 ## 
 ## data:  new_results
 ## X-squared = 19.643, df = 1, p-value = 9.336e-06</code></pre>
+<pre class="r"><code>print(paste(c(&quot;This is our critical value:&quot;,qchisq(0.05,1, lower.tail = FALSE)), collapse=&quot; &quot;)) </code></pre>
+<pre><code>## [1] &quot;This is our critical value: 3.84145882069413&quot;</code></pre>
 <p><strong>Decision</strong>:</p>
-<p>As our p-value is less than 5% significance level, we reject the null hypothesis that the covid test follows the Poisson distribution. This does NOT mean we accept the alternative hypothesis. As we reject the null hypothesis in this report, this does not mean that the true distribution of DATA2002 covid tests does not follow a Poisson distribution. It may be a Poisson distribution if we took a much larger sample from the population.</p>
+<p>Our test statistic of 19.643 is greater than our critical value of 3.84 and so our test statistic lies in the rejection region. This is further confirmed by our p-value, which is less than 5% significance level. Hence, we reject the null hypothesis that the covid test follows the Poisson distribution. A p-value of less than 5% means that the probability of obtaining a sample as or more extreme than the observed sample assuming the null hypothesis is true is very rare, which suggests that our null hypothesis is not true. This does NOT mean we accept the alternative hypothesis. As we reject the null hypothesis in this report, this does not mean that the true distribution of DATA2002 covid tests does not follow a Poisson distribution. It may be a Poisson distribution if we took a much larger sample from the population.</p>
 </div>
 <div id="perform-two-other-hypothesis-tests.-give-some-rationale-for-why-you-selected-these-hypothesis-tests-and-interpret-the-results.-be-sure-to-mention-any-limitations-in-the-data-that-may-impact-your-findings." class="section level2">
 <h2><span class="header-section-number">5.2</span> Perform two other hypothesis tests. Give some rationale for why you selected these hypothesis tests and interpret the results. Be sure to mention any limitations in the data that may impact your findings.</h2>
@@ -2424,7 +2409,7 @@ knitr::kable(round(f$expected,2),caption=&quot;Figure 5: Expected cell table&quo
 <pre class="r"><code>n1 &lt;- sum(f$expected&lt;5)/(sum(f$expected&lt;=5)+sum(f$expected&gt;5))</code></pre>
 <p>In Figure 4, we can see our observed cell table. This table is used to generate the figure 5 Expected table from our chi-square test function by using the following formula:</p>
 <p><span class="math display">\[e_{ij} = \frac{y_{i\bullet} y_{\bullet j}}{n}\]</span> where <span class="math inline">\(y_{i\bullet}\)</span> is the marginal row total and <span class="math inline">\(y_{\bullet j}\)</span> is the marginal column total.</p>
-<p>From Figure 5, we can see that 62.5% of the expected cell counts are less than 5, this means we must do a Fisher’s exact tests.</p>
+<p>From <strong>Figure 5</strong>, we can see that 62.5% of the expected cell counts are less than 5, this means we must do a Fisher’s exact tests.</p>
 <pre class="r"><code>fisher.test(ob,workspace=2000000)</code></pre>
 <pre><code>## 
 ##  Fisher&#39;s Exact Test for Count Data
@@ -2437,7 +2422,7 @@ knitr::kable(round(f$expected,2),caption=&quot;Figure 5: Expected cell table&quo
 </div>
 <div id="is-there-a-relationship-between-favourite-season-and-asthma" class="section level3">
 <h3><span class="header-section-number">5.2.2</span> Is there a relationship between favourite season and asthma?</h3>
-<p>Rationale: A <strong>Chi-square hypothesis test of independence</strong> was chosen because we want to compare 2 categorical variables(fav_season and asthma) and determine if they are independent. This test is important for staff at the University of Sydney could increase their inventory of asthma puffers during a particular season and so save potential lives. Also, knowing if there is a correlation between favourite season and asthma could influence medical professionals treatment of asthma patients.</p>
+<p><strong>Rationale:</strong> A <strong>Chi-square hypothesis test of independence</strong> was chosen because we want to compare 2 categorical variables(fav_season and asthma) and determine if they are independent. This test is important for staff at the University of Sydney could increase their inventory of asthma puffers during a particular season and so save potential lives. Also, knowing if there is a correlation between favourite season and asthma could influence medical professionals treatment of asthma patients.</p>
 <p>To answer this question, we will use a chi-square hypothesis test of Independence. We will use the <strong>df_season</strong> dataframe, which contains 170 rows of observations due to removal of NA values in the stress_level variable.</p>
 <p><strong>Hypothesis test</strong></p>
 <p><span class="math inline">\(H_0:\)</span> The favourite season is independent of a student’s asthma.</p>
@@ -2510,7 +2495,7 @@ knitr::kable(round(rt$expected,2),caption=&quot;Figure 7: Modified Expected cell
 </tr>
 </tbody>
 </table>
-<p>Figure 6 demonstrates that there is a problem with the Winter/Yes cell containing 4.46 value, which is less than 5. This breaks our assumption, so we must modify the expected table by combining Winter and Summer together, as shown in Figure 7.</p>
+<p><strong>Figure 6</strong> demonstrates that there is a problem with the Winter/Yes cell containing 4.46 value, which is less than 5. This breaks our assumption, so we must modify the expected table by combining Winter and Summer together, as shown in <strong>Figure 7</strong>.</p>
 <pre class="r"><code># Combine summer and winter for actual table
 t[,3] &lt;- t[,3] + t[,4]
 t &lt;- t[,-4]
@@ -2522,15 +2507,17 @@ d</code></pre>
 ## data:  t
 ## X-squared = 3.223, df = 2, p-value = 0.1996</code></pre>
 <p>Our degrees of freedom is (number of rows - 1)*(number of columns - 1) = (2-1)(3-1)=2. Hence degrees of freedom is correct.</p>
+<pre class="r"><code>print(paste(c(&quot;This is our critical value:&quot;,qchisq(0.05,2, lower.tail = FALSE)), collapse=&quot; &quot;)) </code></pre>
+<pre><code>## [1] &quot;This is our critical value: 5.99146454710798&quot;</code></pre>
 <p><strong>Decision</strong>:</p>
-<p>The p-value of 0.1996 is greater than 0.05 (our significance level), which means we do not reject the null hypothesis. This suggests but does not confirm that the asthma and favourite season of students are independent.</p>
+<p>Our test statistic is 3.223 is less than critical value of 5.991465, this means that our test statistic does not lie in the rejection region. Similarly, the p-value of 0.1996 is greater than 0.05 (our significance level), which means we do not reject the null hypothesis. This suggests but does not confirm that the asthma and favourite season of students are independent.</p>
 <p>Further sampling and tests are needed to confirm if there is not a correlation between asthma and favourite season. The data is limited in that being a small, non-randomised sample suffering from selection bias, our data may be skewed in favour of independence. A larger properly randomised sample could potentially result in a different result, which may be better reflective of the true DATA2002 population. Essentially, the outcome of this decision is not accurate, due to the underlying design of the survey.</p>
 </div>
 </div>
 </div>
 <div id="conclusion" class="section level1">
 <h1><span class="header-section-number">6</span> Conclusion</h1>
-<p>To conclude, we</p>
+<p>To conclude, this report found that the</p>
 </div>
 <div id="references-r-packages-used-in-report" class="section level1">
 <h1><span class="header-section-number">7</span> References (R packages used in report)</h1>
