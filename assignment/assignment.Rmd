@@ -19,13 +19,13 @@ library(gt)
 ```
 # Executive summary
 
-This report uses the hypothesis testing framework to answer questions relating to the DATA2002 class survey 2020. It was discovered that the number of covid tests appears to follow a Poisson distribution, however, we unsure if this is a fact. Further, there appears to be no relationship between the variable of student's living with their parents and the hours spent exercising per week. Moreover, there appears that there is no relationship between favourite season and asthma. Due to the limited and non-randomised data collected by the survey, the findings in this report are inaccurate of the true behaviour of DATA2002 students and require further research to enhance reliability/accuracy of findings.
+This report uses the hypothesis testing framework to answer questions relating to the DATA2002 class survey 2020. It was discovered that the number of COVID tests appears to follow a Poisson distribution, however, we unsure if this is a fact. Further, there appears to be no relationship between the variable of student's living with their parents and the hours spent exercising per week. Moreover, there appears that there is no relationship between favourite season and asthma. Due to the limited and non-randomised data collected by the survey, the findings in this report are inaccurate of the true behaviour of DATA2002 students and require further research to enhance reliability/accuracy of findings.
 
 
 # Introduction
 This report focuses on answering 3 main questions regarding the DATA2002 class survey 2020. 
 
-1. The first question being whether the number of covid tests collected in survey follows a Poisson distribution. Finding if the number of covid tests follows a given distribution will enable one to better predict the behaviour of DATA2002 students. This question uses a **Chi-square goodness-of-fit test**.
+1. The first question being whether the number of COVID tests collected in survey follows a Poisson distribution. Finding if the number of COVID tests follows a given distribution will enable one to better predict the behaviour of DATA2002 students. This question uses a **Chi-square goodness-of-fit test**.
 
 2. The second question is whether there is a dependency relationship between living with parents and the hours a week spent exercising. It is common belief that individuals living at home have greater cost savings, both in terms of monetary and time, hence a relationship would confirm this belief for DATA2002 students. This uses a **Fisher's exact test**.
 
@@ -127,7 +127,7 @@ df_exercising <- clean_df[is.na(clean_df$exercising)==FALSE,]
 * Further, I changed the timestamp variable from character data type to POSIXct data type for easier handling of date time object. 
 
 * After cleaning, there are 3 main data frames used in this report.
-  1. **clean_df** = This data frame contains **172 rows** of observations, containing all the observations that have a covid tests value. This data frame will be used in **section 4.1**
+  1. **clean_df** = This data frame contains **172 rows** of observations, containing all the observations that have a COVID tests value. This data frame will be used in **section 4.1**
   2. **df_exercising** =  This data frame is based on the clean_df and contains only **166 rows** of observations due to the removal of NA values in the postcode variable. This dataframe will be used in **section 4.2**.
   3. **df_season** = This data frame is based on the clean_df and contains only **170 rows** of observations due to the removal of NA values in the fav_season variable. This dataframe will be used in **section 4.3**.
 
@@ -230,7 +230,7 @@ ey = n*p
 e_table <- as.table(setNames(round(ey,4),col_names))
 knitr::kable(e_table, col.names = c("Number of covid tests  ","Expected Freq"), caption = "Figure 3")
 ```
-**Figure 3** shows that covid tests 3,4,5,6 and 10 have a frequency less than 5, so we must combine them into a single group with 2. Hence, we create a new group called "2,3,4,5,6 and 10". Note: our **degrees of freedom** is number of categories -1 - 1(if we needed to estimate lambda) and so is 3-1-1=1.
+**Figure 3** shows that COVID tests 3,4,5,6 and 10 have a frequency less than 5, so we must combine them into a single group with 2. Hence, we create a new group called "2,3,4,5,6 and 10". Note: our **degrees of freedom** is number of categories -1 - 1(if we needed to estimate lambda) and so is 3-1-1=1.
 
 To calculate p-value,
 ```{r}
@@ -250,7 +250,7 @@ print(paste(c("This is our critical value:",qchisq(0.05,1, lower.tail = FALSE)),
 
 **Decision**:
 
-Our test statistic of 19.643 is greater than our critical value of 3.84 and so our test statistic lies in the rejection region. This is further confirmed by our p-value, which is less than 5% significance level. Hence, we reject the null hypothesis that the covid test follows the Poisson distribution. A p-value of less than 5% means that the probability of obtaining a sample as or more extreme than the observed sample assuming the null hypothesis is true is very rare, which suggests that our null hypothesis is not true.  This does NOT mean we accept the alternative hypothesis. As we reject the null hypothesis in this report, this does not mean that the true distribution of DATA2002 covid tests does not follow a Poisson distribution. It may be a Poisson distribution if we took a much larger sample from the population.
+Our test statistic of 19.643 is greater than our critical value of 3.84 and so our test statistic lies in the rejection region. This is further confirmed by our p-value, which is less than 5% significance level. Hence, we reject the null hypothesis that the COVID test follows the Poisson distribution. A p-value of less than 5% means that the probability of obtaining a sample as or more extreme than the observed sample assuming the null hypothesis is true is very rare, which suggests that our null hypothesis is not true.  This does NOT mean we accept the alternative hypothesis. As we reject the null hypothesis in this report, this does not mean that the true distribution of DATA2002 COVID tests does not follow a Poisson distribution. It may be a Poisson distribution if we took a much larger sample from the population.
 
 
 ## Perform two other hypothesis tests. Give some rationale for why you selected these hypothesis tests and interpret the results. Be sure to mention any limitations in the data that may impact your findings.
@@ -356,7 +356,8 @@ Further sampling and tests are needed to confirm if there is not a correlation b
 
 
 # Conclusion 
-To conclude, this report found that the
+
+This report addresses the issues of whether the sample of DATA2002 was random, prone to bias and which questions in the survey needed improvement in future. Using the DATA2002 sample, data cleaning was performed and 3 hypothesis tests were conducted. The findings suggest that the number of COVID tests follows a Poisson distribution, there is no correlation between DATA2002 students who live with their parents and hours spent exercising per week and favourite season and asthma are independent variables. These findings are inconclusive due to the data collected is prone to bias as well as the sample size of DATA2002 students was too small, meaning any inferences generated is prone to error. A compulsory, random selection of DATA2002 students could potentially improve the representational accuracy of the sample, reducing the standard error.
 
 
 # References (R packages used in report)
