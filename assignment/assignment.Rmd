@@ -19,7 +19,7 @@ library(gt)
 ```
 # Executive summary
 
-This report uses the hypothesis testing framework to answer questions relating to the DATA2002 class survey 2020. It was discovered that the number of COVID tests appears to follow a Poisson distribution, however, we unsure if this is a fact. Further, there appears to be no relationship between the variable of student's living with their parents and the hours spent exercising per week. Moreover, there appears that there is no relationship between favourite season and asthma. Due to the limited and non-randomised data collected by the survey, the findings in this report are inaccurate of the true behaviour of DATA2002 students and require further research to enhance reliability/accuracy of findings.
+This report uses the hypothesis testing framework to answer questions relating to the DATA2002 class survey in 2020. It was discovered that the number of COVID tests does not appear to follow a Poisson distribution, however, we unsure if this is a fact. Further, there appears to be no relationship between the variable of student's living with their parents and the hours spent exercising per week. Moreover, there appears that there is no relationship between favourite season and asthma. Due to the limited and non-randomised data collected by the survey, the findings in this report are inaccurate of the true behaviour of DATA2002 students and require further research to enhance reliability/accuracy of findings.
 
 
 # Introduction
@@ -27,9 +27,9 @@ This report focuses on answering 3 main questions regarding the DATA2002 class s
 
 1. The first question being whether the number of COVID tests collected in survey follows a Poisson distribution. Finding if the number of COVID tests follows a given distribution will enable one to better predict the behaviour of DATA2002 students. This question uses a **Chi-square goodness-of-fit test**.
 
-2. The second question is whether there is a dependency relationship between living with parents and the hours a week spent exercising. It is common belief that individuals living at home have greater cost savings, both in terms of monetary and time, hence a relationship would confirm this belief for DATA2002 students. This uses a **Fisher's exact test**.
+2. The second question is whether there is a dependency relationship between living with parents and the hours a week spent exercising. It is a common belief that individuals living at home have greater cost savings, both in terms of monetary and time, hence a relationship would confirm this belief for DATA2002 students. This uses a **Fisher's exact test**.
 
-3. The third question focuses on whether there is a relationship between favourite season and asthma. This question is important as it is natural to believe that a a person who suffers from asthma may opt to choose a favourite season, where they suffer the least. To answer this question, we will use a **Chi-square test of independence**.
+3. The third question focuses on whether there is a relationship between favourite season and asthma. This question is important as it is natural to believe that a person who suffers from asthma may opt to choose a favourite season, where they suffer the least. To answer this question, we will use a **Chi-square test of independence**.
 
 This report uses the hypothesis testing framework to answer the above questions.
 
@@ -121,15 +121,15 @@ df_exercising <- clean_df[is.na(clean_df$exercising)==FALSE,]
 
 
 * **Imported class_survey.csv** into R and cleaned the data by shortening the column names and renamed columns. This improves readability as well as conciseness. 
-* **Removed 2 survey observations** where survey was submitted without any input because these observations are useless and do not add any new information to the survey data. 
-* **Converted postcode into character** data type as postcode is a categorical variable. I changed all height into cm, grouped gender into 3 categories (male,female and non-binary) and gave an order to steak preferences output.  
+* **Removed 2 survey observations** where the survey was submitted without any input because these observations are useless and do not add any new information to the survey data. 
+* **Converted postcode into character** data type as postcode is a categorical variable. I changed all height into cm, grouped gender into 3 categories (male, female and non-binary) and gave an order to steak preferences output.  
 
 * Further, I changed the timestamp variable from character data type to POSIXct data type for easier handling of date time object. 
 
 * After cleaning, there are 3 main data frames used in this report.
-  1. **clean_df** = This data frame contains **172 rows** of observations, containing all the observations that have a COVID tests value. This data frame will be used in **section 4.1**
-  2. **df_exercising** =  This data frame is based on the clean_df and contains only **166 rows** of observations due to the removal of NA values in the postcode variable. This dataframe will be used in **section 4.2**.
-  3. **df_season** = This data frame is based on the clean_df and contains only **170 rows** of observations due to the removal of NA values in the fav_season variable. This dataframe will be used in **section 4.3**.
+  1. **clean_df** = This data frame contains **172 rows** of observations, containing all the observations that have a covid_tests value. This data frame will be used in **section 4.1**
+  2. **df_exercising** =  This data frame is based on the clean_df and contains only **166 rows** of observations due to the removal of NA values in the postcode variable. This data frame will be used in **section 4.2**.
+  3. **df_season** = This data frame is based on the clean_df and contains only **170 rows** of observations due to the removal of NA values in the fav_season variable. This data frame will be used in **section 4.3**.
 
 I only fully cleaned variables (fav_season and exercising) for which I will use for our data analysis by removing null values and checking if the values of the variable made sense. 
 
@@ -140,7 +140,7 @@ I only fully cleaned variables (fav_season and exercising) for which I will use 
 
 To answer this question, we need to define what is a random sample. 
 
-A  sample is a subset of population. A random sample is a sample where each person has an equal independent probability of being chosen from a population. 
+A  sample is a subset of the population. A random sample is a sample where each person has an equal independent probability of being chosen from a population. 
 
 Yes, this is a sample with only 174 people which is less than the total population of 572 students, but is it  random?  The test data was collected  through a Google form survey via voluntary choice and was advertised on Edstem. This suggests that the sample is not random as survey participants were more likely to be studious students who read Edstem posts and so is not representative of the true population of DATA2002. Hence, **no**, this is not a random sample of DATA2002. To be random would require a random selection from a database of DATA2002 students that made it compulsory to do the survey.
 
@@ -154,12 +154,12 @@ Yes, this is a sample with only 174 people which is less than the total populati
   * The **height variable** would have the tendency for participants to increase their height due to the fear of appearing short. 
   * Another variable would be the **exercising variable** where participants may want to appear fitter by exaggerating how many hours they exercise. 
   * **Paid work** would have a bias of increased hours as participants may want to appear to be hard working.
-  * **Glasses** variable may have bias as individuals may be insecure about wearing glasses and so opt not to choose not wearing glasses or contacts.
+  * **Glasses** variable may have a bias as individuals may be insecure about wearing glasses and so opt not to choose not wearing glasses or contacts.
 
 
 * **Recall Bias**: **Floss frequency** and **dentist** variable suffer from recall bias as participants personal perception may skew their memory of these variables. The desire to appear hygienic and ideal can make the data inaccurate and unrealistic.
 
-* **Non-response bias**: Some DATA2002 individuals who were aware of the survey may have chosen not to do the survey, as it was not compulsory and didn't have any marks associated to it. These students are missing from the data.
+* **Non-response bias**: Some DATA2002 individuals who were aware of the survey may have chosen not to do the survey, as it was not compulsory and didn't have any marks associated with it. These students are missing from the data.
 
 
 
@@ -167,25 +167,25 @@ Yes, this is a sample with only 174 people which is less than the total populati
 
 Yes!
 
-* **What is your shoe size?** - Shoe size is impossible to clean for in the survey question, there was no requirement to specify what system the size is in such as if the show size is in UK or EU or CM or US. Further, there was no requirement to specify if the shoe size was in male or female size, which adds to ambiguity of the data. Addressing theses issues would greatly improve the usefulness of the shoe size variable.
+* **What is your shoe size?** - Shoe size is impossible to clean for in the survey question, there was no requirement to specify what system the size is in such as if the shoe size is in UK or EU or CM or US. Further, there was no requirement to specify if the shoe size was in male or female size, which adds to the ambiguity of the data. Addressing these issues would greatly improve the usefulness of the shoe size variable.
 
-* **On a scale from 0 to 10, please indicate how stressed you have felt in the past week.** - This question is very contextual and can fluctuate a lot due to the time the survey is being conducted. For example, if the participant does the survey on a Monday, they may be more likely to say they feel stress, than if on a Friday.
+* **On a scale from 0 to 10, please indicate how stressed you have felt in the past week.** - This question is very contextual and can fluctuate a lot due to the time the survey is being conducted. For example, if the participant does the survey on a Monday, they may be more likely to say they feel stress than if on a Friday.
 
-* **How tall are you?** - This question doesn't specify if it is in centimeters, meters or feet or inches. This means that there must be significant data cleaning to make the data usable. To improve question, specify the heights in a specific unit (e.g. meters).
+* **How tall are you?** - This question doesn't specify if it is in centimetres, meters or feet or inches. This means that there must be significant data cleaning to make the data usable. To improve question, specify the heights in a specific unit (e.g. meters).
 
-* **How many hours a week do you spend exercising?** - This question should have a drop down menu with discrete variables, else it allows participants to put in strange values such as 1.233333. This would help enhance the usefulness of this question.
+* **How many hours a week do you spend exercising?** - This question should have a drop-down menu with discrete variables, else it allows participants to put in strange values such as 1.233333. This would help enhance the usefulness of this question.
 
 * **Did you have a dog or a cat when you were a child?** - This question produces results that are binary (YES or NO), but this does not help with inferring specifics about a participant. We do not know if they answered yes, whether they have a dog or a cat or both. To improve, give more categorical options for this question.
 
-* **Postcode of where you live during semester** - The variable postcode had so many unique postcodes that it was difficult to use for hypothesis test. The expected tables generated often contained less than 5 frequency values, because of many postcodes containing only 1 person. Hence, this variable was little use in doing hypothesis test. To improve usefulness, either limit the postcode to a certain region, or group the postcodes into specific regions. This would allow better analysis.
+* **Postcode of where you live during semester** - The variable postcode had so many unique postcodes that it was difficult to use for the hypothesis test. The expected tables generated often contained less than 5 frequency values, because of many postcodes containing only 1 person. Hence, this variable was little use in doing the hypothesis test. To improve usefulness, either limit the postcode to a certain region or group the postcodes into specific regions. This would allow for better analysis.
 
 
 # Results
 ## Does the number of COVID tests follow a Poisson distribution?
 
-To test this question, we will use a **chi-square goodness-of-fit test** and conduct the test through a hypothesis testing framework at 5% significance level. The **chi-square goodness-of-fit test** was chosen because we have one categorical variable(covid_tests) and one population(DATA2002), which we want to determine whether the data follows a Poisson distribution.
+To test this question, we will use a **Chi-square goodness-of-fit test** and conduct the test through a hypothesis testing framework at a 5% significance level. The **chi-square goodness-of-fit test** was chosen because we have one categorical variable(covid_tests) and one population(DATA2002), which we want to determine whether the data follows a Poisson distribution.
 
-For a Poisson distribution, we need to find the average rate $\lambda$ per unit of time. Since we do not know the exact time frame in which individuals took covid tests, we can assume that it is finite and is between March 2020 to September 2020. To find lambda sample, we use the following equation: 
+For a Poisson distribution, we need to find the average rate $\lambda$ per unit of time. Since we do not know the exact time frame in which individuals took COVID tests, we can assume that it is finite and is between March 2020 to September 2020. To find lambda sample, we use the following equation: 
 
 $$\lambda = \frac{\sum(c*f)}{n}$$ where **c** is a categorical variable value, **f** is our corresponding frequency of **c** and **n** is the total number of observations.
 
@@ -203,7 +203,7 @@ clean_df %>% ggplot(aes(x=covid_tests)) +geom_bar()
 ```
 **Figure 2: covid test frequency bar chart**
 
-**Figure 2** bar chart visualises the data in **figure 1**. We will use the **figure 1** to calculate $\lambda$ and Poisson random variable, which will be stored in the p variable.
+**Figure 2** bar chart visualises the data in **Figure 1**. We will use the **Figure 1** to calculate $\lambda$ and Poisson random variable, which will be stored in the p variable.
 ```{r, fig.cap="This is our lambda value"}
 n = sum(results)
 num_groups = length(col_names)
@@ -223,7 +223,7 @@ $H_1:$ The number of COVID tests does not follow a Poisson distribution
 **Assumptions**:
 
 * Observations are independent from each other: YES. Each participant is likely to have completed the survey by themselves, without the aid of others.
-* Expected cell counts for each category of Poisson distribution has a frequency $\geq$ 5. This is a problem which **figure 3** shows below.
+* Expected cell counts for each category of Poisson distribution has a frequency $\geq$ 5. This is a problem which **Figure 3** shows below.
 
 ```{r}
 ey = n*p
@@ -250,24 +250,24 @@ print(paste(c("This is our critical value:",qchisq(0.05,1, lower.tail = FALSE)),
 
 **Decision**:
 
-Our test statistic of 19.643 is greater than our critical value of 3.84 and so our test statistic lies in the rejection region. This is further confirmed by our p-value, which is less than 5% significance level. Hence, we reject the null hypothesis that the COVID test follows the Poisson distribution. A p-value of less than 5% means that the probability of obtaining a sample as or more extreme than the observed sample assuming the null hypothesis is true is very rare, which suggests that our null hypothesis is not true.  This does NOT mean we accept the alternative hypothesis. As we reject the null hypothesis in this report, this does not mean that the true distribution of DATA2002 COVID tests does not follow a Poisson distribution. It may be a Poisson distribution if we took a much larger sample from the population.
+Our test statistic of 19.643 is greater than our critical value of 3.84 and so our test statistic lies in the rejection region. This is further confirmed by our p-value, which is less than a 5% significance level. Hence, we reject the null hypothesis that the COVID test follows the Poisson distribution. A p-value of less than 5% means that the probability of obtaining a sample as or more extreme than the observed sample assuming the null hypothesis is true is very rare, which suggests that our null hypothesis is not true.  This does NOT mean we accept the alternative hypothesis. As we reject the null hypothesis in this report, this does not mean that the true distribution of DATA2002 COVID tests does not follow a Poisson distribution. It may be a Poisson distribution if we took a much larger sample from the population.
 
 
-## Perform two other hypothesis tests. Give some rationale for why you selected these hypothesis tests and interpret the results. Be sure to mention any limitations in the data that may impact your findings.
+<!-- ## Perform two other hypothesis tests. Give some rationale for why you selected these hypothesis tests and interpret the results. Be sure to mention any limitations in the data that may impact your findings. -->
 
-### Is there a correlation between DATA2002 students who live with their parents and the hours spent exercising per week?
+## Is there a correlation between DATA2002 students who live with their parents and the hours spent exercising per week?
 
 
 
-To test this question, we will use a **Fisher's exact test** to test for variable independence. The dataframe used in this question will be df_exercising instead of df_clean, because in df_exercising, the null values for the exercising column have been removed.
+To test this question, we will use a **Fisher's exact test** to test for variable independence. The data frame used in this question will be df_exercising instead of df_clean, because in df_exercising, the null values for the exercising column have been removed.
 
-WHY? - To use a test of independence, we need one population (DATA2002 students) and 2 categorical variables (lives with their parents & exercising). We want to test if the 2 variables are independent, but the expected cell counts are less than 5, hence this suggests our sample size is very small. Our expected cell counts which are less than 5 make 62.5% of expected table so we use a Fisher's exact test.
+WHY? - To use a test of independence, we need one population (DATA2002 students) and 2 categorical variables (lives with their parents & exercising). We want to test if the 2 variables are independent, but the expected cell counts are less than 5, hence this suggests our sample size is very small. Our expected cell counts which are less than 5 make 62.5% of the expected table so we use Fisher's exact test.
 
 **Hypothesis test**
 
-$H_0:$ Living with parent status is independent of the hours spent exercising per week. 
+$H_0:$ A student's living with parent status is independent of the hours spent exercising per week. 
 
-$H_1:$  Living with parent status is dependent on the hours spent exercising per week.
+$H_1:$  A student's living with parent status is dependent on the hours spent exercising per week.
 
 **Assumptions**:
 
@@ -283,7 +283,7 @@ f <-chisq.test(ob)
 knitr::kable(round(f$expected,2),caption="Figure 5: Expected cell table")
 n1 <- sum(f$expected<5)/(sum(f$expected<=5)+sum(f$expected>5))
 ```
-In **Figure 4**, we can see our observed cell table. This table is used to generate the **figure 5** Expected table from our chi-square test function by using the following formula:
+In **Figure 4**, we can see our observed cell table. This table is used to generate the **Figure 5** Expected table from our chi-square test function by using the following formula:
 
 $$e_{ij} = \frac{y_{i\bullet} y_{\bullet j}}{n}$$ where $y_{i\bullet}$ is the marginal row total and $y_{\bullet j}$ is the marginal column total.
 
@@ -295,22 +295,22 @@ fisher.test(ob,workspace=2000000)
 ```
 **Decision**:
 
-A p-value of 0.2518 is greater than 0.05 and so we do not reject the null hypothesis, which is a DATA2002 student's living with parent status is independent of the hours spent exercising per week. Despite not rejecting the null hypothesis, we do not accept the null hypothesis. Limitations of data include the sample being too small and not randomised, which means our sample is not a true representation of the DATA2002 population. Also, this data contains 166 rows of observations instead of the original 174 rows. The 8 removed rows suggests that there are reasons why participants may have chosen not to input the data (e.g. if a participant is disabled, they may not be inclined to put in data). Another limitation is that time spent exercising per week is subjective and could fluctuate week by week, so any inferences made from the data is limited.
+A p-value of 0.2518 is greater than 0.05 and so we do not reject the null hypothesis, which is a DATA2002 student's living with parent status is independent of the hours spent exercising per week. Despite not rejecting the null hypothesis, we do not accept the null hypothesis. Limitations of data include the sample being too small and not randomised, which means our sample is not a true representation of the DATA2002 population. Also, this data contains 166 rows of observations instead of the original 174 rows. The 8 removed rows suggest that there are reasons why participants may have chosen not to input the data (e.g. if a participant is disabled, they may not be inclined to put in data). Another limitation is that time spent exercising per week is subjective and could fluctuate week by week, so any inferences made from the data is limited.
 
 
-### Is there a relationship between favourite season and asthma?
+## Is there a relationship between favourite season and asthma?
 
 **Rationale:** 
 A **Chi-square hypothesis test of independence** was chosen because we want to compare 2 categorical variables(fav_season and asthma) and determine if they are independent. This test is important for staff at the University of Sydney could increase their inventory of asthma puffers during a particular season and so save potential lives. Also, knowing if there is a correlation between favourite season and asthma could influence medical professionals treatment of asthma patients.  
 
 
-To answer this question, we will use a chi-square hypothesis test of Independence. We will use the **df_season** dataframe, which contains 170 rows of observations due to removal of NA values in the stress_level variable.
+To answer this question, we will use a chi-square hypothesis test of Independence. We will use the **df_season** data frame, which contains 170 rows of observations due to removal of NA values in the stress_level variable.
 
 **Hypothesis test**
 
-$H_0:$ The favourite season is independent of a student's asthma.
+$H_0:$ A student's favourite season is independent of a student's asthma condition.
 
-$H_1:$ The favourite season is not independent of a student's asthma.
+$H_1:$ A student's favourite season is not independent of a student's asthma condition.
 
 **Assumptions**:
 
@@ -350,14 +350,14 @@ print(paste(c("This is our critical value:",qchisq(0.05,2, lower.tail = FALSE)),
 
 **Decision**:
 
-Our test statistic is 3.223 is less than critical value of 5.991465, this means that our test statistic does not lie in the rejection region. Similarly, the p-value of 0.1996 is greater than 0.05 (our significance level), which means we do not reject the null hypothesis. This suggests but does not confirm that the asthma and favourite season of students are independent.
+Our test statistic is 3.223 which is less than the critical value of 5.991465. This means that our test statistic does not lie in the rejection region. Similarly, the p-value of 0.1996 is greater than 0.05 (our significance level), which means we do not reject the null hypothesis. This suggests but does not confirm that asthma and favourite season of students are independent.
 
 Further sampling and tests are needed to confirm if there is not a correlation between asthma and favourite season. The data is limited in that being a small, non-randomised sample suffering from selection bias, our data may be skewed in favour of independence. A larger properly randomised sample could potentially result in a different result, which may be better reflective of the true DATA2002 population. Essentially, the outcome of this decision is not accurate, due to the underlying design of the survey.
 
 
 # Conclusion 
 
-This report addresses the issues of whether the sample of DATA2002 was random, prone to bias and which questions in the survey needed improvement in future. Using the DATA2002 sample, data cleaning was performed and 3 hypothesis tests were conducted. The findings suggest that the number of COVID tests follows a Poisson distribution, there is no correlation between DATA2002 students who live with their parents and hours spent exercising per week and favourite season and asthma are independent variables. These findings are inconclusive due to the data collected is prone to bias as well as the sample size of DATA2002 students was too small, meaning any inferences generated is prone to error. A compulsory, random selection of DATA2002 students could potentially improve the representational accuracy of the sample, reducing the standard error.
+This report addresses the issues of whether the sample of DATA2002 was random, prone to bias and which questions in the survey needed improvement in future. Using the DATA2002 sample, data cleaning was performed and 3 hypothesis tests were conducted. The findings suggest that the number of COVID tests does not follow a Poisson distribution, there is no correlation between DATA2002 students who live with their parents and hours spent exercising per week and favourite season and asthma are independent variables. These findings are inconclusive due to the data collected is prone to bias as well as the sample size of DATA2002 students was too small, meaning any inferences generated is prone to error. In future, a compulsory, random selection of DATA2002 students could potentially improve the representational accuracy of the sample, reducing the standard error.
 
 
 # References (R packages used in report)
