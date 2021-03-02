@@ -1,0 +1,280 @@
+---
+title: "DATA2002-W13A-Early-9"
+author: "480320449"
+subtitle: "Group Project"
+date: "University of Sydney | DATA2002 | 4/11/2020"
+# You can change the title, subtitle, author etc.
+# if you do not want a subtitle, author, or date just delete or comment # the the line!
+output:
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+    self_contained: yes
+    theme: flatly
+    code_folding: hide
+---
+# Include the libraries, read and transform the data
+```{r, message=FALSE}
+library(tidyverse)
+library(sjPlot)
+library(caret)
+library(ggpubr)
+data = read_tsv("bodyfat.txt")
+## Data cleaning 
+## Change Height from inches to cm by 
+data$Height <- data$Height*2.54
+
+## Change weight from pounds to kg
+data$Weight <-  data$Weight/2.20462
+max(data$Weight)
+```
+
+# Appropriate model selection
+## Create null model and full model
+```{r}
+# names(data)
+M0 = lm(Pct.BF ~ 1, data)  # Null model
+M1 = lm(Pct.BF ~ ., data)  # Full model
+
+step.back.aic = step(M1,
+                    direction = "backward",
+                    trace = FALSE)
+
+step.fwd.aic = step(M0, scope = list(lower = M0, upper = M1), direction = "forward", trace = FALSE)
+```
+
+
+```{r}
+## The below code only outputs if knitted!
+sjPlot::tab_model( step.fwd.aic, step.back.aic,
+ show.ci = FALSE,
+ show.aic = TRUE,
+ dv.labels = c("Forward model",
+               "Backward model") )
+
+add1(step.fwd.aic, test="F",scope = M1)
+
+
+
+```
+## The forward regression model
+
+```{r  echo=FALSE, results="hide"}
+equatiomatic::extract_eq(step.fwd.aic,intercept="beta",use_coefs = TRUE)
+```
+$$
+\operatorname{Pct.BF} = 442.38 - 406.49(\operatorname{Density}) + 0.06(\operatorname{Abdomen}) + 0.01(\operatorname{Age}) + \epsilon
+$$
+
+
+## The backward regression model
+```{r echo=FALSE, results="hide"}
+equatiomatic::extract_eq(step.back.aic,intercept="beta",use_coefs = TRUE)
+```
+$$
+\operatorname{Pct.BF} = 442.38 - 406.49(\operatorname{Density}) + 0.01(\operatorname{Age}) + 0.06(\operatorname{Abdomen}) + \epsilon
+$$
+
+Do not include density in your model as it was used to calculate pct.BF.
+
+## Now without density
+```{r}
+M1 = lm(Pct.BF ~ .-Density, data)  # Full model
+
+step.back.aic = step(M1,
+                    direction = "backward",
+                    trace = FALSE)
+
+step.fwd.aic = step(M0, scope = list(lower = M0, upper = M1), direction = "forward", trace = FALSE)
+
+```
+## In sample performance comparison
+
+```{r}
+summary(step.back.aic)$adj.r.squared
+summary(step.fwd.aic)$adj.r.squared
+```
+back model adjusted r squared appears to be better than forward model adjusted r squared.
+
+## Out of sample performance
+Use out of sample cross validation method to decide between back and forward models.
+
+
+
+```{r}
+cv_back <- train(
+  Pct.BF ~ Age + Height + Neck + Abdomen + Hip + Thigh + 
+    Forearm + Wrist, data,
+  method = "lm",
+  trControl = trainControl(
+    method = "cv", number = 10,
+    verboseIter = FALSE
+  )
+)
+cv_back
+
+cv_fwd <- train(
+  Pct.BF ~ Waist + Weight + Wrist + Bicep + Age + 
+    Thigh, data,
+  method = "lm",
+  trControl = trainControl(
+    method = "cv", number = 10,
+    verboseIter = FALSE
+  )
+)
+cv_fwd
+
+```
+Since forward model R-squared is greater than backward model R-squared, we choose the forward model (Pct.BF ~ Waist + Weight + Wrist + Bicep + Age + Thigh)
+
+## Forward model
+
+```{r echo=FALSE, results="hide"}
+equatiomatic::extract_eq(step.fwd.aic,intercept="beta",use_coefs = TRUE)
+```
+$$
+\operatorname{Pct.BF} = -32.57 + 2.25(\operatorname{Waist}) - 0.24(\operatorname{Weight}) - 1.76(\operatorname{Wrist}) + 0.24(\operatorname{Bicep}) + 0.06(\operatorname{Age}) + 0.18(\operatorname{Thigh}) + \epsilon
+$$
+
+```{r}
+summary(step.fwd.aic)
+foward_m = step.fwd.aic
+drop1(foward_m, test = "F")
+simu1 = update(foward_m, . ~ . -Thigh)
+simu2 = update(simu1, . ~ . -Age)
+simu3 = update(simu2, . ~ . -Bicep)
+```
+
+
+```{r}
+summary(foward_m)$adj.r.squared
+summary(simu1)$adj.r.squared
+summary(simu2)$adj.r.squared
+summary(simu3)$adj.r.squared
+
+```
+
+By dropping the variables with p-value larger than 0.05, we can update our forward model to the final model with a less variables but as precise as the forward model. By deleting the Thigh, Age and Bicep. The final model is confirmed.
+
+## Final model
+
+```{r echo=FALSE, results="hide"}
+equatiomatic::extract_eq(simu3,intercept="beta",use_coefs = TRUE)
+```
+$$
+\operatorname{Pct.BF} = -27.89 + 2.44(\operatorname{Waist}) - 0.21(\operatorname{Weight}) - 1.37(\operatorname{Wrist}) + \epsilon
+$$
+The out of sample performance is:
+
+```{r}
+out_of_sample <- train(
+  Pct.BF ~ Waist + Weight + Wrist , data,
+  method = "lm",
+  trControl = trainControl(
+    method = "cv", number = 10,
+    verboseIter = FALSE
+  )
+)
+out_of_sample$results
+```
+R = 0.7345172 is a reduction in the R squared value of the original forward model (2.7 Forward Model) from 0.7403129. The R squared value are very similar though to each other.
+
+
+## Assumption checking
+
+## Checking for Linearity
+```{r, message=FALSE}
+data = data %>% mutate(lresid = step.fwd.aic$residuals)
+```
+
+
+```{r}
+p1 = ggplot(data,
+aes(x = Waist, y = Pct.BF)) +
+geom_point(size = 1) + theme_classic(base_size = 20) +geom_smooth(method = "lm", se = FALSE)
+
+p11 = ggplot(data, aes(x = Waist, y = lresid)) +
+geom_point(size = 1) + theme_classic(base_size = 20) +labs(y = "Residuals")+ geom_hline(yintercept = 0)
+
+ggarrange(p1,p11, labels = c("A","B"), ncol = 2, nrow = 1)
+```
+
+
+```{r}
+p2 = ggplot(data, aes(x = Weight, y = Pct.BF)) +
+geom_point(size = 1) + theme_classic(base_size = 20) +geom_smooth(method = "lm", se = FALSE)
+
+p22 = ggplot(data, aes(x = Weight, y = lresid)) +
+geom_point(size = 1) + theme_classic(base_size = 20) +labs(y = "Residuals")+ geom_hline(yintercept = 0)
+
+ggarrange(p2,p22, labels = c("A","B"), ncol = 2, nrow = 1)
+```
+
+
+```{r}
+p3 = ggplot(data,
+aes(x = Wrist, y = Pct.BF)) +
+geom_point(size = 1) + theme_classic(base_size = 20) +geom_smooth(method = "lm", se = FALSE)
+
+p33 = ggplot(data, aes(x = Wrist, y = lresid)) +
+geom_point(size = 1) + theme_classic(base_size = 20) +labs(y = "Residuals")+ geom_hline(yintercept = 0)
+
+ggarrange(p3,p33, labels = c("A","B"), ncol = 2, nrow = 1)
+```
+
+
+```{r}
+#p4 = ggplot(data,
+#aes(x = Bicep, y = Pct.BF)) +
+#geom_point(size = 1) + theme_classic(base_size = 20) +geom_smooth(method = "lm", se = FALSE)
+
+#p44 = ggplot(data, aes(x = Bicep, y = lresid)) +
+#geom_point(size = 1) + theme_classic(base_size = 20) +labs(y = "Residuals")+ geom_hline(yintercept = 0)
+
+#ggarrange(p4,p44, labels = c("A","B"), ncol = 2, nrow = 1)
+```
+
+
+```{r}
+#p5 = ggplot(data,
+#aes(x = Age, y = Pct.BF)) +
+#geom_point(size = 1) + theme_classic(base_size = 20) +geom_smooth(method = "lm", se = FALSE)
+
+#p55 = ggplot(data, aes(x = Age, y = lresid)) +
+#geom_point(size = 1) + theme_classic(base_size = 20) +labs(y = "Residuals")+ geom_hline(yintercept = 0)
+
+#ggarrange(p5,p55, labels = c("A","B"), ncol = 2, nrow = 1)
+```
+
+
+```{r}
+#p6 = ggplot(data,
+#aes(x = Thigh, y = Pct.BF)) +
+#geom_point(size = 1) + theme_classic(base_size = 20) +geom_smooth(method = "lm", se = FALSE)
+
+#p66 = ggplot(data, aes(x = Thigh, y = lresid)) +
+#geom_point(size = 1) + theme_classic(base_size = 20) +labs(y = "Residuals")+ geom_hline(yintercept = 0)
+
+#ggarrange(p6,p66, labels = c("A","B"), ncol = 2, nrow = 1)
+```
+
+As we can see from the multiple scatter plots of variables in the final model, the variables are all met the requirement for linearity. Residuals of each variable is symmetrically distributed above and below zero. A curved pattern in the residuals does not show up. Which means there is no overestimation and underestimation.
+
+## Checking for Independece
+
+Since the 250 samples are sampled from various ages and independently. We can assume that each of them are independent.
+
+## Checking for homoskedasity
+
+By checking the residual plots of each variable of the final model above, we can see that the spread looks constant over the range of each variable value.
+
+## Checking for Normality
+
+```{r}
+data %>% ggplot()+aes(sample = lresid) + geom_qq(size = 2) + geom_qq_line() + theme_bw()
+```
+
+Apart from few points in the lower and upper tail, the majority of the points lie very close to the diagonal line in the QQ plot. Almost right on the diagonal line. Hence, the normality assumption for the residuals is well satisfied.
+
+On the other hand, base on the Central Limit Theorem, the sample size is large enough that most of the point would follow the normal distribution. So we can run our test under the normal distribution assumption.
+

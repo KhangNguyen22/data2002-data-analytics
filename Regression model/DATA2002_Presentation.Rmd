@@ -1,0 +1,349 @@
+---
+title: "DATA2002 Presentation"
+subtitle: "W13A-Early-9"
+author: "Minh Khang Johannes Leon Nguyen (490503902), Yiming Piao(480320449), Dingnan (Crystal) Zhang(490446931), Zhuolin Jiang (470091003)"
+date: "10 November 2020"
+output:
+  xaringan::moon_reader:
+    css: ["default", "assets/sydney-fonts.css", "assets/sydney.css"]
+    self_contained: false # if true, fonts will be stored locally
+    seal: true # show a title slide with YAML information
+    includes:
+      in_header: "assets/mathjax-equation-numbers.html"
+    nature:
+      beforeInit: ["assets/remark-zoom.js", "https://platform.twitter.com/widgets.js"]
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9' # alternatives '16:9' or '4:3' or others e.g. 13:9
+      navigation:
+        scroll: false # disable slide transitions by scrolling
+---
+
+class: segue
+
+#Data Description
+
+---
+
+## Data Description
+## What is the Data?
+## When was this data taken?
+## Where did we take this?
+
+## State Null hypothesis and alternative hypothesis
+
+---
+
+class: segue
+# Appropriate model selection
+
+---
+
+## Stepwise models (With density)
+
+```{r, message=FALSE, include = FALSE}
+library(tidyverse)
+library(sjPlot)
+library(caret)
+library(ggpubr)
+data = read_tsv("bodyfat.txt")
+data = read_tsv("bodyfat.txt")
+## Data cleaning 
+## Change Height from inches to cm by 
+data$Height <- data$Height*2.54
+
+## Change weight from pounds to kg
+data$Weight <-  data$Weight/2.20462
+max(data$Weight)
+```
+
+```{r, message=FALSE, include = FALSE}
+M0 = lm(Pct.BF ~ 1, data)  # Null model
+M1 = lm(Pct.BF ~ ., data)  # Full model
+
+step.back.aic = step(M1,
+                    direction = "backward",
+                    trace = FALSE)
+
+step.fwd.aic = step(M0, scope = list(lower = M0, upper = M1), direction = "forward", trace = FALSE)
+```
+
+.scroll-box-25[
+```{r, }
+sjPlot::tab_model( step.fwd.aic, step.back.aic,
+ show.ci = FALSE,
+ show.aic = TRUE,
+ dv.labels = c("Forward model",
+               "Backward model") )
+```
+]
+---
+
+.scroll-output[
+```{r}
+add1(step.fwd.aic, test="F",scope = M1)
+```
+]
+---
+
+# The forward regression model
+$$
+\operatorname{Pct.BF} = 442.38 - 406.49(\operatorname{Density}) + 0.06(\operatorname{Abdomen}) + 0.01(\operatorname{Age}) + \epsilon
+$$
+
+
+
+
+# The backward regression model
+$$
+\operatorname{Pct.BF} = 442.38 - 406.49(\operatorname{Density}) + 0.01(\operatorname{Age}) + 0.06(\operatorname{Abdomen}) + \epsilon
+$$
+
+---
+class: segue
+# Stepwise models (With No density)
+
+---
+
+```{r, include = FALSE}
+M1 = lm(Pct.BF ~ .-Density, data)  # Full model
+
+step.back.aic1 = step(M1,
+                    direction = "backward",
+                    trace = FALSE)
+
+step.fwd.aic1 = step(M0, scope = list(lower = M0, upper = M1), direction = "forward", trace = FALSE)
+
+```
+
+
+## Backward stepwise model
+.scroll-output[
+```{r}
+summary(step.back.aic1)
+```
+]
+---
+## Forward stepwise model
+.scroll-output[
+```{r}
+summary(step.fwd.aic1)
+```
+]
+---
+
+class: segue
+
+# Out of sample performance
+
+---
+
+# Backward model
+.scroll-output[
+```{r}
+set.seed(111)
+cv_back <- train(
+  Pct.BF ~ Age + Height + Neck + Abdomen + Hip + Thigh + 
+    Forearm + Wrist, data,
+  method = "lm",
+  trControl = trainControl(
+    method = "cv", number = 10,
+    verboseIter = FALSE
+  )
+)
+cv_back
+```
+]
+---
+# Forward model
+.scroll-output[
+```{r}
+cv_fwd <- train(
+  Pct.BF ~ Waist + Weight + Wrist , data,
+  method = "lm",
+  trControl = trainControl(
+    method = "cv", number = 10,
+    verboseIter = FALSE
+  )
+)
+cv_fwd
+
+```
+]
+
+---
+# Comparing R-suqared
+
+```{r}
+cv_back$results
+```
+
+```{r}
+cv_fwd$results
+```
+
+
+---
+
+# Forward model adjustments
+.scroll-output[
+```{r}
+summary(step.fwd.aic1)
+```
+]
+---
+
+# Forward model adjustments
+```{r}
+foward_m = step.fwd.aic
+simu1 = update(foward_m, . ~ . -Thigh)
+simu2 = update(simu1, . ~ . -Age)
+simu3 = update(simu2, . ~ . -Bicep)
+```
+
+```{r}
+summary(simu1)$adj.r.squared
+summary(simu2)$adj.r.squared
+summary(simu3)$adj.r.squared
+```
+
+---
+
+# Final model
+.font160[
+$$
+\operatorname{Pct.BF} = -27.89 + 2.44(\operatorname{Waist}) - 0.21(\operatorname{Weight}) - 1.37(\operatorname{Wrist}) + \epsilon
+$$
+]
+
+```{r, include = FALSE}
+set.seed(110)
+out_of_sample <- train(
+  Pct.BF ~ Waist + Weight + Wrist , data,
+  method = "lm",
+  trControl = trainControl(
+    method = "cv", number = 10,
+    verboseIter = FALSE
+  )
+)
+```
+
+# The out sample performance is
+```{r}
+out_of_sample$results
+```
+
+---
+
+class: segue
+
+# Assumption Checking
+
+---
+
+## Checking for Linearity
+```{r, include=FALSE}
+data = data %>% mutate(lresid = step.fwd.aic$residuals)
+```
+
+```{r, include = FALSE}
+p1 = ggplot(data,
+aes(x = Waist, y = Pct.BF)) +
+geom_point(size = 1) + theme_classic(base_size = 20) +geom_smooth(method = "lm", se = FALSE)
+
+p11 = ggplot(data, aes(x = Waist, y = lresid)) +
+geom_point(size = 1) + theme_classic(base_size = 20) +labs(y = "Residuals")+ geom_hline(yintercept = 0)
+```
+
+```{r, fig.height=4.5, fig.width=12, fig.retina=2, fig.align='center', message=FALSE, warning=FALSE}
+ggarrange(p1,p11, labels = c("A","B"), ncol = 2, nrow = 1)
+```
+---
+## Checking for Linearity
+```{r, include = FALSE}
+p2 = ggplot(data, aes(x = Weight, y = Pct.BF)) +
+geom_point(size = 1) + theme_classic(base_size = 20) +geom_smooth(method = "lm", se = FALSE)
+
+p22 = ggplot(data, aes(x = Weight, y = lresid)) +
+geom_point(size = 1) + theme_classic(base_size = 20) +labs(y = "Residuals")+ geom_hline(yintercept = 0)
+```
+
+
+```{r, fig.height=4.5, fig.width=12, fig.retina=2, fig.align='center', message=FALSE, warning=FALSE}
+ggarrange(p2,p22, labels = c("A","B"), ncol = 2, nrow = 1)
+```
+
+
+---
+## Checking for Linearity
+
+```{r, include = FALSE}
+p3 = ggplot(data,
+aes(x = Wrist, y = Pct.BF)) +
+geom_point(size = 1) + theme_classic(base_size = 20) +geom_smooth(method = "lm", se = FALSE)
+
+p33 = ggplot(data, aes(x = Wrist, y = lresid)) +
+geom_point(size = 1) + theme_classic(base_size = 20) +labs(y = "Residuals")+ geom_hline(yintercept = 0)
+```
+
+
+```{r, fig.height=4.5, fig.width=12, fig.retina=2, fig.align='center', message=FALSE, warning=FALSE}
+ggarrange(p3,p33, labels = c("A","B"), ncol = 2, nrow = 1)
+```
+
+
+As we can see from the multiple scatter plots of variables in the final model, the variables are all met the requirement for linearity. Residuals of each variable is symmetrically distributed above and below zero. A curved pattern in the residuals does not show up. Which means there is no overestimation and underestimation.
+---
+.font160[
+# Checking for Independece
+]
+
+Since the 250 samples are sampled from various ages and independently. We can assume that each of them are independent.
+
+.font160[
+# Checking for Homoskedasticity
+]
+
+By checking the residual plots of each variable of the final model above, we can see that the spread looks constant over the range of each variable value. Which we can confirm the homoskedasticity for each variable.
+
+---
+
+## Checking for Normality
+
+```{r, fig.height=4.5, fig.width=12, fig.retina=2, fig.align='center', message=FALSE, warning=FALSE}
+data %>% ggplot()+aes(sample = lresid) + geom_qq(size = 2) + geom_qq_line() + theme_bw()
+```
+
+Apart from few points in the lower and upper tail, the majority of the points lie very close to the diagonal line in the QQ plot. Almost right on the diagonal line. Hence, the normality assumption for the residuals is well satisfied.
+On the other hand, base on the Central Limit Theorem, the sample size is large enough that most of the point would follow the normal distribution. 
+
+---
+
+class: segue
+
+# Discussion of results
+
+---
+
+## Discussion of results
+
+### What does the results say in relation to rejection of null hypothesis?
+- .font140[Discussion]
+- .font140[
+$$
+\operatorname{Pct.BF} = -27.89 + 2.44(\operatorname{Waist}) - 0.21(\operatorname{Weight}) - 1.37(\operatorname{Wrist}) + \epsilon
+$$
+]
+- .font140[Model performance]
+
+
+### Limitation of results
+
+### How can the results benefit the stakeholders?
+
+---
+
+class: segue
+
+# Thank you!

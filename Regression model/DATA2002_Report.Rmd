@@ -1,0 +1,218 @@
+---
+title: Building a Multiple Regression Model on Men's Body Fat Percentages
+
+# Use letters for affiliations
+author: 
+  - name: Yiming Piao (480320449), Minh Khang Johannes Leon Nguyen (490503902), Dingnan Zhang (490446931), Zhuolin Jiang (470091003)
+#  - affiliations: DATA2002 Project Group, Faculty of Science, School of Mathematics and Statistics, University of Sydney, Sydney, Australia
+
+    
+# Optional: line of arbitrary text with additional information.
+# Could be used, for example, to mention the bibliographic info in a post-print.
+# If not specified, defaults to "This version was compiled on \today"
+#date_subtitle: Published in *Journal of Statistical Software*, 2018
+
+# For footer text  TODO(fold into template, allow free form two-authors)
+
+
+# Abstract                           --------------CHANGE THE ABSTRACT
+abstract: The purpose of this report is to assist health professionals in predicting a male's body fat percentage based on several body measurements via a multiple regression model. Often, it is expensive and time consuming to measure a man's body fat percentage as this requires a body scan at a health clinic. A key issue this report aims to solve is which body part measurements are relevant in helping predict the body fat percentage of men. This can assist health professionals to estimate a man's body fat percentage through calculation, further informing their diagnostics. This research uses backward and forward stepwise model selection as well as out of sample performance comparisons to evaluate the most relevant regression model. It was discovered that waist circumference (cm), weight in kg, and wrist circumference(cm) were key determinants influencing an adult male's body fat percentage. As this research paper is only based on a sample of 250 adult men, further research needs to take into account larger samples as well as the men's ethnicity, e.g. German men may have different results from Swedish men. This will enhance the accuracy of the regression model presented in this paper.
+        
+
+# Optional: Acknowledgements
+acknowledgements: |
+  This template package builds upon, and extends, the work of the excellent
+  [rticles](https://cran.r-project.org/package=rticles) package, and both packages rely on the
+  [PNAS LaTeX](http://www.pnas.org/site/authors/latex.xhtml) macros. Both these sources are
+  gratefully acknowledged as this work would not have been possible without them.  Our extensions
+  are under the same respective licensing term
+  ([GPL-3](https://www.gnu.org/licenses/gpl-3.0.en.html) and
+  [LPPL (>= 1.3)](https://www.latex-project.org/lppl/)).
+
+# Optional: One or more keywords     ------------INCLUDE SOMETHING
+
+
+# Paper size for the document, values of letter and a4
+papersize: letter
+
+# Font size of the document, values of 9pt (default), 10pt, 11pt and 12pt
+fontsize: 9pt
+
+# Optional: Force one-column layout, default is two-column
+#one_column: true
+
+# Optional: Enables lineno mode, but only if one_column mode is also true
+#lineno: true
+
+# Optional: Enable one-sided layout, default is two-sided
+#one_sided: true
+
+# Optional: Enable section numbering, default is unnumbered
+#numbersections: true
+
+# Optional: Specify the depth of section number, default is 5
+#secnumdepth: 5
+
+# Optional: Skip inserting final break between acknowledgements, default is false
+skip_final_break: true
+
+# Optional: Bibliography 
+bibliography: pinp
+
+# Optional: Enable a 'Draft' watermark on the document
+#watermark: true
+
+
+# Produce a pinp document
+output: pinp::pinp
+
+---
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.pos = 'H')
+```
+
+```{r, include = FALSE}
+library(tidyverse)
+library(ggfortify)
+data = read_tsv("bodyfat.txt")
+## Change Height from inches to cm by
+data$Height <- data$Height*2.54
+## Change weight from pounds to kg
+data$Weight <-  data$Weight/2.20462
+
+M1 = lm(Pct.BF ~ .-Density, data)  # Full model
+M0 = lm(Pct.BF ~ 1, data)  # Null model
+
+step.back.aic1 = step(M1,
+                    direction = "backward",
+                    trace = FALSE)
+
+step.fwd.aic1 = step(M0, scope = list(lower = M0, upper = M1), direction = "forward", trace = FALSE)
+
+data = data %>% mutate(lresid = step.fwd.aic1$residuals)
+
+simu1 = update(step.fwd.aic1, . ~ . -Thigh)
+simu2 = update(simu1, . ~ . -Age)
+Final = update(simu2, . ~ . -Bicep)
+a <- autoplot(Final, which = 1:2)
+```
+# Introduction
+
+Our dataset is about body fat(estimated by Siri's equation) and other male physical characteristics. In this fast-paced era, many people are unable to eat a healthy diet and exercise, which leads to high body fat rates. A person's body fat percentage is the most intuitive measure that helps us check whether people are healthy. Our purpose for this report is to determine what factors are relevant in influencing a male's body fat percentage.
+
+
+We are going to see that is there any relationships between different body fat percentages and different physical characteristics of people.
+
+We wish to conclude with a regression model that shows a correlation between body measurement variables and a man's body fat that can be negative or positive.
+
+# Dataset
+
+Dr. A. Garth Fisher supplied this dataset and permitted to freely distribute the data and use it for non-commercial purposes.
+
+Our observations are 250 adult males between the age of 22 and 81.
+
+Our 16 variables are all quantitative variables, which consists of male physical measurements like body fat percentage, age, height, weight, neck circumference, and other aspects.
+
+# Analysis
+
+# Appropriate Model Selection
+
+To choose the most appropriate regression model, this requires selecting a balance between too little or too many predictor variables, where too little leads to underfitting and too many leads to overfitting the sample data. In each case, this leads to a poor generalisation of new data and makes it harder to find the true model.
+
+Initially, the backward and forward stepwise variable selection was used on the data to select an appropriate model, both of which produced the same linear regression model containing density, abdomen, and age as predictors of body fat percentage.  The stepwise function selects the model with the minimum Akaike information criteria (AIC) score, an estimate of a model's out of sample prediction error.  Backward variable selection refers to, starting with a full model, manually drop variables iteratively using an F-test until a model with a satisfactory AIC is achieved. Forward variable selection is the iterative act of adding explanatory variables into a null model until a model with satisfactory AIC is achieved. This model was rejected because the percentage of body fat formula contained density and so has a direct correlation. Next, the density column of the dataset was dropped and then the backward/forward models were regenerated. To choose the best model, the models were compared based on out of sample performance, specifically via comparing 10-fold cross validation RMSE, $R^2$, and MAE results. The forward model produced an AIC value of 1443.187 and the backward model produced an AIC value of 1442.736, which are roughly the same. Please refer to the results section for further information.
+
+# Hypothesis
+
+<center>
+$Y = \beta_0 + \beta_1x_1 + \beta_2x_2 + ... + \beta_ix_i + \epsilon$.
+</center>
+
+
+for $i$ = 1,2,...,$n$ where $n$ is the number of observations in the data set.
+
+<ul>
+    <li> Y is the outcome variable : Pct.BF </li>
+    <li> $\beta_0$ is the population intercept parameter. </li>
+    <li> $\beta_1$ is the population slope parameter. </li>
+    <li> $\epsilon$ is the error term and typically assumed to follow $N(0,\sigma^2)$ </li>
+</ul>
+
+# Assumptions {.smaller}
+
+
+
+<ul>
+    <li> <b>**Four assumptions checking**</b>
+    <li> <b>**Linearity**</b> - As we can see from the scatter plots of residuals vs. fitted value and QQplot**(Fig. 1 in Appendix)** of the final model, residuals of each variable are symmetrically distributed above and below zero. A curved pattern in the residuals plot does not show up, which means there is no overestimation and underestimation. This means the relationship between Y and x is linear. However, there are few observations in the right region of the residual plots. One possible reason is that since the magnitude is large so only a few of the observations can lie in that region.
+    <li> <b>**Independence**</b> - Since the 250 samples are sampled from various ages and independently, we can assume that each of them is independent. And all the errors are independent of each other.
+    <li> <b>**Homoskedasticity**</b> - By checking the residual plots of the variable in the final model, we can see that the spread looks constant over the range of each variable value. Which we can confirm the homoskedasticity for each variable. The errors have constant variance.
+    <li> <b>**Normality**</b> - Apart from a few points in the lower and upper tail, the majority of the points lie very close to the diagonal line in the QQ plot. Hence, the normality assumption for the residuals is well satisfied. On the other hand, based on the Central Limit Theorem, the sample size is large enough that most of the points would follow the normal distribution. The errors follow a normal distribution.
+</ul>
+
+# Results
+
+**Final model**
+$$\operatorname{Pct.BF} = -27.89 + 2.44(\operatorname{Waist}) - 0.21(\operatorname{Weight}) - 1.37(\operatorname{Wrist}) + \epsilon$$
+**Model performance and reasoning behind selection**
+
+The final model was chosen by comparing the backward and forward models, generated from the dataset less density column.
+
+
+Setting the seed to 2020, we conducted 10 fold cross validation on the backward and forward model, which revealed their estimated out of sample performance. With the backward model consisting of 8 variables (Age, Height, Neck, Abdomen, Hip, Thigh, Forearm, Wrist), this resulted in an RMSE of 4.27, ${R}^2$ of 0.7337, and MAE of 3.50257. Likewise, with the forward model consisting of 6 variables (Waist, Weight, Wrist, Bicep, Age, Thigh), this resulted in an RMSE of 4.291982, ${R}^2$ of 0.7333, and MAE of 3.56. As expected, the backward model RMSE and MAE values, measures of prediction error, were slightly higher than the forward model's RMSE and MAE, given the backward model had 2 more variables compared to the forward model. Since the ${R}^2$ is a measure of how well the linear regression model explains the response variable, it seems intuitive to choose the backward model as a higher ${R}^2$ is generally better, however, the research team decided to choose the forward model due to belief of better generalisation to new data.
+
+Further, in R, we reexamined the forward model using summary and dropped variables with p-values greater than 0.05, namely Bicep, Thigh, and Age, as these were deemed to be insignificant regarding the response variable. This decreased the ${R}^2$ from 0.7333 (original forward model) to 0.7285 (forward model minus Bicep, Thigh, and Age), a minuscule change.
+
+
+**Discussion**
+
+If the p-value is greater than 0.05, the data is consistent with the null hypothesis, which indicates that the variable does not affect body fat rate.
+
+If the p-value is less than 0.05. it means that we will reject the null hypothesis, which indicates that the variable does indeed influence body fat rate. 
+
+For the model, we kept 3 variables and 1 intercept. We have one positively related to our response variable, and others are all explanatory variables with a negative estimate.
+1. $\beta0$ = -27.89, means that when there is no waist, weight, and wrist, we expect to have an average body fat rate of -27.89. This does not make any sense in the real world.
+2. $\beta1$ = 2.44 , a one-centimeter increase in waist circumference results in a 2.44 increase in body fat rate on average. All else holding constant.
+3. $\beta2$ = -0.21, a one kg increase in weight results in a 0.21 decrease in body fat rate on average. All else holding constant. This could be potentially a result of muscle growth, leads to more weight and less body fat.
+4. $\beta3$ = -1.37, a one cm increase in wrist value results in a 1.37 decrease in body fat rate on average. All else holding constant.
+
+
+**Model performance**
+
+The $R^2$ value is 0.7285, which means 72.85% of the variation in body fat for these 250 males have been explained by 3 variables. This is quite acceptable, which suggests that the model will perform well on new data.
+
+# Limitations
+1. In terms of estimating the population as a whole, we have limitations of 250 samples, and so we cannot predict Y values beyond 250 samples.  We also do not know if the selection of participants was random or not.
+
+2. As far as our sample is concerned, other external factors that may affect body fat rate is not recorded in the data. Some improvements of variables to include in the further studies are weekly exercise diet, lifestyle, daily protein intake, and other factors.
+
+3. Our data contains only male participants, so we were unable to evaluate and research common problems relating to females or see if there were variations in body fat ratios between females and males. This has no practical significance for measuring the effect of human body fat rate.
+
+4. Since the percentage of body fat is an estimate, it is not clear what the individual's true percentage of body fat is.
+
+# Discussion and Conclusion
+
+In this analysis, by interpreting the regression model coefficients, we identified some of the main factors that led to the change in body fat rate, including waist, weight, and wrist. Whether these factors are relevant in determining body fat percentage requires further examination by a domain subject health expert, and so this model's effectiveness is limited. Researchers now agree that BMI is not the most effective way to calculate a person's health. The biggest drawback with BMI research is that it can not say the fat-to-muscle ratio, because since muscles appear to be larger, muscle people can be categorized as overweight, as described earlier, and because it can be concluded that they do not necessarily have a health risk. As a result, the body fat test has become the subject of most exercise enthusiasts almost every day. Around the same time, lowering body fat for people who need to lose weight has been a top priority. The body fat rate also has a significant effect on cardiovascular and cerebrovascular disorders.
+\newpage
+
+# Appendix
+
+```{r check_assumptions_weight,fig.width=4,fig.height= 3,fig.cap="Residuals Plot and QQ Plot", echo=FALSE,message=FALSE,warning=FALSE}
+a
+```
+
+
+# References  
+
+Dirk Eddelbuettel and James Balamuta (2020). pinp: 'pinp' is not 'PNAS'. R package version 0.0.10. https://CRAN.R-project.org/package=pinp
+
+Masaaki Horikoshi and Yuan Tang (2016). ggfortify: Data Visualization Tools for Statistical Analysis Results. https://CRAN.R-project.org/package=ggfortify
+
+Yuan Tang, Masaaki Horikoshi, and Wenxuan Li. "ggfortify: Unified Interface to Visualize Statistical Result of Popular R Packages." _The R Journal_ 8.2 (2016): 478-489.  
+
+Wickham et al., (2019). Welcome to the tidyverse. _Journal of Open Source Software_, 4(43), 1686, https://doi.org/10.21105/joss.01686  
+
+# Link to Github
+
+https://github.sydney.edu.au/ypia5846/DATA2002-W13A-Early-9__GroupProject
+
+

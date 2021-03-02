@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>DATA2002 Presentation</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Minh Khang Johannes Leon Nguyen (490503902), Yiming Piao(480320449), Dingnan (Crystal) Zhang(490446931), Zhuolin Jiang (470091003)" />
+    <meta name="date" content="2020-11-10" />
+    <link href="DATA2002_Presentation_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } },
+      });
+    </script>
+    <style>
+    .mjx-mrow a {
+      color: black;
+      pointer-events: none;
+      cursor: default;
+    }
+    </style>
+    <link rel="stylesheet" href="assets/sydney-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="assets/sydney.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# DATA2002 Presentation
+## W13A-Early-9
+### Minh Khang Johannes Leon Nguyen (490503902), Yiming Piao(480320449), Dingnan (Crystal) Zhang(490446931), Zhuolin Jiang (470091003)
+### 10 November 2020
+
+---
+
+
+class: segue
+
+#Data Description
+
+
+---
+## Data Description
+### What is the Data?
+The data recorded each individuals' body fat percentage and other measurement about the body.
+The study subjects of the dataset are 250 adult males, which almost covers every age.
+
+### When was this data taken?
+24 Jun 2008
+
+### Where did we take this?
+We take this dataset from Dr.A. Garth Fisher, who generously supplied this and  gave permission to freely distribute the data and use it for non-commercial purposes. 
+---
+## Data Description
+### Measured 16 variables
+density, age, height, weight, %body fat,  neck circumference and other ten  various body circumferences.
+
+
+
+.scroll-output[
+
+```r
+str(data)
+```
+
+```
+## tibble [250 × 16] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##  $ Density: num [1:250] 1.07 1.09 1.04 1.08 1.03 ...
+##  $ Pct.BF : num [1:250] 12.3 6.1 25.3 10.4 28.7 20.9 19.2 12.4 4.1 11.7 ...
+##  $ Age    : num [1:250] 23 22 22 26 24 24 26 25 25 23 ...
+##  $ Weight : num [1:250] 70 78.6 69.9 83.8 83.6 ...
+##  $ Height : num [1:250] 172 184 168 184 181 ...
+##  $ Neck   : num [1:250] 36.2 38.5 34 37.4 34.4 39 36.4 37.8 38.1 42.1 ...
+##  $ Chest  : num [1:250] 93.1 93.6 95.8 101.8 97.3 ...
+##  $ Abdomen: num [1:250] 85.2 83 87.9 86.4 100 94.4 90.7 88.5 82.5 88.6 ...
+##  $ Waist  : num [1:250] 33.5 32.7 34.6 34 39.4 ...
+##  $ Hip    : num [1:250] 94.5 98.7 99.2 101.2 101.9 ...
+##  $ Thigh  : num [1:250] 59 58.7 59.6 60.1 63.2 66 58.4 60 62.9 63.1 ...
+##  $ Knee   : num [1:250] 37.3 37.3 38.9 37.3 42.2 42 38.3 39.4 38.3 41.7 ...
+##  $ Ankle  : num [1:250] 21.9 23.4 24 22.8 24 25.6 22.9 23.2 23.8 25 ...
+##  $ Bicep  : num [1:250] 32 30.5 28.8 32.4 32.2 35.7 31.9 30.5 35.9 35.6 ...
+##  $ Forearm: num [1:250] 27.4 28.9 25.2 29.4 27.7 30.6 27.8 29 31.1 30 ...
+##  $ Wrist  : num [1:250] 17.1 18.2 16.6 18.2 17.7 18.8 17.7 18.8 18.2 19.2 ...
+##  - attr(*, "spec")=
+##   .. cols(
+##   ..   Density = col_double(),
+##   ..   Pct.BF = col_double(),
+##   ..   Age = col_double(),
+##   ..   Weight = col_double(),
+##   ..   Height = col_double(),
+##   ..   Neck = col_double(),
+##   ..   Chest = col_double(),
+##   ..   Abdomen = col_double(),
+##   ..   Waist = col_double(),
+##   ..   Hip = col_double(),
+##   ..   Thigh = col_double(),
+##   ..   Knee = col_double(),
+##   ..   Ankle = col_double(),
+##   ..   Bicep = col_double(),
+##   ..   Forearm = col_double(),
+##   ..   Wrist = col_double()
+##   .. )
+```
+]
+
+---
+background-image: url("Siri.png")
+background-size: 85% 50%
+background-position: 50% 75%
+
+
+## Data Description
+
+.font160[Measure % body fat directly is not easy   →  use Siri’s equation to predict it]
+
+
+
+---
+### Hypothesis
+.font180[
+$$
+H_0:\beta_i = 0
+$$
+
+$$
+H_1:\beta_i&gt;0, \beta_i&lt;0, \beta_i \neq 0
+$$
+]
+
+### Assumption
+The residuals `\(\epsilon_i\)` are iid `\(N(0, σ^2)\)`, and there is a linear relationship between some attributes and body fat.
+
+### Conclusion
+Reject if the p-value is less than the level of significance, `\(\alpha\)`
+---
+
+class: segue
+# Appropriate model selection
+
+---
+
+## Stepwise models (With density)
+
+
+
+.scroll-box-25[
+
+```r
+sjPlot::tab_model( step.fwd.aic, step.back.aic,
+ show.ci = FALSE,
+ show.aic = TRUE,
+ dv.labels = c("Forward model",
+               "Backward model") )
+```
+
+&lt;table style="border-collapse:collapse; border:none;"&gt;
+&lt;tr&gt;
+&lt;th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; "&gt;&amp;nbsp;&lt;/th&gt;
+&lt;th colspan="2" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; "&gt;Forward model&lt;/th&gt;
+&lt;th colspan="2" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; "&gt;Backward model&lt;/th&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; "&gt;Predictors&lt;/td&gt;
+&lt;td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  "&gt;Estimates&lt;/td&gt;
+&lt;td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  "&gt;p&lt;/td&gt;
+&lt;td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  "&gt;Estimates&lt;/td&gt;
+&lt;td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  "&gt;p&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; "&gt;(Intercept)&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "&gt;442.38&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "&gt;&lt;strong&gt;&amp;lt;0.001&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "&gt;442.38&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "&gt;&lt;strong&gt;&amp;lt;0.001&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; "&gt;Density&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "&gt;&amp;#45;406.49&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "&gt;&lt;strong&gt;&amp;lt;0.001&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "&gt;&amp;#45;406.49&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "&gt;&lt;strong&gt;&amp;lt;0.001&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; "&gt;Abdomen&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "&gt;0.06&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "&gt;&lt;strong&gt;&amp;lt;0.001&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "&gt;0.06&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "&gt;&lt;strong&gt;&amp;lt;0.001&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; "&gt;Age&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "&gt;0.01&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "&gt;0.074&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "&gt;0.01&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "&gt;0.074&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;"&gt;Observations&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="2"&gt;250&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="2"&gt;250&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;"&gt;R&lt;sup&gt;2&lt;/sup&gt; / R&lt;sup&gt;2&lt;/sup&gt; adjusted&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2"&gt;0.977 / 0.977&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2"&gt;0.977 / 0.977&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;"&gt;AIC&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2"&gt;831.066&lt;/td&gt;
+&lt;td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="2"&gt;831.066&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;/table&gt;
+]
+---
+
+# The forward regression model
+$$
+\operatorname{Pct.BF} = 442.38 - 406.49(\operatorname{Density}) + 0.06(\operatorname{Abdomen}) + 0.01(\operatorname{Age}) + \epsilon
+$$
+
+
+
+
+# The backward regression model
+$$
+\operatorname{Pct.BF} = 442.38 - 406.49(\operatorname{Density}) + 0.01(\operatorname{Age}) + 0.06(\operatorname{Abdomen}) + \epsilon
+$$
+.font180[They are the same!]
+---
+class: segue
+# Stepwise models (With No density)
+
+---
+
+
+
+
+## Backward &amp; Forward stepwise model
+.scroll-output[
+
+```r
+summary(step.back.aic1)$adj.r.squared
+```
+
+```
+## [1] 0.7385032
+```
+
+```r
+summary(step.fwd.aic1)$adj.r.squared
+```
+
+```
+## [1] 0.7359972
+```
+
+```r
+summary(step.back.aic1)$adj.r.squared&gt;summary(step.fwd.aic1)$adj.r.squared
+```
+
+```
+## [1] TRUE
+```
+]
+---
+
+class: segue
+
+# Out of sample performance
+
+---
+
+
+
+
+# Comparing R-squared
+
+
+```r
+cv_backwardModel$results
+```
+
+```
+##   intercept     RMSE  Rsquared      MAE    RMSESD RsquaredSD     MAESD
+## 1      TRUE 4.241686 0.7372837 3.512915 0.5959821 0.07984721 0.4885719
+```
+
+
+```r
+cv_fowardModel$results
+```
+
+```
+##   intercept     RMSE  Rsquared      MAE    RMSESD RsquaredSD     MAESD
+## 1      TRUE 4.296077 0.7470399 3.584908 0.5041799 0.07001262 0.4388953
+```
+
+
+---
+
+# Forward model adjustments
+.scroll-output[
+
+```r
+summary(step.fwd.aic1)
+```
+
+```
+## 
+## Call:
+## lm(formula = Pct.BF ~ Waist + Weight + Wrist + Bicep + Age + 
+##     Thigh, data = data)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -10.4994  -2.9471  -0.3397   3.2353   9.4302 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -32.57374    8.36270  -3.895 0.000127 ***
+## Waist         2.24555    0.17740  12.658  &lt; 2e-16 ***
+## Weight       -0.23553    0.07632  -3.086 0.002263 ** 
+## Wrist        -1.76369    0.48630  -3.627 0.000350 ***
+## Bicep         0.24326    0.15615   1.558 0.120584    
+## Age           0.06175    0.03070   2.012 0.045374 *  
+## Thigh         0.17838    0.12100   1.474 0.141722    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 4.262 on 243 degrees of freedom
+## Multiple R-squared:  0.7424,	Adjusted R-squared:  0.736 
+## F-statistic: 116.7 on 6 and 243 DF,  p-value: &lt; 2.2e-16
+```
+]
+---
+
+# Forward model adjustments
+
+
+
+
+```r
+simu1 = update(foward_m, . ~ . -Thigh)
+simu2 = update(simu1, . ~ . -Age)
+Final = update(simu2, . ~ . -Bicep)
+```
+
+
+```r
+summary(foward_m)$adj.r.squared
+```
+
+```
+## [1] 0.7359972
+```
+
+```r
+summary(simu1)$adj.r.squared
+```
+
+```
+## [1] 0.7347278
+```
+
+```r
+summary(simu2)$adj.r.squared
+```
+
+```
+## [1] 0.7332004
+```
+
+```r
+summary(Final)$adj.r.squared
+```
+
+```
+## [1] 0.7302579
+```
+
+---
+
+# Final model
+.font160[
+$$
+\operatorname{Pct.BF} = -27.89 + 2.44(\operatorname{Waist}) - 0.21(\operatorname{Weight}) - 1.37(\operatorname{Wrist}) + \epsilon
+$$
+]
+
+
+
+# The out sample performance is
+
+```r
+out_of_sample$results
+```
+
+```
+##   intercept     RMSE  Rsquared      MAE    RMSESD RsquaredSD     MAESD
+## 1      TRUE 4.325163 0.7412123 3.594366 0.3425671 0.05120392 0.2346484
+```
+
+---
+
+class: segue
+
+# Assumption Checking
+
+---
+
+## Checking for Linearity and normality
+
+
+
+```r
+autoplot(Final, which = 1:2)
+```
+
+&lt;img src="DATA2002_Presentation_files/figure-html/unnamed-chunk-18-1.png" width="864" style="display: block; margin: auto;" /&gt;
+
+
+
+Apart from a few points in the lower and upper tail, the majority of the points lie very close to the diagonal line in the QQ plot. Hence, the normality assumption for the residuals is well satisfied. 
+On the other hand, based on the Central Limit Theorem, the sample size is large enough that most of the points would follow the normal distribution.
+---
+## Checking for Linearity
+
+```r
+ggarrange(p1,p11, labels = c("A","B"), ncol = 2, nrow = 1)
+```
+
+&lt;img src="DATA2002_Presentation_files/figure-html/unnamed-chunk-20-1.png" width="864" style="display: block; margin: auto;" /&gt;
+
+---
+## Checking for Linearity
+
+
+
+
+```r
+ggarrange(p2,p22, labels = c("A","B"), ncol = 2, nrow = 1)
+```
+
+&lt;img src="DATA2002_Presentation_files/figure-html/unnamed-chunk-22-1.png" width="864" style="display: block; margin: auto;" /&gt;
+
+
+---
+## Checking for Linearity
+
+
+
+
+
+```r
+ggarrange(p3,p33, labels = c("A","B"), ncol = 2, nrow = 1)
+```
+
+&lt;img src="DATA2002_Presentation_files/figure-html/unnamed-chunk-24-1.png" width="864" style="display: block; margin: auto;" /&gt;
+
+
+As we can see from the multiple scatter plots of variables in the final model, the variables all meet the requirement for linearity. Residuals of each variable is symmetrically distributed above and below zero. A curved pattern in the residuals does not show up. Which means there is no overestimation and underestimation.
+
+---
+.font160[
+# Checking for Independece
+]
+
+Since the 250 samples are sampled from various ages and independently. We can assume that each of them are independent.
+
+.font160[
+# Checking for Homoskedasticity
+]
+
+By checking the residual plots of each variable of the final model above, we can see that the spread looks constant over the range of each variable value. Which we can confirm the homoskedasticity for each variable.
+
+---
+
+class: segue
+
+# Discussion of results
+
+---
+
+## Discussion of results
+
+### What does the results say in relation to rejection of null hypothesis?
+- .font140[Discussion]
+- .font140[
+$$
+\operatorname{Pct.BF} = -27.89 + 2.44(\operatorname{Waist}) - 0.21(\operatorname{Weight}) - 1.37(\operatorname{Wrist}) + \epsilon
+$$
+]
+
+
+### Limitation of results
+
+### How can the results benefit the stakeholders?
+
+---
+
+class: segue
+
+# Thank you!
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="assets/remark-zoom.js"></script>
+<script src="https://platform.twitter.com/widgets.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
